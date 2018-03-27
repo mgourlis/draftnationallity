@@ -15,7 +15,7 @@ public class QuestionCategory {
     @Column(name = "question_category_id")
     private int id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique=true)
     @NotEmpty(message = "*Please provide a name for the category")
     private String name;
 

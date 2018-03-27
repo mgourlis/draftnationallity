@@ -10,10 +10,10 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "question_category_id")
+    @Column(name = "question_id")
     private int id;
 
-    @Column(name = "short_name")
+    @Column(name = "short_name", unique=true)
     @NotEmpty(message = "*Please provide a short name for the question")
     private String shortname;
 
