@@ -1,9 +1,7 @@
 package gr.mgourlis.draftnationallity.model;
 
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -13,7 +11,7 @@ import java.util.List;
 public class QuestionCategory extends BaseEntity {
 
     @Column(name = "name", unique=true)
-    @NotEmpty(message = "*Please provide a name for the category")
+    @NotNull(message = "*Please provide a name for the category")
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "questionCategory")

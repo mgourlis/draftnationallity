@@ -1,8 +1,7 @@
 package gr.mgourlis.draftnationallity.model;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -12,12 +11,12 @@ import java.util.List;
 public class Question extends BaseEntity {
 
     @Column(name = "short_name", unique=true)
-    @NotEmpty(message = "*Please provide a short name for the question")
+    @NotNull(message = "*Please provide a short name for the question")
     private String shortname;
 
     @Lob
     @Column(name = "question_text", length=1000)
-    @NotEmpty(message = "*The question's text can not be empty")
+    @NotNull(message = "*The question's text can not be empty")
     private String questiontext;
 
     @ManyToOne(optional=false, fetch = FetchType.LAZY)

@@ -1,8 +1,7 @@
 package gr.mgourlis.draftnationallity.model;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -12,11 +11,11 @@ import java.util.List;
 public class ExamSettings extends BaseEntity {
 
     @Column(name = "name", unique=true)
-    @NotEmpty(message = "*Please provide a name for the exam settings")
+    @NotNull(message = "*Please provide a name for the exam settings")
     private String name;
 
     @Column(name = "number_of_questions")
-    @NotEmpty(message = "*Please how many questions this exam settings has")
+    @NotNull(message = "*Please how many questions this exam settings has")
     private int numOfQuestions;
 
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval=true, mappedBy = "examSetting")

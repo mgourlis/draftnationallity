@@ -1,8 +1,7 @@
 package gr.mgourlis.draftnationallity.model;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "difficulty")
@@ -11,11 +10,11 @@ import javax.persistence.*;
 public class Difficulty extends BaseEntity {
 
     @Column(name = "level", unique=true)
-    @NotEmpty(message = "*Please provide a level for the difficulty")
+    @NotNull(message = "*Please provide a level for the difficulty")
     private String level;
 
     @Column(name = "levelnum", unique=true)
-    @NotEmpty(message = "*Please provide a level number for the difficulty")
+    @NotNull(message = "*Please provide a level number for the difficulty")
     private int level_number;
 
     public String getLevel() {

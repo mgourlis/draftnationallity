@@ -1,8 +1,7 @@
 package gr.mgourlis.draftnationallity.model;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "difficultysettings")
@@ -11,7 +10,7 @@ import javax.persistence.*;
 public class DifficultySettings extends BaseEntity {
 
     @Column(name = "percentage")
-    @NotEmpty(message = "*Please set the percentage for this question difficulty")
+    @NotNull(message = "*Please set the percentage for this question difficulty")
     private int percentage;
 
     @ManyToOne(optional=false, fetch = FetchType.LAZY)
@@ -19,7 +18,7 @@ public class DifficultySettings extends BaseEntity {
     private Difficulty difficulty;
 
     @ManyToOne(optional=false, fetch = FetchType.LAZY)
-    @JoinColumn(name="difficulty_settings_id",referencedColumnName="difficulty_settings_id")
+    @JoinColumn(name="exam_settings_id",referencedColumnName="exam_settings_id")
     private ExamSettings examSetting;
 
     public int getPercentage() {
