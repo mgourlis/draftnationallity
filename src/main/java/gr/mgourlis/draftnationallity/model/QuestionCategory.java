@@ -8,12 +8,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "questioncategory")
-public class QuestionCategory {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "question_category_id")
-    private int id;
+@AttributeOverride(name = "id", column = @Column(name = "question_category_id",
+        nullable = false, columnDefinition = "BIGINT UNSIGNED"))
+public class QuestionCategory extends BaseEntity {
 
     @Column(name = "name", unique=true)
     @NotEmpty(message = "*Please provide a name for the category")
@@ -21,15 +18,6 @@ public class QuestionCategory {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "questionCategory")
     private List<Question> questions;
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

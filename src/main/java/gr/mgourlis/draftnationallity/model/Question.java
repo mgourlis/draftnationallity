@@ -3,15 +3,13 @@ package gr.mgourlis.draftnationallity.model;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "question")
-public class Question {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "question_id")
-    private int id;
+@AttributeOverride(name = "id", column = @Column(name = "question_id",
+        nullable = false, columnDefinition = "BIGINT UNSIGNED"))
+public class Question extends BaseEntity {
 
     @Column(name = "short_name", unique=true)
     @NotEmpty(message = "*Please provide a short name for the question")
@@ -30,13 +28,12 @@ public class Question {
     @JoinColumn(name="difficulty_id",referencedColumnName="difficulty_id")
     private Difficulty questionDifficulty;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    @ManyToMany
+    @JoinTable(
+            name="question_packet",
+            joinColumns=@JoinColumn(name="question_id", referencedColumnName="question_id"),
+            inverseJoinColumns=@JoinColumn(name="exam_id", referencedColumnName="exam_id"))
+    private List<Exam> exams;
 
     public String getShortname() {
         return shortname;

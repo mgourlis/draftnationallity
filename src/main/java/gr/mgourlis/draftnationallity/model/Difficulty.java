@@ -6,12 +6,9 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "difficulty")
-public class Difficulty {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "difficulty_id")
-    private int id;
+@AttributeOverride(name = "id", column = @Column(name = "difficulty_id",
+        nullable = false, columnDefinition = "BIGINT UNSIGNED"))
+public class Difficulty extends BaseEntity {
 
     @Column(name = "level", unique=true)
     @NotEmpty(message = "*Please provide a level for the difficulty")
@@ -20,14 +17,6 @@ public class Difficulty {
     @Column(name = "levelnum", unique=true)
     @NotEmpty(message = "*Please provide a level number for the difficulty")
     private int level_number;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getLevel() {
         return level;
