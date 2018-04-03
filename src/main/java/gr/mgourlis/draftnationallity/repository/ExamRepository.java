@@ -4,4 +4,6 @@ import gr.mgourlis.draftnationallity.model.Exam;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ExamRepository extends JpaRepository<Exam,Long> {
+    public Exam findFirstByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, Boolean deleted);
+    public Exam findExamByUIDAndDeleted(String UID, Boolean deleted);
 }

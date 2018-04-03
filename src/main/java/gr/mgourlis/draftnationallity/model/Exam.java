@@ -17,15 +17,15 @@ public class Exam extends BaseEntity {
     @NotNull
     private String UID;
 
-    @Column(name = "settingname")
+    @Column(name = "ischecked")
     @NotNull
-    private String settingname;
+    private Boolean isChecked;
 
     @ManyToOne(optional=false, fetch = FetchType.LAZY)
     @JoinColumn(name="exam_settings_id",referencedColumnName="exam_settings_id")
-    private ExamSettings examSettings;
+    private ExamSetting examSetting;
 
-    @ManyToMany(mappedBy="exams")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy="exams")
     private List<Question> questions;
 
     public String getName() {
@@ -44,19 +44,15 @@ public class Exam extends BaseEntity {
         this.UID = UID;
     }
 
-    public String getSettingname() {
-        return settingname;
-    }
+    public Boolean getChecked() { return isChecked; }
 
-    public void setSettingname(String settingname) {
-        this.settingname = settingname;
-    }
+    public void setChecked(Boolean checked) { isChecked = checked; }
 
-    public List<Question> getQuestions() {
-        return questions;
-    }
+    public ExamSetting getExamSetting() { return examSetting; }
 
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
+    public void setExamSetting(ExamSetting examSetting) { this.examSetting = examSetting; }
+
+    public List<Question> getQuestions() { return questions; }
+
+    public void setQuestions(List<Question> questions) { this.questions = questions; }
 }

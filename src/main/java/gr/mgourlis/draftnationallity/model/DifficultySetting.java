@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "difficultysettings")
 @AttributeOverride(name = "id", column = @Column(name = "difficulty_settings_id",
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
-public class DifficultySettings extends BaseEntity {
+public class DifficultySetting extends BaseEntity {
 
     @Column(name = "percentage")
     @NotNull(message = "*Please set the percentage for this question difficulty")
@@ -19,7 +19,7 @@ public class DifficultySettings extends BaseEntity {
 
     @ManyToOne(optional=false, fetch = FetchType.LAZY)
     @JoinColumn(name="exam_settings_id",referencedColumnName="exam_settings_id")
-    private ExamSettings examSetting;
+    private ExamSetting examSetting;
 
     public int getPercentage() {
         return percentage;
@@ -37,11 +37,11 @@ public class DifficultySettings extends BaseEntity {
         this.difficulty = difficulty;
     }
 
-    public ExamSettings getExamSetting() {
+    public ExamSetting getExamSetting() {
         return examSetting;
     }
 
-    public void setExamSetting(ExamSettings examSetting) {
+    public void setExamSetting(ExamSetting examSetting) {
         this.examSetting = examSetting;
     }
 }

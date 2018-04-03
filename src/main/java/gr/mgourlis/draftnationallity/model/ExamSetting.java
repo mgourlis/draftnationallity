@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "examsettings")
 @AttributeOverride(name = "id", column = @Column(name = "exam_settings_id",
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
-public class ExamSettings extends BaseEntity {
+public class ExamSetting extends BaseEntity {
 
     @Column(name = "name", unique=true)
     @NotNull(message = "*Please provide a name for the exam settings")
@@ -18,8 +18,12 @@ public class ExamSettings extends BaseEntity {
     @NotNull(message = "*Please how many questions this exam settings has")
     private int numOfQuestions;
 
+    @Column(name = "enabled")
+    @NotNull(message = "*Please set if this exam settings is enabled")
+    private Boolean enabled;
+
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval=true, mappedBy = "examSetting")
-    private List<DifficultySettings> difficultySettings;
+    private List<DifficultySetting> difficultySettings;
 
     public String getName() {
         return name;
@@ -37,11 +41,19 @@ public class ExamSettings extends BaseEntity {
         this.numOfQuestions = numOfQuestions;
     }
 
-    public List<DifficultySettings> getDifficultySettings() {
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public List<DifficultySetting> getDifficultySettings() {
         return difficultySettings;
     }
 
-    public void setDifficultySettings(List<DifficultySettings> difficultySettings) {
+    public void setDifficultySettings(List<DifficultySetting> difficultySettings) {
         this.difficultySettings = difficultySettings;
     }
 }

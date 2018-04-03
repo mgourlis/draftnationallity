@@ -27,7 +27,7 @@ public class Question extends BaseEntity {
     @JoinColumn(name="difficulty_id",referencedColumnName="difficulty_id")
     private Difficulty questionDifficulty;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name="question_packet",
             joinColumns=@JoinColumn(name="question_id", referencedColumnName="question_id"),
