@@ -9,7 +9,8 @@ import java.util.List;
 public interface ExamService {
 
     public Exam createExam(ExamSetting examSetting, List<Question> examQuestions);
-    public List<Question> examQuestions(ExamSetting examSetting);
-    public Exam lastExamByUser(String user);
+    public List<Question> generateExamQuestions(ExamSetting examSetting);
+    public Exam findLastExamByUser(String user);
+    public List<Exam> getExams();
 
 }
