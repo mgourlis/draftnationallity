@@ -8,5 +8,4 @@ import gr.mgourlis.draftnationallity.model.Role;
 @Repository("RoleRepository")
 public interface RoleRepository extends JpaRepository<Role, Long>{
 	Role findByRole(String role);
-
 }

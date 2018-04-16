@@ -23,16 +23,16 @@ public class BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Size(max = 20)
-    @Column(name = "created_by", length = 20)
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50)
     private String createdBy;
 
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @Size(max = 20)
-    @Column(name = "updated_by", length = 20)
+    @Size(max = 50)
+    @Column(name = "updated_by", length = 50)
     private String updatedBy;
 
     @Size(max = 500)

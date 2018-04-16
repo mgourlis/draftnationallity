@@ -13,9 +13,9 @@ public class Exam extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "UID")
+    @Column(name = "uID" , unique = true)
     @NotNull
-    private String UID;
+    private String uID;
 
     @Column(name = "ischecked")
     @NotNull
@@ -37,11 +37,11 @@ public class Exam extends BaseEntity {
     }
 
     public String getUID() {
-        return UID;
+        return uID;
     }
 
     public void setUID(String UID) {
-        this.UID = UID;
+        this.uID = uID;
     }
 
     public Boolean getChecked() { return isChecked; }
