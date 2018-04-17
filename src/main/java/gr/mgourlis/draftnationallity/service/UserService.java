@@ -1,14 +1,13 @@
 package gr.mgourlis.draftnationallity.service;
 
 import gr.mgourlis.draftnationallity.model.User;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-@Service
-public interface UserService {
+public interface UserService extends UserDetailsService {
 	public List<User> findAll();
-	public User findUserById(int id);
+	public User findUserById(Long id);
 	public User findUserByEmail(String email);
-	public void saveUser(User user);
+	public void save(User user);
 }

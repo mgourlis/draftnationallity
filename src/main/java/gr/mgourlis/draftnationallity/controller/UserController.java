@@ -19,7 +19,7 @@ import java.util.List;
 
 @Controller
 @Secured("ADMIN")
-@RequestMapping("/user")
+@RequestMapping("/admin/user")
 public class UserController {
 
     @Autowired
@@ -30,19 +30,18 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         List<User> users = userService.findAll();
         modelAndView.addObject("users", users);
-        modelAndView.setViewName("showUsers");
+        modelAndView.setViewName("admin/user/showUsers");
         return modelAndView;
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
-    public ModelAndView showUser(@PathVariable("id") int id){
+    public ModelAndView showUser(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
         User user = userService.findUserById(id);
         try {
-            System.out.println("222222222");
             user.setPassword("");
             modelAndView.addObject("users", user);
-            modelAndView.setViewName("showUser");
+            modelAndView.setViewName("admin/user/showUser");
             return modelAndView;
         }catch (EntityNotFoundException e){
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
@@ -50,7 +49,7 @@ public class UserController {
     }
 
     @RequestMapping(value="/{id}/edit", method = RequestMethod.GET)
-    public ModelAndView editUser(@PathVariable("id") int id){
+    public ModelAndView editUser(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
         User user = userService.findUserById(id);
         if(user == null){
@@ -58,26 +57,26 @@ public class UserController {
         }
         user.setPassword("");
         modelAndView.addObject("user", user);
-        modelAndView.setViewName("editUser");
+        modelAndView.setViewName("/admin/user/editUser");
         return modelAndView;
     }
 
     @RequestMapping(value="/{id}/edit", method = RequestMethod.POST)
-    public ModelAndView editUser(@PathVariable("id") int id, @Valid User user, BindingResult bindingResult){
+    public ModelAndView editUser(@PathVariable("id") long id, @Valid User user, BindingResult bindingResult){
         ModelAndView modelAndView = new ModelAndView();
         User edituser = userService.findUserById(id);
         if(user == null){
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
         }
         else if (bindingResult.hasErrors()){
-            modelAndView.setViewName("editUser");
+            modelAndView.setViewName("/admin/user/editUser");
         }
         else{
             edituser.setActive(user.getActive());
             edituser.setName(user.getName());
             edituser.setLastName(user.getLastName());
             edituser.setRoles(user.getRoles());
-            userService.saveUser(edituser);
+            userService.save(edituser);
             modelAndView.addObject("successMessage", "User has been registered successfully");
             modelAndView.addObject("user", edituser);
         }
@@ -90,7 +89,7 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         User user = new User();
         modelAndView.addObject("user", user);
-        modelAndView.setViewName("newUser");
+        modelAndView.setViewName("admin/user/newUser");
         return modelAndView;
     }
 
@@ -104,9 +103,9 @@ public class UserController {
                             "There is already a user with the email provided");
         }
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("newUser");
+            modelAndView.setViewName("admin/user/newUser");
         } else {
-            userService.saveUser(user);
+            userService.save(user);
             modelAndView.addObject("successMessage", "User has been created successfully");
             modelAndView.addObject("user", user);
             modelAndView.setViewName("redirect:showUser");

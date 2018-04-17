@@ -1,0 +1,38 @@
+<head th:fragment="head">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta content="ie=edge" http-equiv="x-ua-compatible" />
+    <title th:text="${metaTitle} ? ${metaTitle} : 'Nationallity-Questions'"></title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<nav class="navbar navbar-inverse" th:fragment="navbar">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Nationallity Questions</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="#">Users</a></li>
+            <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="#">Roles</a></li>
+            <li><a href="#">Page 3</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"><span class="glyphicon glyphicon-user"></span>
+                <span th:utext="${#request.userPrincipal.principal.name}" sec:authorize="isFullyAuthenticated()"></span>
+                <span> </span>
+                <span th:text ="${#request.userPrincipal.principal.lastName}" sec:authorize="isFullyAuthenticated()"></span>
+                <span>(</span>
+                <span th:text ="${#request.userPrincipal.principal.email}" sec:authorize="isFullyAuthenticated()"></span>
+                <span>)</span></a></li>
+            <li>
+                <a href="#" sec:authorize="isFullyAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="Submit" class="btn btn-link" style="padding-top:0;padding-bottom:0;"><span class="glyphicon glyphicon-log-out"></span> Logout</button>
+                    </form>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
