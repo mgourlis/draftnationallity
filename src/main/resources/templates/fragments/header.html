@@ -13,21 +13,35 @@
             <a class="navbar-brand" href="/">Nationallity Questions</a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Home</a></li>
-            <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="#">Users</a></li>
-            <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="#">Roles</a></li>
-            <li><a href="#">Page 3</a></li>
+            <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/user/">Users</a></li>
+            <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/role/">Roles</a></li>
+            <li sec:authorize="hasRole('ROLE_MODERATOR')"><a href="/moderator/question-category/">Questions</a></li>
+            <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Settings</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/moderator/difficulty/">Difficulties</a></li>
+                    <li><a href="/moderator/difficulty-setting/">Difficulty Settings</a></li>
+                    <li><a href="/moderator/exam-setting/">Exam Settings</a></li>
+                </ul>
+            </li>
+            <li sec:authorize="hasRole('ROLE_MODERATOR')"><a href="/moderator/exam/">Exams</a></li>
+            <li sec:authorize="hasRole('ROLE_USER')" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Exams</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/user/exam/new">New Exam</a></li>
+                    <li><a href="/user/exam/">Past Exams</a></li>
+                </ul>
+            </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><span class="glyphicon glyphicon-user"></span>
-                <span th:utext="${#request.userPrincipal.principal.name}" sec:authorize="isFullyAuthenticated()"></span>
+            <li sec:authorize="isFullyAuthenticated()">
+                <a href="#"><span class="glyphicon glyphicon-user"></span>
+                <span th:utext="${#request.userPrincipal.principal.name}"></span>
                 <span> </span>
-                <span th:text ="${#request.userPrincipal.principal.lastName}" sec:authorize="isFullyAuthenticated()"></span>
+                <span th:text ="${#request.userPrincipal.principal.lastName}"></span>
                 <span>(</span>
-                <span th:text ="${#request.userPrincipal.principal.email}" sec:authorize="isFullyAuthenticated()"></span>
+                <span th:text ="${#request.userPrincipal.principal.email}"></span>
                 <span>)</span></a></li>
-            <li>
-                <a href="#" sec:authorize="isFullyAuthenticated()">
+            <li sec:authorize="isFullyAuthenticated()">
+                <a href="#">
                     <form th:action="@{/logout}" method="post">
                         <button type="Submit" class="btn btn-link" style="padding-top:0;padding-bottom:0;"><span class="glyphicon glyphicon-log-out"></span> Logout</button>
                     </form>
