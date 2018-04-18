@@ -38,6 +38,8 @@ public class User implements UserDetails {
 	private String lastName;
 	@Column(name = "active")
 	private boolean active;
+	@Column(name = "cred_non_expired")
+	private boolean credNonExpired;
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH,CascadeType.REMOVE})
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
@@ -72,12 +74,12 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return true;
+		return credNonExpired;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return getActive();
+		return isActive();
 	}
 
 	public void setPassword(String password) {
@@ -108,12 +110,16 @@ public class User implements UserDetails {
 		this.email = email;
 	}
 
-	public boolean getActive() {
+	public boolean isActive() {
 		return active;
 	}
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public void setCredNonExpired(boolean credNonExpired) {
+		this.credNonExpired = credNonExpired;
 	}
 
 	public Set<Role> getRoles() {

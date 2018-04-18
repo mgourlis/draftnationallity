@@ -53,6 +53,9 @@ public class Initializer {
         Role roleUser = new Role();
         roleUser.setRole("ROLE_USER");
         roleRepository.save(roleUser);
+        Role expiredUser = new Role();
+        expiredUser.setRole("ROLE_EXPIRED");
+        roleRepository.save(expiredUser);
         //--------------------------------------
 
         //-------------INIT USERS---------------
@@ -64,6 +67,7 @@ public class Initializer {
         userAdmin.setPassword("123456");
         userAdmin.setEmail("admin@test.gr");
         userAdmin.setActive(true);
+        userAdmin.setCredNonExpired(true);
         role = roleRepository.findByRole("ROLE_ADMIN");
         userAdmin.setRoles(new HashSet<Role>(Arrays.asList(role)));
         userService.save(userAdmin);
@@ -87,6 +91,96 @@ public class Initializer {
         role = roleRepository.findByRole("ROLE_USER");
         userUser.setRoles(new HashSet<Role>(Arrays.asList(role)));
         userService.save(userUser);
+
+        User userUser1 = new User();
+        userUser1.setName("MyronUser");
+        userUser1.setLastName("GourlisUser");
+        userUser1.setPassword("123456");
+        userUser1.setEmail("user1@test.gr");
+        userUser1.setActive(true);
+        role = roleRepository.findByRole("ROLE_USER");
+        userUser1.setRoles(new HashSet<Role>(Arrays.asList(role)));
+        userService.save(userUser1);
+
+        User userUser2 = new User();
+        userUser2.setName("MyronUser");
+        userUser2.setLastName("GourlisUser");
+        userUser2.setPassword("123456");
+        userUser2.setEmail("user2@test.gr");
+        userUser2.setActive(true);
+        role = roleRepository.findByRole("ROLE_USER");
+        userUser2.setRoles(new HashSet<Role>(Arrays.asList(role)));
+        userService.save(userUser2);
+
+        User userUser3 = new User();
+        userUser3.setName("MyronUser");
+        userUser3.setLastName("GourlisUser");
+        userUser3.setPassword("123456");
+        userUser3.setEmail("user3@test.gr");
+        userUser3.setActive(true);
+        role = roleRepository.findByRole("ROLE_USER");
+        userUser3.setRoles(new HashSet<Role>(Arrays.asList(role)));
+        userService.save(userUser3);
+
+        User userUser4 = new User();
+        userUser4.setName("MyronUser");
+        userUser4.setLastName("GourlisUser");
+        userUser4.setPassword("123456");
+        userUser4.setEmail("user4@test.gr");
+        userUser4.setActive(true);
+        role = roleRepository.findByRole("ROLE_USER");
+        userUser4.setRoles(new HashSet<Role>(Arrays.asList(role)));
+        userService.save(userUser4);
+
+        User userUser5 = new User();
+        userUser5.setName("MyronUser");
+        userUser5.setLastName("GourlisUser");
+        userUser5.setPassword("123456");
+        userUser5.setEmail("user5@test.gr");
+        userUser5.setActive(true);
+        role = roleRepository.findByRole("ROLE_USER");
+        userUser5.setRoles(new HashSet<Role>(Arrays.asList(role)));
+        userService.save(userUser5);
+
+        User userUser6 = new User();
+        userUser6.setName("MyronUser");
+        userUser6.setLastName("GourlisUser");
+        userUser6.setPassword("123456");
+        userUser6.setEmail("user6@test.gr");
+        userUser6.setActive(true);
+        role = roleRepository.findByRole("ROLE_USER");
+        userUser6.setRoles(new HashSet<Role>(Arrays.asList(role)));
+        userService.save(userUser6);
+
+        User userUser7 = new User();
+        userUser7.setName("MyronUser");
+        userUser7.setLastName("GourlisUser");
+        userUser7.setPassword("123456");
+        userUser7.setEmail("user7@test.gr");
+        userUser7.setActive(true);
+        role = roleRepository.findByRole("ROLE_USER");
+        userUser7.setRoles(new HashSet<Role>(Arrays.asList(role)));
+        userService.save(userUser7);
+
+        User userUser8 = new User();
+        userUser8.setName("MyronUser");
+        userUser8.setLastName("GourlisUser");
+        userUser8.setPassword("123456");
+        userUser8.setEmail("user8@test.gr");
+        userUser8.setActive(true);
+        role = roleRepository.findByRole("ROLE_USER");
+        userUser8.setRoles(new HashSet<Role>(Arrays.asList(role)));
+        userService.save(userUser8);
+
+        User userUser9 = new User();
+        userUser9.setName("MyronUser");
+        userUser9.setLastName("GourlisUser");
+        userUser9.setPassword("123456");
+        userUser9.setEmail("user9@test.gr");
+        userUser9.setActive(true);
+        role = roleRepository.findByRole("ROLE_USER");
+        userUser9.setRoles(new HashSet<Role>(Arrays.asList(role)));
+        userService.save(userUser9);
         //--------------------------------------
 
     }

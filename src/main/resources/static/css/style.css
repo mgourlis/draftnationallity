@@ -17,4 +17,16 @@ html, body {
     height: 150px;
     clear:both;
     padding-top:20px;
-} 
+}
+
+.sorted-desc::after, .sorted-asc::after {
+    float: right;
+}
+
+.sorted-desc::after{
+    content:"\25BC";
+}
+
+.sorted-asc::after{
+    content: "\25B2";
+}

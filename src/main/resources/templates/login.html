@@ -16,8 +16,11 @@
 			<input type="password"  th:placeholder="Password"
 				   id="password" name="password" class="form-control" /> <br />
 			<!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
-			<div align="center" th:if="${param.error}">
+			<div align="center" th:if="${error} == 'true'">
 				<p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
+			</div>
+			<div align="center" th:if="${error} =='locked'">
+				<p style="font-size: 20; color: #FF1C19;">This user account is disabled</p>
 			</div>
 			<button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit" th:text="Login"></button>
 		</form>

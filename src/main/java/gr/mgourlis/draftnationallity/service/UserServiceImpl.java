@@ -1,13 +1,17 @@
 package gr.mgourlis.draftnationallity.service;
 
+import gr.mgourlis.draftnationallity.model.Role;
 import gr.mgourlis.draftnationallity.model.User;
 import gr.mgourlis.draftnationallity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service("UserService")
@@ -16,12 +20,30 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private RoleService roleService;
+
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
 	public List<User> findAll() {
 		return userRepository.findAll();
+	}
+
+	@Override
+	public Page<User> findAll(Pageable pageable) {
+		return userRepository.findAll(pageable);
+	}
+
+	@Override
+	public List<User> findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(String email, String role) {
+		return userRepository.findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(email,role);
+	}
+
+	@Override
+	public Page<User> findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(String email, String role, Pageable pageable) {
+		return userRepository.findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(email,role,pageable);
 	}
 
 	@Override
@@ -36,8 +58,46 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public void save(User user) {
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		userRepository.save(user);
+	    if(user.getId() == null){
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            if(!user.isCredentialsNonExpired()){
+            	Role expired = roleService.findByName("ROLE_EXPIRED");
+            	user.getRoles().add(expired);
+			}
+            userRepository.save(user);
+        }else{
+	        User oldUser = userRepository.getOne(user.getId());
+            user.setEmail(oldUser.getEmail());
+            user.setPassword(oldUser.getPassword());
+            userRepository.save(user);
+        }
+
+	}
+
+    @Override
+    public void resetPassword(User user, String password) {
+        User oldUser = userRepository.getOne(user.getId());
+        if(oldUser != null) {
+			Role expired = roleService.findByName("ROLE_EXPIRED");
+        	user.getRoles().remove(expired);
+            user.setEmail(oldUser.getEmail());
+            user.setPassword(bCryptPasswordEncoder.encode(password));
+            user.setCredNonExpired(true);
+            userRepository.save(user);
+        }else{
+            throw new EntityNotFoundException("Can't save user. Invalid user");
+        }
+    }
+
+    @Override
+	public void delete(Long id) {
+		User user = userRepository.getOne(id);
+		if (user != null){
+			userRepository.delete(user);
+		}
+		else{
+			throw new EntityNotFoundException("Invalid user");
+		}
 	}
 
 	@Override

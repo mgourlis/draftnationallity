@@ -3,6 +3,8 @@ package gr.mgourlis.draftnationallity.controller;
 import gr.mgourlis.draftnationallity.model.User;
 import gr.mgourlis.draftnationallity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,9 +29,21 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value="/", method = RequestMethod.GET)
-    public ModelAndView showUsers(){
+    public ModelAndView showUsers(ModelAndView modelAndView, Pageable pageable){
+        Page<User> usersPage = userService.findAll(pageable);
+        PageWrapper<User> page = new PageWrapper<User>(usersPage,"/admin/user/");
+        modelAndView.addObject("users", page.getContent());
+        modelAndView.addObject("page",usersPage);
+        modelAndView.setViewName("admin/user/showUsers");
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/search", method = RequestMethod.GET)
+    public ModelAndView searchUsers(@RequestParam("user") String user, @RequestParam("role") String role){
         ModelAndView modelAndView = new ModelAndView();
-        List<User> users = userService.findAll();
+        user = user == null ? "" : user;
+        role = role == null ? "" : "ROLE_" + role;
+        List<User> users = userService.findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(user,role);
         modelAndView.addObject("users", users);
         modelAndView.setViewName("admin/user/showUsers");
         return modelAndView;
@@ -48,7 +63,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value="/{id}/edit", method = RequestMethod.GET)
+    @RequestMapping(value="/edit/{id}", method = RequestMethod.GET)
     public ModelAndView editUser(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
         User user = userService.findUserById(id);
@@ -61,7 +76,7 @@ public class UserController {
         return modelAndView;
     }
 
-    @RequestMapping(value="/{id}/edit", method = RequestMethod.POST)
+    @RequestMapping(value="/edit/{id}", method = RequestMethod.POST)
     public ModelAndView editUser(@PathVariable("id") long id, @Valid User user, BindingResult bindingResult){
         ModelAndView modelAndView = new ModelAndView();
         User edituser = userService.findUserById(id);
@@ -72,7 +87,7 @@ public class UserController {
             modelAndView.setViewName("/admin/user/editUser");
         }
         else{
-            edituser.setActive(user.getActive());
+            edituser.setActive(user.isActive());
             edituser.setName(user.getName());
             edituser.setLastName(user.getLastName());
             edituser.setRoles(user.getRoles());
@@ -111,6 +126,14 @@ public class UserController {
             modelAndView.setViewName("redirect:showUser");
 
         }
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteUser(@PathVariable("id") long id){
+        ModelAndView modelAndView = new ModelAndView();
+        userService.delete(id);
+        modelAndView.setViewName("admin/user/showUsers");
         return modelAndView;
     }
 

@@ -17,9 +17,12 @@ public class Exam extends BaseEntity {
     @NotNull
     private String uID;
 
-    @Column(name = "ischecked")
+    @Column(name = "is_checked")
     @NotNull
     private Boolean isChecked;
+
+    @Column(name = "file_number")
+    private String fileNumber;
 
     @ManyToOne(optional=false, fetch = FetchType.LAZY)
     @JoinColumn(name="exam_settings_id",referencedColumnName="exam_settings_id")

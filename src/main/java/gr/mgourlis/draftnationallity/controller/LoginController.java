@@ -3,11 +3,14 @@ package gr.mgourlis.draftnationallity.controller;
 import gr.mgourlis.draftnationallity.model.User;
 import gr.mgourlis.draftnationallity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -17,8 +20,9 @@ public class LoginController {
 	private UserService userService;
 
 	@RequestMapping(value="/login", method = RequestMethod.GET)
-	public ModelAndView login(){
+	public ModelAndView login(@RequestParam(value = "error", defaultValue="ok") String error){
 		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("error",error);
 		modelAndView.setViewName("login");
 		return modelAndView;
 	}
@@ -64,6 +68,14 @@ public class LoginController {
 		modelAndView.addObject("userName", user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
 		modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
 		modelAndView.setViewName("home");
+		return modelAndView;
+	}
+
+	@PreAuthorize("#user.email == authentication.email")
+	@RequestMapping(value="/resetpass")
+	public ModelAndView resetPassword(){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("/resetPassword");
 		return modelAndView;
 	}
 	

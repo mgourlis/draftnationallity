@@ -20,10 +20,10 @@ public class RoleController {
     private RoleService roleService;
 
     @RequestMapping(value="/", method = RequestMethod.GET)
-    public ModelAndView showUsers(){
+    public ModelAndView showRoles(){
         ModelAndView modelAndView = new ModelAndView();
         List<Role> roles = roleService.findAll();
-        modelAndView.addObject("users", roles);
+        modelAndView.addObject("roles", roles);
         modelAndView.setViewName("showRoles");
         return modelAndView;
     }

@@ -11,7 +11,16 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.RedirectStrategy;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -49,6 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.
 			authorizeRequests()
 				.antMatchers("/login").permitAll()
+				.antMatchers("/resetpass").hasRole("EXPIRED")
 				.antMatchers("/").fullyAuthenticated()
 				.antMatchers("/admin/**").hasRole("ADMIN")
 				.anyRequest()
@@ -56,10 +66,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.and()
 				.formLogin()
 				.loginPage("/login")
-				.failureUrl("/login?error=true")
 				.defaultSuccessUrl("/")
+				.
 				.usernameParameter("email")
 				.passwordParameter("password")
+				.failureHandler(customAuthenticationFailureHandler())
 				//.and()
 				//.logout()
 				//.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -78,8 +89,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public SpringSecurityDialect springSecurityDialect() {
-		return new SpringSecurityDialect();
+	public AuthenticationFailureHandler customAuthenticationFailureHandler() {
+		ExceptionMappingAuthenticationFailureHandler exceptionMappingAuthenticationFailureHandler =
+				new ExceptionMappingAuthenticationFailureHandler();
+		Map<Object, Object> map = new HashMap<>();
+		map.put("org.springframework.security.authentication.CredentialsExpiredException", "/resetpass");
+		map.put("org.springframework.security.authentication.BadCredentialsException", "/login?error=true");
+		map.put("org.springframework.security.authentication.LockedException", "/login?error=locked");
+
+		exceptionMappingAuthenticationFailureHandler.setExceptionMappings(map);
+
+		return exceptionMappingAuthenticationFailureHandler;
 	}
+
 
 }
