@@ -18,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @Secured("ADMIN")
@@ -29,22 +28,22 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value="/", method = RequestMethod.GET)
-    public ModelAndView showUsers(ModelAndView modelAndView, Pageable pageable){
-        Page<User> usersPage = userService.findAll(pageable);
-        PageWrapper<User> page = new PageWrapper<User>(usersPage,"/admin/user/");
-        modelAndView.addObject("users", page.getContent());
+    public ModelAndView searchUsers(@RequestParam(value = "userQ", required=false, defaultValue = "") String userQ,
+                                    @RequestParam(value = "roleQ", required=false, defaultValue = "") String roleQ,
+                                    ModelAndView modelAndView,
+                                    Pageable pageable){
+        Page<User> usersPage = null;
+        if(userQ.equals("") && roleQ.equals("")) {
+            usersPage = userService.findAll(pageable);
+        }else if(userQ.equals("") || userQ == null){
+            usersPage = userService.findUsersByRoles_Role(roleQ,pageable);
+        }else if(roleQ.equals("") || roleQ == null){
+            usersPage = userService.findUsersByEmailContaining(userQ,pageable);
+        }else{
+            usersPage = userService.findUsersByEmailContainingAndRoles_Role(userQ,roleQ,pageable);
+        }
+        modelAndView.addObject("users", usersPage.getContent());
         modelAndView.addObject("page",usersPage);
-        modelAndView.setViewName("admin/user/showUsers");
-        return modelAndView;
-    }
-
-    @RequestMapping(value="/search", method = RequestMethod.GET)
-    public ModelAndView searchUsers(@RequestParam("user") String user, @RequestParam("role") String role){
-        ModelAndView modelAndView = new ModelAndView();
-        user = user == null ? "" : user;
-        role = role == null ? "" : "ROLE_" + role;
-        List<User> users = userService.findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(user,role);
-        modelAndView.addObject("users", users);
         modelAndView.setViewName("admin/user/showUsers");
         return modelAndView;
     }

@@ -11,8 +11,12 @@ import java.util.List;
 public interface UserService extends UserDetailsService {
 	public List<User> findAll();
 	public Page<User> findAll(Pageable pageable);
-	public List<User> findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(String email, String role);
-	public Page<User> findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(String email, String role, Pageable pageable);
+	public List<User> findUsersByEmailContainingAndRoles_Role(String email, String role);
+	public Page<User> findUsersByEmailContainingAndRoles_Role(String email, String role, Pageable pageable);
+	public List<User> findUsersByEmailContaining(String email);
+	public Page<User> findUsersByEmailContaining(String email, Pageable pageable);
+	public List<User> findUsersByRoles_Role(String role);
+	public Page<User> findUsersByRoles_Role(String role, Pageable pageable);
 	public User findUserById(Long id);
 	public User findUserByEmail(String email);
 	public void save(User user);

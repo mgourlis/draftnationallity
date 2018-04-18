@@ -7,7 +7,18 @@
     <div class="container">
         <div th:if="${!users.isEmpty()}">
             <h2>Users</h2>
-            <div class="btn-group dropdown" sd:page-size-selector="dropdown"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="btn-group dropdown" sd:page-size-selector="dropdown"></div>
+                </div>
+                <div class="col-md-6">
+                    <form th:action="@{/admin/user/}" method="GET" class="form-inline">
+                        <div class="form-group mb-2"><input type="text" id="userQ" name="userQ"  th:placeholder="Email" class="form-control" th:value="${param.userQ}" /></div>
+                        <div class="form-group mx-sm-3 mb-2"><input type="text" id="roleQ" name="roleQ"  th:placeholder="Role" class="form-control" th:value="${param.roleQ}" /></div>
+                        <button class="btn btn-primary mb-2" type="Submit" th:text="Search"></button>
+                    </form>
+                </div>
+            </div>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>

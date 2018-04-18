@@ -37,13 +37,37 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<User> findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(String email, String role) {
-		return userRepository.findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(email,role);
+	public List<User> findUsersByEmailContainingAndRoles_Role(String email, String role) {
+		String roleQuery = "ROLE_" + role.toUpperCase();
+		return userRepository.findUsersByEmailContainingAndRoles_Role(email,roleQuery);
 	}
 
 	@Override
-	public Page<User> findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(String email, String role, Pageable pageable) {
-		return userRepository.findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(email,role,pageable);
+	public Page<User> findUsersByEmailContainingAndRoles_Role(String email, String role, Pageable pageable) {
+		String roleQuery = "ROLE_" + role.toUpperCase();
+		return userRepository.findUsersByEmailContainingAndRoles_Role(email,roleQuery,pageable);
+	}
+
+	@Override
+	public List<User> findUsersByEmailContaining(String email) {
+		return userRepository.findUsersByEmailContaining(email);
+	}
+
+	@Override
+	public Page<User> findUsersByEmailContaining(String email, Pageable pageable) {
+		return userRepository.findUsersByEmailContaining(email,pageable);
+	}
+
+	@Override
+	public List<User> findUsersByRoles_Role(String role) {
+		String roleQuery = "ROLE_" + role.toUpperCase();
+		return findUsersByRoles_Role(roleQuery);
+	}
+
+	@Override
+	public Page<User> findUsersByRoles_Role(String role, Pageable pageable) {
+		String roleQuery = "ROLE_" + role.toUpperCase();
+		return userRepository.findUsersByRoles_Role(roleQuery,pageable);
 	}
 
 	@Override

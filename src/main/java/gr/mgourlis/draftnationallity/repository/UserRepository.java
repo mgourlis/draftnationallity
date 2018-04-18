@@ -10,7 +10,11 @@ import java.util.List;
 
 @Repository("UserRepository")
 public interface UserRepository extends JpaRepository<User, Long> {
-	 User findByEmail(String email);
-	 List<User> findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(String email, String role);
-	 Page<User> findUsersByEmailLikeAndRoles_RoleOrderByEmailAsc(String email, String role, Pageable pageable);
+	User findByEmail(String email);
+	List<User> findUsersByEmailContainingAndRoles_Role(String email, String role);
+	Page<User> findUsersByEmailContainingAndRoles_Role(String email, String role, Pageable pageable);
+	List<User> findUsersByEmailContaining(String email);
+	Page<User> findUsersByEmailContaining(String email, Pageable pageable);
+	List<User> findUsersByRoles_Role(String role);
+	Page<User> findUsersByRoles_Role(String role, Pageable pageable);
 }
