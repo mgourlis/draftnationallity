@@ -133,7 +133,7 @@ public class UserController {
     public ModelAndView deleteUser(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
         userService.delete(id);
-        modelAndView.setViewName("admin/user/showUsers");
+        modelAndView.setViewName("redirect:/admin/user/");
         return modelAndView;
     }
 

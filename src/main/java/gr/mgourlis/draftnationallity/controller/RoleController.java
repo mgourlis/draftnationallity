@@ -24,7 +24,7 @@ public class RoleController {
         ModelAndView modelAndView = new ModelAndView();
         List<Role> roles = roleService.findAll();
         modelAndView.addObject("roles", roles);
-        modelAndView.setViewName("showRoles");
+        modelAndView.setViewName("admin/role/showRoles");
         return modelAndView;
     }
 

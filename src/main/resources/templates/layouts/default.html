@@ -4,10 +4,10 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"  >
 <head th:replace="fragments/header :: head"></head>
 <body>
-<div id="container">
     <head th:replace="fragments/header :: navbar"></head>
-    <div layout:fragment="content"></div>
+    <div class="container-fluid">
+        <div layout:fragment="content"></div>
+    </div>
     <div th:replace="fragments/footer :: footer"></div>
-</div>
 </body>
 </html>
