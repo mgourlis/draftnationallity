@@ -38,8 +38,6 @@ public class User implements UserDetails {
 	private String lastName;
 	@Column(name = "active")
 	private boolean active;
-	@Column(name = "cred_non_expired")
-	private boolean credNonExpired;
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
@@ -74,7 +72,7 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return credNonExpired;
+		return true;
 	}
 
 	@Override
@@ -116,10 +114,6 @@ public class User implements UserDetails {
 
 	public void setActive(boolean active) {
 		this.active = active;
-	}
-
-	public void setCredNonExpired(boolean credNonExpired) {
-		this.credNonExpired = credNonExpired;
 	}
 
 	public Set<Role> getRoles() {

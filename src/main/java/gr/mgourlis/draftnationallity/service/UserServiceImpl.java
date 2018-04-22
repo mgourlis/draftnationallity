@@ -12,7 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service("UserService")
 public class UserServiceImpl implements UserService{
@@ -83,30 +85,41 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void save(User user) {
 	    if(user.getId() == null){
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            if(!user.isCredentialsNonExpired()){
-            	Role expired = roleService.findByName("ROLE_EXPIRED");
-            	user.getRoles().add(expired);
+			User emailUser = userRepository.findByEmail(user.getEmail());
+			if(emailUser == null) {
+				user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+				Role expired = roleService.findByName("expired");
+				if (user.getRoles() == null) {
+					Set<Role> roles = new HashSet<Role>();
+					roles.add(expired);
+					user.setRoles(roles);
+				} else {
+					user.getRoles().add(expired);
+				}
+				userRepository.save(user);
+			}else{
+				throw new IllegalArgumentException("Email already exists");
 			}
-            userRepository.save(user);
         }else{
 	        User oldUser = userRepository.getOne(user.getId());
-            user.setEmail(oldUser.getEmail());
-            user.setPassword(oldUser.getPassword());
-            userRepository.save(user);
+			if(oldUser != null) {
+				user.setEmail(oldUser.getEmail());
+				user.setPassword(oldUser.getPassword());
+				userRepository.save(user);
+			}else{
+				throw new EntityNotFoundException("Can't save user. Invalid user");
+			}
         }
 
 	}
 
     @Override
-    public void resetPassword(User user, String password) {
-        User oldUser = userRepository.getOne(user.getId());
-        if(oldUser != null) {
+    public void resetPassword(Long id, String password) {
+        User user = userRepository.getOne(id);
+        if(user != null) {
 			Role expired = roleService.findByName("ROLE_EXPIRED");
         	user.getRoles().remove(expired);
-            user.setEmail(oldUser.getEmail());
             user.setPassword(bCryptPasswordEncoder.encode(password));
-            user.setCredNonExpired(true);
             userRepository.save(user);
         }else{
             throw new EntityNotFoundException("Can't save user. Invalid user");

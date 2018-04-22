@@ -1,5 +1,7 @@
 package gr.mgourlis.draftnationallity.configuration;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -17,6 +19,17 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
         resolver.setFallbackPageable(new PageRequest(0, 10));
         argumentResolvers.add(resolver);
         super.addArgumentResolvers(argumentResolvers);
+    }
+
+    @Bean
+    public FilterRegistrationBean resetPasswordBean() {
+        final FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
+        filterRegBean.setFilter(new changePasswordFilter());
+        filterRegBean.addUrlPatterns("/**");
+        filterRegBean.setEnabled(Boolean.TRUE);
+        filterRegBean.setName("Reset Password");
+        filterRegBean.setAsyncSupported(Boolean.TRUE);
+        return filterRegBean;
     }
 
 }

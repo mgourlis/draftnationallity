@@ -67,7 +67,6 @@ public class Initializer {
         userAdmin.setPassword("123456");
         userAdmin.setEmail("admin@test.gr");
         userAdmin.setActive(true);
-        userAdmin.setCredNonExpired(true);
         role = roleRepository.findByRole("ROLE_ADMIN");
         userAdmin.setRoles(new HashSet<Role>(Arrays.asList(role)));
         userService.save(userAdmin);

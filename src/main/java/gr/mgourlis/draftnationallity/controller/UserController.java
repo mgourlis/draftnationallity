@@ -28,19 +28,19 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value="/", method = RequestMethod.GET)
-    public ModelAndView searchUsers(@RequestParam(value = "userQ", required=false, defaultValue = "") String userQ,
-                                    @RequestParam(value = "roleQ", required=false, defaultValue = "") String roleQ,
+    public ModelAndView searchUsers(@RequestParam(value = "userQ", required=false, defaultValue = "") String user,
+                                    @RequestParam(value = "roleQ", required=false, defaultValue = "") String role,
                                     ModelAndView modelAndView,
                                     Pageable pageable){
         Page<User> usersPage = null;
-        if(userQ.equals("") && roleQ.equals("")) {
+        if(user.equals("") && role.equals("")) {
             usersPage = userService.findAll(pageable);
-        }else if(userQ.equals("") || userQ == null){
-            usersPage = userService.findUsersByRoles_Role(roleQ,pageable);
-        }else if(roleQ.equals("") || roleQ == null){
-            usersPage = userService.findUsersByEmailContaining(userQ,pageable);
+        }else if(user.equals("") || user == null){
+            usersPage = userService.findUsersByRoles_Role(role,pageable);
+        }else if(role.equals("") || role == null){
+            usersPage = userService.findUsersByEmailContaining(user,pageable);
         }else{
-            usersPage = userService.findUsersByEmailContainingAndRoles_Role(userQ,roleQ,pageable);
+            usersPage = userService.findUsersByEmailContainingAndRoles_Role(user,role,pageable);
         }
         modelAndView.addObject("users", usersPage.getContent());
         modelAndView.addObject("page",usersPage);
@@ -83,7 +83,7 @@ public class UserController {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
         }
         else if (bindingResult.hasErrors()){
-            modelAndView.setViewName("/admin/user/editUser");
+            modelAndView.setViewName("/admin/user/edit/"+user.getId());
         }
         else{
             edituser.setActive(user.isActive());
@@ -94,7 +94,7 @@ public class UserController {
             modelAndView.addObject("successMessage", "User has been registered successfully");
             modelAndView.addObject("user", edituser);
         }
-        modelAndView.setViewName("redirect:/"+edituser.getId().toString());
+        modelAndView.setViewName("redirect:/admin/user/" + edituser.getId());
         return modelAndView;
     }
 
@@ -120,9 +120,10 @@ public class UserController {
             modelAndView.setViewName("admin/user/newUser");
         } else {
             userService.save(user);
+            User editUser = userService.findUserByEmail(user.getEmail());
             modelAndView.addObject("successMessage", "User has been created successfully");
             modelAndView.addObject("user", user);
-            modelAndView.setViewName("redirect:showUser");
+            modelAndView.setViewName("redirect:/admin/user/" + editUser.getId());
 
         }
         return modelAndView;

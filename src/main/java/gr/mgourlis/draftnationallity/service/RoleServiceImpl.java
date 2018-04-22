@@ -25,7 +25,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role findByName(String rolename) {
-        return roleRepository.findByRole(rolename);
+        String roleQuery = "ROLE_" + rolename.toUpperCase();
+        return roleRepository.findByRole(roleQuery);
     }
 
     @Override

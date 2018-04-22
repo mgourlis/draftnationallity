@@ -53,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.
 			authorizeRequests()
 				.antMatchers("/login").permitAll()
-				.antMatchers("/resetpass").hasRole("EXPIRED")
+				.antMatchers("/resetpass").fullyAuthenticated()
 				.antMatchers("/").fullyAuthenticated()
 				.antMatchers("/admin/**").hasRole("ADMIN")
 				.anyRequest()
@@ -87,7 +87,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		ExceptionMappingAuthenticationFailureHandler exceptionMappingAuthenticationFailureHandler =
 				new ExceptionMappingAuthenticationFailureHandler();
 		Map<Object, Object> map = new HashMap<>();
-		map.put("org.springframework.security.authentication.CredentialsExpiredException", "/resetpass");
+		map.put("org.springframework.security.authentication.CredentialsExpiredException", "/changepass");
 		map.put("org.springframework.security.authentication.BadCredentialsException", "/login?error=true");
 		map.put("org.springframework.security.authentication.LockedException", "/login?error=locked");
 
@@ -95,6 +95,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		return exceptionMappingAuthenticationFailureHandler;
 	}
+
+
 
 
 }
