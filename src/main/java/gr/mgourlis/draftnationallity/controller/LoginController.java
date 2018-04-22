@@ -1,5 +1,6 @@
 package gr.mgourlis.draftnationallity.controller;
 
+import gr.mgourlis.draftnationallity.dto.ChangePasswordDTO;
 import gr.mgourlis.draftnationallity.model.User;
 import gr.mgourlis.draftnationallity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 
 @Controller
 public class LoginController {
@@ -74,50 +79,51 @@ public class LoginController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value="/resetpass")
+	@RequestMapping(value="/resetpass", method = RequestMethod.GET)
 	public ModelAndView resetPassword(){
+		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(auth.getName());
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("user",user);
-		modelAndView.addObject("oldPassword","");
-		modelAndView.addObject("password","");
-		modelAndView.addObject("passwordConfirm","");
+		if(user == null){
+			throw new EntityNotFoundException();
+		}
+		modelAndView = new ModelAndView();
+		modelAndView.addObject("email",user.getEmail());
+		modelAndView.addObject("resetpass",new ChangePasswordDTO());
 		modelAndView.setViewName("/resetPassword");
 		return modelAndView;
 	}
 
 
 	@RequestMapping(value="/resetpass", method = RequestMethod.POST)
-	public ModelAndView setResetPassword(@RequestParam(value="oldPassword", defaultValue = "") String oldPassword,
-										 @RequestParam(value="password", defaultValue = "") String password,
-										 @RequestParam(value="passwordConfirm", defaultValue = "") String passwordConfirm,
-                                         User postuser, BindingResult bindingResult){
+	public ModelAndView setResetPassword(@Valid @ModelAttribute("resetpass") ChangePasswordDTO resetpass, BindingResult bindingResult){
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(auth.getName());
 		if (user == null) {
 			bindingResult
-					.rejectValue("massageBox", "error.message",
-							"You don't have permission");
+					.rejectValue("oldPassword", "error.oldPassword",
+							"You don't have permission to change this password");
 		}
-		if(!user.getPassword().equals(bCryptPasswordEncoder.encode(oldPassword))){
+		if(!bCryptPasswordEncoder.matches(resetpass.getOldPassword(),user.getPassword())){
 			bindingResult
 					.rejectValue("oldPassword", "error.oldPassword",
-							"The old password does not match");
+							"The current password does not match");
 		}
-		if(!password.equals(passwordConfirm)){
+		if(!resetpass.getPassword().equals(resetpass.getPasswordConfirm())){
+			bindingResult
+					.rejectValue("password", "error.password",
+							"The passwords does not match");
 			bindingResult
 					.rejectValue("passwordConfirm", "error.passwordConfirm",
-							"The password confirmation does not match");
+							"The passwords does not match");
 		}
 		if(!bindingResult.hasErrors()){
-			userService.resetPassword(user.getId(),password);
+			userService.resetPassword(user.getId(),resetpass.getPassword());
 			SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
 			modelAndView.setViewName("redirect:/login");
 		}else {
-		    modelAndView.addObject("user",postuser);
-			modelAndView.setViewName("/resetpass");
+			modelAndView.setViewName("resetPassword");
 		}
 		return modelAndView;
 	}

@@ -1,4 +1,4 @@
-package gr.mgourlis.draftnationallity.configuration;
+package gr.mgourlis.draftnationallity.filters;
 
 import gr.mgourlis.draftnationallity.repository.RoleRepository;
 import org.slf4j.Logger;
@@ -31,8 +31,6 @@ public class changePasswordFilter implements Filter {
 
     private String changePasswordUrl = "/resetpass";
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(changePasswordFilter.class);
-
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
 
@@ -55,7 +53,6 @@ public class changePasswordFilter implements Filter {
                 Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
                 boolean hasRole = false;
                 for (GrantedAuthority authority : authorities) {
-                    System.out.println(authority.getAuthority());
                     hasRole = authority.getAuthority().equals(ROLE_KEY);
                     if (hasRole) {
                         int pos = requestURL.indexOf("/resetpass");

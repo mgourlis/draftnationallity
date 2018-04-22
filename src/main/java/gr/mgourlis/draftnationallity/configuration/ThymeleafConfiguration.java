@@ -17,4 +17,6 @@ public class ThymeleafConfiguration {
     public SpringSecurityDialect springSecurityDialect() {
         return new SpringSecurityDialect();
     }
+
+
 }

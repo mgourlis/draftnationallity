@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService{
     public void resetPassword(Long id, String password) {
         User user = userRepository.getOne(id);
         if(user != null) {
-			Role expired = roleService.findByName("ROLE_EXPIRED");
+			Role expired = roleService.findByName("expired");
         	user.getRoles().remove(expired);
             user.setPassword(bCryptPasswordEncoder.encode(password));
             userRepository.save(user);

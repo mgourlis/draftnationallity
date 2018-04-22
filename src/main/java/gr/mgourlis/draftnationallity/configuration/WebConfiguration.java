@@ -1,5 +1,6 @@
 package gr.mgourlis.draftnationallity.configuration;
 
+import gr.mgourlis.draftnationallity.filters.changePasswordFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
