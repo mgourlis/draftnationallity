@@ -3,6 +3,9 @@ package gr.mgourlis.draftnationallity.service;
 import gr.mgourlis.draftnationallity.model.Role;
 import gr.mgourlis.draftnationallity.model.User;
 import gr.mgourlis.draftnationallity.repository.UserRepository;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -89,12 +93,15 @@ public class UserServiceImpl implements UserService{
 			if(emailUser == null) {
 				user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 				Role expired = roleService.findByName("expired");
+				Role admin = roleService.findByName("admin");
 				if (user.getRoles() == null) {
 					Set<Role> roles = new HashSet<Role>();
 					roles.add(expired);
 					user.setRoles(roles);
 				} else {
-					user.getRoles().add(expired);
+					if(!user.getRoles().contains(admin)) {
+						user.getRoles().add(expired);
+					}
 				}
 				userRepository.save(user);
 			}else{
@@ -103,7 +110,7 @@ public class UserServiceImpl implements UserService{
         }else{
 	        User oldUser = userRepository.getOne(user.getId());
 			if(oldUser != null) {
-				user.setEmail(oldUser.getEmail());
+ 				user.setEmail(oldUser.getEmail());
 				user.setPassword(oldUser.getPassword());
 				userRepository.save(user);
 			}else{
@@ -114,13 +121,19 @@ public class UserServiceImpl implements UserService{
 	}
 
     @Override
-    public void resetPassword(Long id, String password) {
+    public void resetPassword(Long id, String password, boolean expire) {
         User user = userRepository.getOne(id);
         if(user != null) {
 			Role expired = roleService.findByName("expired");
-        	user.getRoles().remove(expired);
-            user.setPassword(bCryptPasswordEncoder.encode(password));
-            userRepository.save(user);
+        	if(expire) {
+				user.getRoles().add(expired);
+				user.setPassword(bCryptPasswordEncoder.encode(password));
+				userRepository.save(user);
+			}else{
+				user.getRoles().remove(expired);
+				user.setPassword(bCryptPasswordEncoder.encode(password));
+				userRepository.save(user);
+			}
         }else{
             throw new EntityNotFoundException("Can't save user. Invalid user");
         }
@@ -144,6 +157,16 @@ public class UserServiceImpl implements UserService{
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
 		return user;
+	}
+
+	@Override
+	public String generateRandomPassword() {
+		List rules = Arrays.asList(new CharacterRule(EnglishCharacterData.UpperCase, 1),
+				new CharacterRule(EnglishCharacterData.LowerCase, 1), new CharacterRule(EnglishCharacterData.Digit, 1));
+
+		PasswordGenerator generator = new PasswordGenerator();
+		String password = generator.generatePassword(8, rules);
+		return password;
 	}
 
 

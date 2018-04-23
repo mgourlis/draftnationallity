@@ -3,6 +3,8 @@ package gr.mgourlis.draftnationallity.service;
 import gr.mgourlis.draftnationallity.model.Role;
 import gr.mgourlis.draftnationallity.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<Role> findAll() {
         return roleRepository.findAll();
+    }
+
+    @Override
+    public Page<Role> findAll(Pageable pageable) {
+        return roleRepository.findAll(pageable);
     }
 
     @Override

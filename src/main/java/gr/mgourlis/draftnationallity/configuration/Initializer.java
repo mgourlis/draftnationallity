@@ -71,6 +71,7 @@ public class Initializer {
         userAdmin.setRoles(new HashSet<Role>(Arrays.asList(role)));
         userService.save(userAdmin);
 
+
         User userModerator = new User();
         userModerator.setName("MyronMod");
         userModerator.setLastName("GourlisMod");

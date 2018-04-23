@@ -21,23 +21,28 @@ public class User implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "user_id")
 	private Long id;
+
 	@Column(name = "email", unique=true)
 	@Email(message = "*Please provide a valid Email")
 	@NotEmpty(message = "*Please provide an email")
 	private String email;
+
 	@Column(name = "password")
 	@Length(min = 5, message = "*Your password must have at least 5 characters")
-	@NotEmpty(message = "*Please provide your password")
 	@Transient
 	private String password;
+
 	@Column(name = "name")
 	@NotEmpty(message = "*Please provide your name")
 	private String name;
+
 	@Column(name = "last_name")
 	@NotEmpty(message = "*Please provide your last name")
 	private String lastName;
+
 	@Column(name = "active")
 	private boolean active;
+
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
@@ -130,4 +135,21 @@ public class User implements UserDetails {
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof User)) return false;
+
+		User user = (User) o;
+
+		if (getId() != null ? !getId().equals(user.getId()) : user.getId() != null) return false;
+		return getEmail().equals(user.getEmail());
+	}
+
+	@Override
+	public int hashCode() {
+		int result = getId() != null ? getId().hashCode() : 0;
+		result = 31 * result + getEmail().hashCode();
+		return result;
+	}
 }

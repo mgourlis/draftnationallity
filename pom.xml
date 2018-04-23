@@ -90,6 +90,13 @@
 			<version>1.7.0</version>
 		</dependency>
 
+		<!-- Password Generator Validator-->
+		<dependency>
+			<groupId>org.passay</groupId>
+			<artifactId>passay</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

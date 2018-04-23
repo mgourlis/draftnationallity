@@ -6,6 +6,19 @@
 <body>
     <head th:replace="fragments/header :: navbar"></head>
     <div class="container-fluid">
+        <div class="alert alert-success" th:if="(${successMessageBox} != null)">
+            <span th:utext="${successMessageBox}"></span>
+        </div>
+        <div class="alert alert-info" th:if="(${infoMessageBox} != null)">
+            <span th:utext="${infoMessageBox}"></span>
+        </div>
+        <div class="alert alert-warning" th:if="(${warningMessageBox} != null)">
+            <span th:utext="${warningMessageBox}"></span>
+        </div>
+
+        <div class="alert alert-danger" th:if="(${errorMessageBox} != null)">
+            <span th:utext="${errorMessageBox}"></span>
+        </div>
         <div layout:fragment="content"></div>
     </div>
     <div th:replace="fragments/footer :: footer"></div>

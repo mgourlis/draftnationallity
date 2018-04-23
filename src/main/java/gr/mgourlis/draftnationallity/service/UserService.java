@@ -20,6 +20,7 @@ public interface UserService extends UserDetailsService {
 	public User findUserById(Long id);
 	public User findUserByEmail(String email);
 	public void save(User user);
-	public void resetPassword(Long idr, String password);
+	public void resetPassword(Long idr, String password, boolean expire);
 	public void delete(Long id);
+	public String generateRandomPassword();
 }

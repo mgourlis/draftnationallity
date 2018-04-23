@@ -1,5 +1,7 @@
 package gr.mgourlis.draftnationallity.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +16,9 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="role_id")
 	private Long id;
+
 	@Column(name="role", unique=true)
+	@NotEmpty
 	private String role;
 	
 	public Long getId() {
@@ -28,6 +32,24 @@ public class Role {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Role)) return false;
+
+		Role role1 = (Role) o;
+
+		return getRole().equals(role1.getRole());
+	}
+
+	@Override
+	public int hashCode() {
+		return getRole().hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return role.split("ROLE_")[1].toLowerCase();
+	}
 }

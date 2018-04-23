@@ -5,7 +5,18 @@
 <body>
 <div layout:fragment="content">
     <div class="container">
-        <h2>Users</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Users</h2>
+            </div>
+            <div class="col-md-6">
+                <div class="pull-right">
+                    <a th:href="${'/admin/user/new'}" class="btn btn-primary mb-2">Create User</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+        </div>
         <div class="row">
             <div class="col-md-4">
                 <div class="btn-group dropdown" sd:page-size-selector="dropdown"></div>
@@ -14,7 +25,16 @@
                 <div class="pull-right">
                      <form th:action="@{/admin/user/}" method="GET" class="form-inline">
                          <div class="form-group mb-2"><input type="text" id="user" name="user"  th:placeholder="Email" class="form-control" th:value="${param.user}" /></div>
-                         <div class="form-group mx-sm-3 mb-2"><input type="text" id="role" name="role"  th:placeholder="Role" class="form-control" th:value="${param.role}" /></div>
+                         <div class="form-group mb-2">
+                                 <select class="form-control" id="role" name="role" >
+                                     <option value=""></option>
+                                     <option th:each="role : ${roles}"
+                                             th:value="${role.toString()}"
+                                             th:text="${role.toString()}"
+                                             th:selected="(${param.role} == ${role.toString()})">Role name</option>
+                                 </select>
+                         </div>
+                         <!--<div class="form-group mx-sm-3 mb-2"><input type="text" id="role" name="role"  th:placeholder="Role" class="form-control" th:value="${param.role}" /></div>-->
                          <button class="btn btn-primary mb-2" type="Submit" th:text="Search"></button>
                     </form>
                 </div>
@@ -52,74 +72,24 @@
                         </td>
                         <td><a th:href="${'/admin/user/' + user.id}" class="btn btn-success btn-xs">View</a></td>
                         <td><a th:href="${'/admin/user/edit/' + user.id}" class="btn btn-warning btn-xs">Edit</a></td>
-                        <td><a th:href="${'/admin/user/delete/' + user.id}" class="btn btn-danger btn-xs">Delete</a></td>
+                        <td><a th:href="${'/admin/user/delete/' + user.id}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
                     </tr>
                 </tbody>
             </table>
-
         </div>
 
-        <div class="row">
-            <!--            <div class="col-sm-5">
-                            <div class="pagination"><p>shown <span class="badge"
-                                                                       th:text="${page.size * (page.number-1) + 1}"></span> to
-                                <span class="badge" th:text="${page.lastPage ? page.totalElements : page.size * (page.number-1)+ page.size}"></span> from
-                                <span class="badge"
-                                      th:text="${page.totalElements}"></span>
-                                users</p></div>
-                        </div>
-
-                        <div class="col-sm-7">
-                            <div th:fragment='paginationbar'>
-                                <div class="text-center">
-                                    <ul class='pagination pagination-centered'>
-                                        <li th:class="${page.firstPage}?'disabled':''">
-                                            <span th:if='${page.firstPage}'>← First</span>
-                                            <a th:if='${not page.firstPage}' th:href='@{${page.url}(page=0,size=${page.size})}'>←
-                                                First</a>
-                                        </li>
-                                        <li th:class="${page.hasPreviousPage}? '' : 'disabled'">
-                                            <span th:if='${not page.hasPreviousPage}'>«</span>
-                                            <a th:if='${page.hasPreviousPage}'
-                                               th:href='@{${page.url}(page=${page.number-2},size=${page.size})}'
-                                               title='Go to previous page'>«</a>
-                                        </li>
-                                        <li th:each='item : ${page.items}' th:class="${item.current}? 'active' : ''">
-                                            <span th:if='${item.current}' th:text='${item.number}'>1</span>
-                                            <a th:if='${not item.current}'
-                                               th:href='@{${page.url}(page=${item.number-1},size=${page.size})}'><span
-                                                    th:text='${item.number}'>1</span></a>
-                                        </li>
-                                        <li th:class="${page.hasNextPage}? '' : 'disabled'">
-                                            <span th:if='${not page.hasNextPage}'>»</span>
-                                            <a th:if='${page.hasNextPage}'
-                                               th:href='@{${page.url}(page=${page.number},size=${page.size})}'
-                                               title='Go to next page'>»</a>
-                                        </li>
-                                        <li th:class="${page.lastPage}? 'disabled' : ''">
-                                            <span th:if='${page.lastPage}'>Last →</span>
-                                            <a th:if='${not page.lastPage}'
-                                               th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>Last →</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div> -->
-            <div class="col-sm-6">
-                <div sd:pagination-summary="">info</div>
-            </div>
-            <div class="col-sm-6">
-                <nav class="pull-right">
-                    <ul class="pagination" sd:pagination="full">
-                        <!-- Pagination created by SpringDataDialect, this content is just for mockup -->
-                        <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                    </ul>
-                </nav>
-            </div>
+        <div class="col-sm-6">
+            <div sd:pagination-summary="">info</div>
+        </div>
+        <div class="col-sm-6">
+            <nav class="pull-right">
+                <ul class="pagination" sd:pagination="full">
+                    <!-- Pagination created by SpringDataDialect, this content is just for mockup -->
+                    <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
 </body>

@@ -34,39 +34,6 @@ public class LoginController {
 		modelAndView.setViewName("login");
 		return modelAndView;
 	}
-	
-/*
-	@RequestMapping(value="/registration", method = RequestMethod.GET)
-	public ModelAndView registration(){
-		ModelAndView modelAndView = new ModelAndView();
-		User user = new User();
-		modelAndView.addObject("user", user);
-		modelAndView.setViewName("newUser");
-		return modelAndView;
-	}
-
-
-	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
-		ModelAndView modelAndView = new ModelAndView();
-		User userExists = userService.findUserByEmail(user.getEmail());
-		if (userExists != null) {
-			bindingResult
-					.rejectValue("email", "error.user",
-							"There is already a user registered with the email provided");
-		}
-		if (bindingResult.hasErrors()) {
-			modelAndView.setViewName("newUser");
-		} else {
-			userService.saveUser(user);
-			modelAndView.addObject("successMessage", "User has been registered successfully");
-			modelAndView.addObject("user", new User());
-			modelAndView.setViewName("newUser");
-			
-		}
-		return modelAndView;
-	}
-*/
 
 	@RequestMapping(value="/", method = RequestMethod.GET)
 	public ModelAndView home(){
@@ -110,16 +77,8 @@ public class LoginController {
 					.rejectValue("oldPassword", "error.oldPassword",
 							"The current password does not match");
 		}
-		if(!resetpass.getPassword().equals(resetpass.getPasswordConfirm())){
-			bindingResult
-					.rejectValue("password", "error.password",
-							"The passwords does not match");
-			bindingResult
-					.rejectValue("passwordConfirm", "error.passwordConfirm",
-							"The passwords does not match");
-		}
 		if(!bindingResult.hasErrors()){
-			userService.resetPassword(user.getId(),resetpass.getPassword());
+			userService.resetPassword(user.getId(),resetpass.getPassword(),false);
 			SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
 			modelAndView.setViewName("redirect:/login");
 		}else {

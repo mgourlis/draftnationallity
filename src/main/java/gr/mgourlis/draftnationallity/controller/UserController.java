@@ -1,6 +1,9 @@
 package gr.mgourlis.draftnationallity.controller;
 
+import gr.mgourlis.draftnationallity.dto.UserEditDTO;
+import gr.mgourlis.draftnationallity.model.Role;
 import gr.mgourlis.draftnationallity.model.User;
+import gr.mgourlis.draftnationallity.service.RoleService;
 import gr.mgourlis.draftnationallity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,15 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @Secured("ADMIN")
@@ -27,9 +28,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RoleService roleService;
+
     @RequestMapping(value="/", method = RequestMethod.GET)
-    public ModelAndView searchUsers(@RequestParam(value = "userQ", required=false, defaultValue = "") String user,
-                                    @RequestParam(value = "roleQ", required=false, defaultValue = "") String role,
+    public ModelAndView searchUsers(@RequestParam(value = "user", required=false, defaultValue = "") String user,
+                                    @RequestParam(value = "role", required=false, defaultValue = "") String role,
                                     ModelAndView modelAndView,
                                     Pageable pageable){
         Page<User> usersPage = null;
@@ -42,6 +46,7 @@ public class UserController {
         }else{
             usersPage = userService.findUsersByEmailContainingAndRoles_Role(user,role,pageable);
         }
+        modelAndView.addObject("roles",roleService.findAll());
         modelAndView.addObject("users", usersPage.getContent());
         modelAndView.addObject("page",usersPage);
         modelAndView.setViewName("admin/user/showUsers");
@@ -53,7 +58,6 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         User user = userService.findUserById(id);
         try {
-            user.setPassword("");
             modelAndView.addObject("users", user);
             modelAndView.setViewName("admin/user/showUser");
             return modelAndView;
@@ -66,35 +70,36 @@ public class UserController {
     public ModelAndView editUser(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
         User user = userService.findUserById(id);
+        List<Role> roles = roleService.findAll();
         if(user == null){
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
         }
-        user.setPassword("");
-        modelAndView.addObject("user", user);
+        UserEditDTO userDto = new UserEditDTO();
+        userDto.init(user);
+        modelAndView.addObject("user", userDto);
+        modelAndView.addObject("roles", roles);
         modelAndView.setViewName("/admin/user/editUser");
         return modelAndView;
     }
 
     @RequestMapping(value="/edit/{id}", method = RequestMethod.POST)
-    public ModelAndView editUser(@PathVariable("id") long id, @Valid User user, BindingResult bindingResult){
+    public ModelAndView editUser(@PathVariable("id") long id, @Valid @ModelAttribute("user") UserEditDTO userDto, BindingResult bindingResult){
         ModelAndView modelAndView = new ModelAndView();
         User edituser = userService.findUserById(id);
-        if(user == null){
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+        if(edituser == null){
+            throw new EntityNotFoundException();
         }
         else if (bindingResult.hasErrors()){
-            modelAndView.setViewName("/admin/user/edit/"+user.getId());
+            modelAndView.setViewName("/admin/user/editUser");
         }
         else{
-            edituser.setActive(user.isActive());
-            edituser.setName(user.getName());
-            edituser.setLastName(user.getLastName());
-            edituser.setRoles(user.getRoles());
+            edituser.setActive(userDto.isActive());
+            edituser.setName(userDto.getName());
+            edituser.setLastName(userDto.getLastName());
+            edituser.setRoles(userDto.getRoles());
             userService.save(edituser);
-            modelAndView.addObject("successMessage", "User has been registered successfully");
-            modelAndView.addObject("user", edituser);
+            modelAndView.setViewName("redirect:/admin/user/" + edituser.getId());
         }
-        modelAndView.setViewName("redirect:/admin/user/" + edituser.getId());
         return modelAndView;
     }
 
@@ -102,15 +107,17 @@ public class UserController {
     public ModelAndView newUser(){
         ModelAndView modelAndView = new ModelAndView();
         User user = new User();
+        modelAndView.addObject("roles",roleService.findAll());
         modelAndView.addObject("user", user);
         modelAndView.setViewName("admin/user/newUser");
         return modelAndView;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
+    public ModelAndView createNewUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         User userExists = userService.findUserByEmail(user.getEmail());
+        modelAndView.addObject("roles",roleService.findAll());
         if (userExists != null) {
             bindingResult
                     .rejectValue("email", "error.user",
@@ -119,11 +126,13 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("admin/user/newUser");
         } else {
+            String randpass = userService.generateRandomPassword();
+            user.setPassword(randpass);
             userService.save(user);
             User editUser = userService.findUserByEmail(user.getEmail());
-            modelAndView.addObject("successMessage", "User has been created successfully");
-            modelAndView.addObject("user", user);
-            modelAndView.setViewName("redirect:/admin/user/" + editUser.getId());
+            modelAndView.addObject("successMessageBox", "User has been created successfully with password: " + randpass);
+            modelAndView.addObject("user", new User());
+            modelAndView.setViewName("admin/user/newUser");
 
         }
         return modelAndView;
@@ -134,6 +143,25 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         userService.delete(id);
         modelAndView.setViewName("redirect:/admin/user/");
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/resetpass", method = RequestMethod.POST)
+    public ModelAndView setResetPassword(@RequestParam(value = "email", required=true) String email){
+        ModelAndView modelAndView = new ModelAndView();
+        User user = userService.findUserByEmail(email);
+        if(user == null){
+            throw new EntityNotFoundException("Could not find user");
+        }else{
+            String randpass = userService.generateRandomPassword();
+            userService.resetPassword(user.getId(),randpass,true);
+            UserEditDTO userDto = new UserEditDTO();
+            userDto.init(user);
+            modelAndView.addObject("roles",roleService.findAll());
+            modelAndView.addObject("user", userDto);
+            modelAndView.addObject("successMessageBox","User password changed to password: " + randpass);
+        }
+        modelAndView.setViewName("/admin/user/editUser");
         return modelAndView;
     }
 
