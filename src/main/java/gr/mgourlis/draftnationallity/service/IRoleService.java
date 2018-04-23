@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface RoleService {
+public interface IRoleService {
     public List<Role> findAll();
     public Page<Role> findAll(Pageable pageable);
     public Role findById(Long id);

@@ -1,8 +1,7 @@
 package gr.mgourlis.draftnationallity.controller;
 
 import gr.mgourlis.draftnationallity.model.Role;
-import gr.mgourlis.draftnationallity.model.User;
-import gr.mgourlis.draftnationallity.service.RoleService;
+import gr.mgourlis.draftnationallity.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,10 +9,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 @Controller
 @Secured("ADMIN")
@@ -21,7 +17,7 @@ import java.util.List;
 public class RoleController {
 
     @Autowired
-    private RoleService roleService;
+    private IRoleService roleService;
 
     @RequestMapping(value="/", method = RequestMethod.GET)
     public ModelAndView getRoles(ModelAndView modelAndView, Pageable pageable){

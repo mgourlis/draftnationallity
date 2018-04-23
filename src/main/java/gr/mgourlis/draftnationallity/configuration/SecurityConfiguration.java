@@ -1,6 +1,6 @@
 package gr.mgourlis.draftnationallity.configuration;
 
-import gr.mgourlis.draftnationallity.service.UserService;
+import gr.mgourlis.draftnationallity.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	UserService userService;
+    IUserService IUserService;
 
 	public SecurityConfiguration() {
 		super();
@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider(){
 		DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-		auth.setUserDetailsService(userService);
+		auth.setUserDetailsService(IUserService);
 		auth.setPasswordEncoder(passwordEncoder());
 		return auth;
 	}

@@ -2,7 +2,7 @@ package gr.mgourlis.draftnationallity.controller;
 
 import gr.mgourlis.draftnationallity.dto.ChangePasswordDTO;
 import gr.mgourlis.draftnationallity.model.User;
-import gr.mgourlis.draftnationallity.service.UserService;
+import gr.mgourlis.draftnationallity.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +22,7 @@ import javax.validation.Valid;
 public class LoginController {
 	
 	@Autowired
-	private UserService userService;
+	private IUserService userService;
 
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -54,7 +54,6 @@ public class LoginController {
 		if(user == null){
 			throw new EntityNotFoundException();
 		}
-		modelAndView = new ModelAndView();
 		modelAndView.addObject("email",user.getEmail());
 		modelAndView.addObject("resetpass",new ChangePasswordDTO());
 		modelAndView.setViewName("/resetPassword");
@@ -78,7 +77,7 @@ public class LoginController {
 							"The current password does not match");
 		}
 		if(!bindingResult.hasErrors()){
-			userService.resetPassword(user.getId(),resetpass.getPassword(),false);
+            userService.resetPassword(user.getId(),resetpass.getPassword(),false);
 			SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
 			modelAndView.setViewName("redirect:/login");
 		}else {

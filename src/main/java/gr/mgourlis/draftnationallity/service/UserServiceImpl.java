@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.Set;
 
 @Service("UserService")
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements IUserService {
 
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
-	private RoleService roleService;
+	private IRoleService IRoleService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -92,8 +92,8 @@ public class UserServiceImpl implements UserService{
 			User emailUser = userRepository.findByEmail(user.getEmail());
 			if(emailUser == null) {
 				user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-				Role expired = roleService.findByName("expired");
-				Role admin = roleService.findByName("admin");
+				Role expired = IRoleService.findByName("expired");
+				Role admin = IRoleService.findByName("admin");
 				if (user.getRoles() == null) {
 					Set<Role> roles = new HashSet<Role>();
 					roles.add(expired);
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService{
     public void resetPassword(Long id, String password, boolean expire) {
         User user = userRepository.getOne(id);
         if(user != null) {
-			Role expired = roleService.findByName("expired");
+			Role expired = IRoleService.findByName("expired");
         	if(expire) {
 				user.getRoles().add(expired);
 				user.setPassword(bCryptPasswordEncoder.encode(password));

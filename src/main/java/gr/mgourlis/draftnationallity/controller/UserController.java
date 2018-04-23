@@ -3,8 +3,8 @@ package gr.mgourlis.draftnationallity.controller;
 import gr.mgourlis.draftnationallity.dto.UserEditDTO;
 import gr.mgourlis.draftnationallity.model.Role;
 import gr.mgourlis.draftnationallity.model.User;
-import gr.mgourlis.draftnationallity.service.RoleService;
-import gr.mgourlis.draftnationallity.service.UserService;
+import gr.mgourlis.draftnationallity.service.IRoleService;
+import gr.mgourlis.draftnationallity.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,27 +26,27 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private IUserService userService;
 
     @Autowired
-    private RoleService roleService;
+    private IRoleService roleService;
 
     @RequestMapping(value="/", method = RequestMethod.GET)
     public ModelAndView searchUsers(@RequestParam(value = "user", required=false, defaultValue = "") String user,
                                     @RequestParam(value = "role", required=false, defaultValue = "") String role,
                                     ModelAndView modelAndView,
                                     Pageable pageable){
-        Page<User> usersPage = null;
+        Page<User> usersPage;
         if(user.equals("") && role.equals("")) {
             usersPage = userService.findAll(pageable);
-        }else if(user.equals("") || user == null){
+        }else if(user.equals("")){
             usersPage = userService.findUsersByRoles_Role(role,pageable);
-        }else if(role.equals("") || role == null){
+        }else if(role.equals("")){
             usersPage = userService.findUsersByEmailContaining(user,pageable);
         }else{
             usersPage = userService.findUsersByEmailContainingAndRoles_Role(user,role,pageable);
         }
-        modelAndView.addObject("roles",roleService.findAll());
+        modelAndView.addObject("roles", roleService.findAll());
         modelAndView.addObject("users", usersPage.getContent());
         modelAndView.addObject("page",usersPage);
         modelAndView.setViewName("admin/user/showUsers");
@@ -107,7 +107,7 @@ public class UserController {
     public ModelAndView newUser(){
         ModelAndView modelAndView = new ModelAndView();
         User user = new User();
-        modelAndView.addObject("roles",roleService.findAll());
+        modelAndView.addObject("roles", roleService.findAll());
         modelAndView.addObject("user", user);
         modelAndView.setViewName("admin/user/newUser");
         return modelAndView;
@@ -117,7 +117,7 @@ public class UserController {
     public ModelAndView createNewUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         User userExists = userService.findUserByEmail(user.getEmail());
-        modelAndView.addObject("roles",roleService.findAll());
+        modelAndView.addObject("roles", roleService.findAll());
         if (userExists != null) {
             bindingResult
                     .rejectValue("email", "error.user",
@@ -129,7 +129,6 @@ public class UserController {
             String randpass = userService.generateRandomPassword();
             user.setPassword(randpass);
             userService.save(user);
-            User editUser = userService.findUserByEmail(user.getEmail());
             modelAndView.addObject("successMessageBox", "User has been created successfully with password: " + randpass);
             modelAndView.addObject("user", new User());
             modelAndView.setViewName("admin/user/newUser");
@@ -147,7 +146,7 @@ public class UserController {
     }
 
     @RequestMapping(value="/resetpass", method = RequestMethod.POST)
-    public ModelAndView setResetPassword(@RequestParam(value = "email", required=true) String email){
+    public ModelAndView setResetPassword(@RequestParam(value = "email") String email){
         ModelAndView modelAndView = new ModelAndView();
         User user = userService.findUserByEmail(email);
         if(user == null){
@@ -157,7 +156,7 @@ public class UserController {
             userService.resetPassword(user.getId(),randpass,true);
             UserEditDTO userDto = new UserEditDTO();
             userDto.init(user);
-            modelAndView.addObject("roles",roleService.findAll());
+            modelAndView.addObject("roles", roleService.findAll());
             modelAndView.addObject("user", userDto);
             modelAndView.addObject("successMessageBox","User password changed to password: " + randpass);
         }

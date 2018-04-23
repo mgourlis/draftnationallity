@@ -3,7 +3,7 @@ package gr.mgourlis.draftnationallity.configuration;
 import gr.mgourlis.draftnationallity.model.Role;
 import gr.mgourlis.draftnationallity.model.User;
 import gr.mgourlis.draftnationallity.repository.*;
-import gr.mgourlis.draftnationallity.service.UserService;
+import gr.mgourlis.draftnationallity.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -16,7 +16,7 @@ import java.util.HashSet;
 public class Initializer {
 
     @Autowired
-    private UserService userService;
+    private IUserService IUserService;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -69,7 +69,7 @@ public class Initializer {
         userAdmin.setActive(true);
         role = roleRepository.findByRole("ROLE_ADMIN");
         userAdmin.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userAdmin);
+        IUserService.save(userAdmin);
 
 
         User userModerator = new User();
@@ -80,7 +80,7 @@ public class Initializer {
         userModerator.setActive(true);
         role = roleRepository.findByRole("ROLE_MODERATOR");
         userModerator.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userModerator);
+        IUserService.save(userModerator);
 
         User userUser = new User();
         userUser.setName("MyronUser");
@@ -90,7 +90,7 @@ public class Initializer {
         userUser.setActive(true);
         role = roleRepository.findByRole("ROLE_USER");
         userUser.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userUser);
+        IUserService.save(userUser);
 
         User userUser1 = new User();
         userUser1.setName("MyronUser");
@@ -100,7 +100,7 @@ public class Initializer {
         userUser1.setActive(true);
         role = roleRepository.findByRole("ROLE_USER");
         userUser1.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userUser1);
+        IUserService.save(userUser1);
 
         User userUser2 = new User();
         userUser2.setName("MyronUser");
@@ -110,7 +110,7 @@ public class Initializer {
         userUser2.setActive(true);
         role = roleRepository.findByRole("ROLE_USER");
         userUser2.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userUser2);
+        IUserService.save(userUser2);
 
         User userUser3 = new User();
         userUser3.setName("MyronUser");
@@ -120,7 +120,7 @@ public class Initializer {
         userUser3.setActive(true);
         role = roleRepository.findByRole("ROLE_USER");
         userUser3.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userUser3);
+        IUserService.save(userUser3);
 
         User userUser4 = new User();
         userUser4.setName("MyronUser");
@@ -130,7 +130,7 @@ public class Initializer {
         userUser4.setActive(true);
         role = roleRepository.findByRole("ROLE_USER");
         userUser4.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userUser4);
+        IUserService.save(userUser4);
 
         User userUser5 = new User();
         userUser5.setName("MyronUser");
@@ -140,7 +140,7 @@ public class Initializer {
         userUser5.setActive(true);
         role = roleRepository.findByRole("ROLE_USER");
         userUser5.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userUser5);
+        IUserService.save(userUser5);
 
         User userUser6 = new User();
         userUser6.setName("MyronUser");
@@ -150,7 +150,7 @@ public class Initializer {
         userUser6.setActive(true);
         role = roleRepository.findByRole("ROLE_USER");
         userUser6.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userUser6);
+        IUserService.save(userUser6);
 
         User userUser7 = new User();
         userUser7.setName("MyronUser");
@@ -160,7 +160,7 @@ public class Initializer {
         userUser7.setActive(true);
         role = roleRepository.findByRole("ROLE_USER");
         userUser7.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userUser7);
+        IUserService.save(userUser7);
 
         User userUser8 = new User();
         userUser8.setName("MyronUser");
@@ -170,7 +170,7 @@ public class Initializer {
         userUser8.setActive(true);
         role = roleRepository.findByRole("ROLE_USER");
         userUser8.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userUser8);
+        IUserService.save(userUser8);
 
         User userUser9 = new User();
         userUser9.setName("MyronUser");
@@ -180,7 +180,7 @@ public class Initializer {
         userUser9.setActive(true);
         role = roleRepository.findByRole("ROLE_USER");
         userUser9.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        userService.save(userUser9);
+        IUserService.save(userUser9);
         //--------------------------------------
 
     }
