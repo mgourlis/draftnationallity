@@ -1,5 +1,6 @@
 package gr.mgourlis.draftnationallity.model;
 
+import gr.mgourlis.draftnationallity.constraints.ValidPassword;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -28,7 +29,6 @@ public class User implements UserDetails {
 	private String email;
 
 	@Column(name = "password")
-	@Length(min = 5, message = "*Your password must have at least 5 characters")
 	@Transient
 	private String password;
 

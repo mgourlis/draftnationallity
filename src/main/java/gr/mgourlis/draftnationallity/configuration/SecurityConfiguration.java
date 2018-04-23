@@ -22,7 +22,7 @@ import java.util.Map;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-    IUserService IUserService;
+    IUserService userService;
 
 	public SecurityConfiguration() {
 		super();
@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider(){
 		DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-		auth.setUserDetailsService(IUserService);
+		auth.setUserDetailsService(userService);
 		auth.setPasswordEncoder(passwordEncoder());
 		return auth;
 	}

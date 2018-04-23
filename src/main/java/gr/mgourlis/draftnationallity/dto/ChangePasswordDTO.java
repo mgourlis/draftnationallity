@@ -1,6 +1,7 @@
 package gr.mgourlis.draftnationallity.dto;
 
 import gr.mgourlis.draftnationallity.constraints.FieldMatch;
+import gr.mgourlis.draftnationallity.constraints.ValidPassword;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -12,6 +13,7 @@ public class ChangePasswordDTO {
     private String oldPassword;
 
     @NotEmpty
+    @ValidPassword
     private String password;
 
     @NotEmpty
