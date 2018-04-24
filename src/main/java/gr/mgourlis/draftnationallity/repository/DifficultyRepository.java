@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository("DifficultyRepository")
 public interface DifficultyRepository extends JpaRepository<Difficulty,Long> {
     Page<Difficulty> findDifficultiesByDeleted(Boolean deleted, Pageable pageable);
+    Difficulty findDifficultyByIdAndDeleted(long id, boolean deleted);
     Difficulty findDifficultyByLevelAndDeleted(String level, Boolean deleted);
     Difficulty findDifficultyByLevelNumberAndDeleted(int levelNumber, Boolean deleted);
 }

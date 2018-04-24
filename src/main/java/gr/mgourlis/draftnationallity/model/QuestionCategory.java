@@ -10,7 +10,7 @@ import java.util.List;
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
 public class QuestionCategory extends BaseEntity {
 
-    @Column(name = "name", unique=true)
+    @Column(name = "name")
     @NotNull(message = "*Please provide a name for the category")
     private String name;
 

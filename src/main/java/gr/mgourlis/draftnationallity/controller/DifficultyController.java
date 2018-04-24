@@ -40,7 +40,7 @@ public class DifficultyController {
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public ModelAndView showDifficulty(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
-        Difficulty difficulty = difficultyService.findDifficultyById(id);
+        Difficulty difficulty = difficultyService.getOne(id);
         try {
             modelAndView.addObject("difficulties", difficulty);
             modelAndView.setViewName("admin/difficulty/showDifficulty");
@@ -53,7 +53,7 @@ public class DifficultyController {
     @RequestMapping(value="/edit/{id}", method = RequestMethod.GET)
     public ModelAndView editDifficulty(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
-        Difficulty difficulty = difficultyService.findDifficultyById(id);
+        Difficulty difficulty = difficultyService.getOne(id);
         if(difficulty == null){
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
         }
@@ -65,7 +65,7 @@ public class DifficultyController {
     @RequestMapping(value="/edit/{id}", method = RequestMethod.POST)
     public ModelAndView editDifficulty(@PathVariable("id") long id, @Valid @ModelAttribute("difficulty") Difficulty difficulty, BindingResult bindingResult){
         ModelAndView modelAndView = new ModelAndView();
-        Difficulty editdifficulty = difficultyService.findDifficultyById(id);
+        Difficulty editdifficulty = difficultyService.getOne(id);
         if(editdifficulty == null){
             throw new EntityNotFoundException();
         }

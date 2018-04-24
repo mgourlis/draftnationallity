@@ -17,8 +17,8 @@ public class DifficultyServiceImpl implements IDifficultyService{
     DifficultyRepository difficultyRepository;
 
     @Override
-    public Difficulty findDifficultyById(long id) {
-        return difficultyRepository.getOne(id);
+    public Difficulty getOne(long id) {
+        return difficultyRepository.findDifficultyByIdAndDeleted(id,false);
     }
 
     @Override
