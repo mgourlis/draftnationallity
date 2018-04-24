@@ -1,7 +1,12 @@
 package gr.mgourlis.draftnationallity.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "difficulty")
@@ -9,13 +14,13 @@ import javax.validation.constraints.NotNull;
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
 public class Difficulty extends BaseEntity {
 
-    @Column(name = "level", unique=true)
-    @NotNull(message = "*Please provide a level for the difficulty")
+    @Column(name = "level")
+    @NotEmpty(message = "*Please provide a level for the difficulty")
     private String level;
 
-    @Column(name = "levelnum", unique=true)
-    @NotNull(message = "*Please provide a level number for the difficulty")
-    private int level_number;
+    @Column(name = "levelnum")
+    @Min(1)
+    private int levelNumber;
 
     public String getLevel() {
         return level;
@@ -25,11 +30,11 @@ public class Difficulty extends BaseEntity {
         this.level = level;
     }
 
-    public int getLevel_number() {
-        return level_number;
+    public int getLevelNumber() {
+        return levelNumber;
     }
 
-    public void setLevel_number(int level_number) {
-        this.level_number = level_number;
+    public void setLevelNumber(int levelNumber) {
+        this.levelNumber = levelNumber;
     }
 }

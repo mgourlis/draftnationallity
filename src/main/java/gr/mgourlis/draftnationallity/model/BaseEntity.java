@@ -1,11 +1,16 @@
 package gr.mgourlis.draftnationallity.model;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
 @MappedSuperclass
-public class BaseEntity {
+@EntityListeners(AuditingEntityListener.class)
+public abstract class BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,6 +30,7 @@ public class BaseEntity {
 
     @Size(max = 50)
     @Column(name = "created_by", length = 50)
+    @CreatedBy
     private String createdBy;
 
     @Column(name = "updated_at")
@@ -33,6 +39,7 @@ public class BaseEntity {
 
     @Size(max = 50)
     @Column(name = "updated_by", length = 50)
+    @LastModifiedBy
     private String updatedBy;
 
     @Size(max = 500)

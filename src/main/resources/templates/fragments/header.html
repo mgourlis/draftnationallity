@@ -16,7 +16,7 @@
         <ul class="nav navbar-nav">
             <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/user/">Users</a></li>
             <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/role/">Roles</a></li>
-            <li sec:authorize="hasRole('ROLE_MODERATOR')"><a href="/admin/question-category/">Questions</a></li>
+            <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/question-category/">Questions</a></li>
             <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Settings</a>
                 <ul class="dropdown-menu">
                     <li><a href="/admin/difficulty/">Difficulties</a></li>
