@@ -6,23 +6,14 @@
 <div id="main" layout:fragment="content">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form autocomplete="off" th:action="@{'/admin/difficulty/edit/' + ${difficulty.getId()}}" th:object="${difficulty}" method="post" class="form-horizontal" role="form">
-                <h2>Edit Difficulty</h2>
+            <form autocomplete="off" th:action="@{'/admin/question-category/edit/' + ${questionCategory.getId()}}" th:object="${questionCategory}" method="post" class="form-horizontal" role="form">
+                <h2>Edit Question Category</h2>
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <label th:if="${#fields.hasErrors('level')}" th:errors="*{level}"
+                        <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
                                class="validation-message"></label>
-                        <input type="text" th:field="*{level}" placeholder="Name"
+                        <input type="text" th:field="*{name}" placeholder="Name"
                                class="form-control" />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-sm-9">
-                        <label	th:if="${#fields.hasErrors('levelNumber')}" th:errors="*{levelNumber}"
-                                  class="validation-message"></label>
-                        <input type="text" th:field="*{levelNumber}"
-                               placeholder="Level Number" class="form-control" />
                     </div>
                 </div>
 

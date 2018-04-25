@@ -65,9 +65,8 @@ public class DifficultyServiceImpl implements IDifficultyService{
     public void delete(Long id) {
         Difficulty difficulty = difficultyRepository.getOne(id);
         if(difficulty != null){
-            difficulty.setLevel(difficulty.getLevel()+" (deleted)");
             difficulty.setDeleted(true);
-            save(difficulty);
+            difficultyRepository.save(difficulty);
         }else{
             throw new EntityNotFoundException("Invalid Difficulty");
         }

@@ -42,6 +42,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return auth;
 	}
 
+	@Bean
+	public AuthenticationFailureHandler customAuthenticationFailureHandler() {
+		ExceptionMappingAuthenticationFailureHandler exceptionMappingAuthenticationFailureHandler =
+				new ExceptionMappingAuthenticationFailureHandler();
+		Map<Object, Object> map = new HashMap<>();
+		map.put("org.springframework.security.authentication.CredentialsExpiredException", "/changepass");
+		map.put("org.springframework.security.authentication.BadCredentialsException", "/login?error=true");
+		map.put("org.springframework.security.authentication.LockedException", "/login?error=locked");
+
+		exceptionMappingAuthenticationFailureHandler.setExceptionMappings(map);
+
+		return exceptionMappingAuthenticationFailureHandler;
+	}
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth)
 			throws Exception {
@@ -81,22 +95,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	       .ignoring()
 	       .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
 	}
-
-	@Bean
-	public AuthenticationFailureHandler customAuthenticationFailureHandler() {
-		ExceptionMappingAuthenticationFailureHandler exceptionMappingAuthenticationFailureHandler =
-				new ExceptionMappingAuthenticationFailureHandler();
-		Map<Object, Object> map = new HashMap<>();
-		map.put("org.springframework.security.authentication.CredentialsExpiredException", "/changepass");
-		map.put("org.springframework.security.authentication.BadCredentialsException", "/login?error=true");
-		map.put("org.springframework.security.authentication.LockedException", "/login?error=locked");
-
-		exceptionMappingAuthenticationFailureHandler.setExceptionMappings(map);
-
-		return exceptionMappingAuthenticationFailureHandler;
-	}
-
-
-
 
 }

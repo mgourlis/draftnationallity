@@ -5,10 +5,12 @@ import gr.mgourlis.draftnationallity.repository.QuestionCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
+@Service("QuestionCategoryService")
 public class QuestionCategoryServiceImpl implements IQuestionCategoryService {
 
     @Autowired
@@ -45,9 +47,13 @@ public class QuestionCategoryServiceImpl implements IQuestionCategoryService {
         }else{
             QuestionCategory oldQuestionCategory = questionCategoryRepository.getOne(questionCategory.getId());
             if(oldQuestionCategory != null){
-                oldQuestionCategory.setName(questionCategory.getName());
-                oldQuestionCategory.setQuestions(questionCategory.getQuestions());
-                questionCategoryRepository.save(oldQuestionCategory);
+                if(questionCategoryRepository.findQuestionCategoryByNameAndDeleted(questionCategory.getName(),false) == null){
+                    oldQuestionCategory.setName(questionCategory.getName());
+                    oldQuestionCategory.setQuestions(questionCategory.getQuestions());
+                    questionCategoryRepository.save(oldQuestionCategory);
+                }else{
+                    throw new IllegalArgumentException("Question Category already exists");
+                }
             }else{
                 throw new EntityNotFoundException("Can't save Question Category. Invalid Question Category");
             }
@@ -59,9 +65,8 @@ public class QuestionCategoryServiceImpl implements IQuestionCategoryService {
     public void delete(long id) {
         QuestionCategory questionCategory = questionCategoryRepository.getOne(id);
         if(questionCategory != null){
-            questionCategory.setName(questionCategory.getName()+" (deleted)");
             questionCategory.setDeleted(true);
-            save(questionCategory);
+            questionCategoryRepository.save(questionCategory);
         }else{
             throw new EntityNotFoundException("Invalid Question Category");
         }

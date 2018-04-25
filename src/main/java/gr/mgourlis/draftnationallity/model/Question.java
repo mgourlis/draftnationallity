@@ -19,11 +19,11 @@ public class Question extends BaseEntity {
     @NotNull(message = "*The question's text can not be empty")
     private String questiontext;
 
-    @ManyToOne(optional=false, fetch = FetchType.LAZY)
+    @ManyToOne(optional=false, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
     @JoinColumn(name="question_category_id",referencedColumnName="question_category_id")
     private QuestionCategory questionCategory;
 
-    @ManyToOne(optional=false, fetch = FetchType.LAZY)
+    @ManyToOne(optional=false, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
     @JoinColumn(name="difficulty_id",referencedColumnName="difficulty_id")
     private Difficulty questionDifficulty;
 
@@ -55,6 +55,9 @@ public class Question extends BaseEntity {
     }
 
     public void setQuestionCategory(QuestionCategory questionCategory) {
+        if(this.questionCategory != null){
+            this.questionCategory.getQuestions().remove(this);
+        }
         this.questionCategory = questionCategory;
     }
 
@@ -64,5 +67,25 @@ public class Question extends BaseEntity {
 
     public void setQuestionDifficulty(Difficulty questionDifficulty) {
         this.questionDifficulty = questionDifficulty;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Question)) return false;
+        if (!super.equals(o)) return false;
+
+        Question question = (Question) o;
+
+        if (!getShortname().equals(question.getShortname())) return false;
+        return getQuestiontext().equals(question.getQuestiontext());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + getShortname().hashCode();
+        result = 31 * result + getQuestiontext().hashCode();
+        return result;
     }
 }

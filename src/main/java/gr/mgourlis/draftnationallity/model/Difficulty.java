@@ -37,4 +37,24 @@ public class Difficulty extends BaseEntity {
     public void setLevelNumber(int levelNumber) {
         this.levelNumber = levelNumber;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Difficulty)) return false;
+        if (!super.equals(o)) return false;
+
+        Difficulty that = (Difficulty) o;
+
+        if (getLevelNumber() != that.getLevelNumber()) return false;
+        return getLevel().equals(that.getLevel());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + getLevel().hashCode();
+        result = 31 * result + getLevelNumber();
+        return result;
+    }
 }

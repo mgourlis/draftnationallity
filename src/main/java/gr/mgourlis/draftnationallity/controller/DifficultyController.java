@@ -1,6 +1,7 @@
 package gr.mgourlis.draftnationallity.controller;
 
 
+import gr.mgourlis.draftnationallity.dto.DifficultyDTO;
 import gr.mgourlis.draftnationallity.model.Difficulty;
 import gr.mgourlis.draftnationallity.service.IDifficultyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,13 +58,15 @@ public class DifficultyController {
         if(difficulty == null){
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
         }
-        modelAndView.addObject("difficulty", difficulty);
+        DifficultyDTO difficultyDTO = new DifficultyDTO();
+        difficultyDTO.init(difficulty);
+        modelAndView.addObject("difficulty", difficultyDTO);
         modelAndView.setViewName("/admin/difficulty/editDifficulty");
         return modelAndView;
     }
 
     @RequestMapping(value="/edit/{id}", method = RequestMethod.POST)
-    public ModelAndView editDifficulty(@PathVariable("id") long id, @Valid @ModelAttribute("difficulty") Difficulty difficulty, BindingResult bindingResult){
+    public ModelAndView editDifficulty(@PathVariable("id") long id, @Valid @ModelAttribute("difficulty") DifficultyDTO difficultyDTO, BindingResult bindingResult){
         ModelAndView modelAndView = new ModelAndView();
         Difficulty editdifficulty = difficultyService.getOne(id);
         if(editdifficulty == null){
@@ -73,8 +76,8 @@ public class DifficultyController {
             modelAndView.setViewName("/admin/difficulty/editDifficulty");
         }
         else{
-            editdifficulty.setLevel(difficulty.getLevel());
-            editdifficulty.setLevelNumber(difficulty.getLevelNumber());
+            editdifficulty.setLevel(difficultyDTO.getLevel());
+            editdifficulty.setLevelNumber(difficultyDTO.getLevelNumber());
             difficultyService.save(editdifficulty);
             modelAndView.setViewName("redirect:/admin/difficulty/" + editdifficulty.getId());
         }

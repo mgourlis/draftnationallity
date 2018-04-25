@@ -7,11 +7,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <h2>Difficulties</h2>
+                <h2>Question Categories</h2>
             </div>
             <div class="col-md-6">
                 <div class="pull-right">
-                    <a th:href="${'/admin/difficulty/new'}" class="btn btn-primary mb-2">Create Difficulty</a>
+                    <a th:href="${'/admin/question-category/new'}" class="btn btn-primary mb-2">Create Question Category</a>
                 </div>
             </div>
         </div>
@@ -22,26 +22,24 @@
                 <div class="btn-group dropdown" sd:page-size-selector="dropdown"></div>
             </div>
         </div>
-        <div th:if="${!difficulties.isEmpty()}">
+        <div th:if="${!questionCategories.isEmpty()}">
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
                     <th><a class="sorted" sd:pagination-sort="id" >ID</a></th>
-                    <th><a class="sorted" sd:pagination-sort="level" >Level</a></th>
-                    <th><a class="sorted" sd:pagination-sort="levelNumber" >Level Number</a></th>
+                    <th><a class="sorted" sd:pagination-sort="name" >Name</a></th>
                     <th>View</th>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="difficulty,iterationStatus : ${difficulties}">
-                    <td th:text="${difficulty.getId()}">ID</td>
-                    <td th:text="${difficulty.getLevel()}">Level</td>
-                    <td th:text="${difficulty.getLevelNumber()}">Level Number</td>
-                    <td><a th:href="${'/admin/difficulty/' + difficulty.getId()}" class="btn btn-success btn-xs">View</a></td>
-                    <td><a th:href="${'/admin/difficulty/edit/' + difficulty.getId()}" class="btn btn-warning btn-xs">Edit</a></td>
-                    <td><a th:href="${'/admin/difficulty/delete/' + difficulty.getId()}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
+                <tr th:each="questionCategory,iterationStatus : ${questionCategories}">
+                    <td th:text="${questionCategory.getId()}">ID</td>
+                    <td th:text="${questionCategory.getName()}">Name</td>
+                    <td><a th:href="${'/admin/question-category/' + questionCategory.getId()}" class="btn btn-success btn-xs">View</a></td>
+                    <td><a th:href="${'/admin/question-category/edit/' + questionCategory.getId()}" class="btn btn-warning btn-xs">Edit</a></td>
+                    <td><a th:href="${'/admin/question-category/delete/' + questionCategory.getId()}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
                 </tr>
                 </tbody>
             </table>

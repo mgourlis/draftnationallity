@@ -14,7 +14,7 @@ public class QuestionCategory extends BaseEntity {
     @NotNull(message = "*Please provide a name for the category")
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "questionCategory")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH}, mappedBy = "questionCategory")
     private List<Question> questions;
 
     public String getName() {
@@ -31,5 +31,23 @@ public class QuestionCategory extends BaseEntity {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof QuestionCategory)) return false;
+        if (!super.equals(o)) return false;
+
+        QuestionCategory that = (QuestionCategory) o;
+
+        return getName().equals(that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + getName().hashCode();
+        return result;
     }
 }
