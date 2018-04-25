@@ -163,6 +163,8 @@ public class QuestionController {
             question.setQuestionDifficulty(editDifficulty);
             question.setQuestionCategory(editQuestionCategory);
             questionService.save(question);
+            modelAndView.addObject("questionCategories",questionCategoryService.findAll());
+            modelAndView.addObject("difficulties",difficultyService.findAll());
             modelAndView.addObject("successMessageBox", "Question has been created successfully");
             modelAndView.addObject("question", new Question());
             modelAndView.setViewName("admin/question/newQuestion");
