@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
@@ -47,10 +48,10 @@ public class DifficultyServiceImpl implements IDifficultyService{
             if(difficultyRepository.findDifficultyByLevelNumberAndDeleted(difficulty.getLevelNumber(),false) == null){
                     difficultyRepository.save(difficulty);
             }else{
-                throw new IllegalArgumentException("Difficulty already exists");
+                throw new EntityExistsException("Difficulty already exists");
             }
         }else{
-            Difficulty oldDifficulty = difficultyRepository.getOne(difficulty.getId());
+            Difficulty oldDifficulty = difficultyRepository.findDifficultyByIdAndDeleted(difficulty.getId(),false);
             if(oldDifficulty != null){
                 oldDifficulty.setLevel(difficulty.getLevel());
                 oldDifficulty.setLevelNumber(difficulty.getLevelNumber());
@@ -63,7 +64,7 @@ public class DifficultyServiceImpl implements IDifficultyService{
 
     @Override
     public void delete(Long id) {
-        Difficulty difficulty = difficultyRepository.getOne(id);
+        Difficulty difficulty = difficultyRepository.findDifficultyByIdAndDeleted(id,false);
         if(difficulty != null){
             difficulty.setDeleted(true);
             difficultyRepository.save(difficulty);

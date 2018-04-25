@@ -87,16 +87,16 @@ public class DifficultyController {
     @RequestMapping(value="/new", method = RequestMethod.GET)
     public ModelAndView newDifficulty(){
         ModelAndView modelAndView = new ModelAndView();
-        Difficulty difficulty = new Difficulty();
-        modelAndView.addObject("difficulty", difficulty);
+        DifficultyDTO difficultyDTO = new DifficultyDTO();
+        modelAndView.addObject("difficulty", difficultyDTO);
         modelAndView.setViewName("admin/difficulty/newDifficulty");
         return modelAndView;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public ModelAndView createNewUser(@Valid @ModelAttribute("difficulty") Difficulty difficulty, BindingResult bindingResult) {
+    public ModelAndView createNewUser(@Valid @ModelAttribute("difficulty") DifficultyDTO difficultyDTO, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        Difficulty difficultyExists = difficultyService.findByLevelNumber(difficulty.getLevelNumber());
+        Difficulty difficultyExists = difficultyService.findByLevelNumber(difficultyDTO.getLevelNumber());
         if (difficultyExists != null) {
             bindingResult
                     .rejectValue("levelNumber", "error.difficulty",
@@ -105,6 +105,9 @@ public class DifficultyController {
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("admin/difficulty/newDifficulty");
         } else {
+            Difficulty difficulty = new Difficulty();
+            difficulty.setLevel(difficultyDTO.getLevel());
+            difficulty.setLevelNumber(difficultyDTO.getLevelNumber());
             difficultyService.save(difficulty);
             modelAndView.addObject("successMessageBox", "Difficulty has been created successfully");
             modelAndView.addObject("difficulty", new Difficulty());

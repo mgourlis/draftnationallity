@@ -1,8 +1,8 @@
 package gr.mgourlis.draftnationallity.controller;
 
 import gr.mgourlis.draftnationallity.dto.QuestionCategoryDTO;
+import gr.mgourlis.draftnationallity.model.Question;
 import gr.mgourlis.draftnationallity.model.QuestionCategory;
-import gr.mgourlis.draftnationallity.repository.QuestionCategoryRepository;
 import gr.mgourlis.draftnationallity.service.IQuestionCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.util.ArrayList;
 
 @Controller
 @Secured("ADMIN")
@@ -92,16 +93,16 @@ public class QuestionCategoryController {
     @RequestMapping(value="/new", method = RequestMethod.GET)
     public ModelAndView newQuestionCategory(){
         ModelAndView modelAndView = new ModelAndView();
-        QuestionCategory questionCategory = new QuestionCategory();
-        modelAndView.addObject("questionCategory", questionCategory);
+        QuestionCategoryDTO questionCategoryDTO = new QuestionCategoryDTO();
+        modelAndView.addObject("questionCategory", questionCategoryDTO);
         modelAndView.setViewName("admin/category/newCategory");
         return modelAndView;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public ModelAndView createNewQuestionCategory(@Valid @ModelAttribute("questionCategory") QuestionCategory questionCategory, BindingResult bindingResult) {
+    public ModelAndView createNewQuestionCategory(@Valid @ModelAttribute("questionCategory") QuestionCategoryDTO questionCategoryDTO, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        QuestionCategory questionCategoryExists = questionCategoryService.findQuestionCategoryByName(questionCategory.getName());
+        QuestionCategory questionCategoryExists = questionCategoryService.findQuestionCategoryByName(questionCategoryDTO.getName());
         if (questionCategoryExists != null) {
             bindingResult
                     .rejectValue("name", "error.questionCategory",
@@ -110,6 +111,9 @@ public class QuestionCategoryController {
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("admin/category/newCategory");
         } else {
+            QuestionCategory questionCategory = new QuestionCategory();
+            questionCategory.setName(questionCategoryDTO.getName());
+            questionCategory.setQuestions(new ArrayList<Question>());
             questionCategoryService.save(questionCategory);
             modelAndView.addObject("successMessageBox", "Question Category has been created successfully");
             modelAndView.addObject("questionCategory", new QuestionCategory());

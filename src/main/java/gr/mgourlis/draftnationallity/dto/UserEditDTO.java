@@ -2,8 +2,8 @@ package gr.mgourlis.draftnationallity.dto;
 
 import gr.mgourlis.draftnationallity.model.Role;
 import gr.mgourlis.draftnationallity.model.User;
-import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 public class UserEditDTO {

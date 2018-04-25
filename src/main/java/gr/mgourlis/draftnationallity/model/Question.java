@@ -10,7 +10,7 @@ import java.util.List;
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
 public class Question extends BaseEntity {
 
-    @Column(name = "short_name", unique=true)
+    @Column(name = "short_name")
     @NotNull(message = "*Please provide a short name for the question")
     private String shortname;
 

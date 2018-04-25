@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
@@ -42,17 +43,17 @@ public class QuestionCategoryServiceImpl implements IQuestionCategoryService {
             if(questionCategoryRepository.findQuestionCategoryByNameAndDeleted(questionCategory.getName(),false) == null){
                 questionCategoryRepository.save(questionCategory);
             }else{
-                throw new IllegalArgumentException("Question Category already exists");
+                throw new EntityExistsException("Question Category already exists");
             }
         }else{
-            QuestionCategory oldQuestionCategory = questionCategoryRepository.getOne(questionCategory.getId());
+            QuestionCategory oldQuestionCategory = questionCategoryRepository.findQuestionCategoryByIdAndDeleted(questionCategory.getId(),false);
             if(oldQuestionCategory != null){
                 if(questionCategoryRepository.findQuestionCategoryByNameAndDeleted(questionCategory.getName(),false) == null){
                     oldQuestionCategory.setName(questionCategory.getName());
                     oldQuestionCategory.setQuestions(questionCategory.getQuestions());
                     questionCategoryRepository.save(oldQuestionCategory);
                 }else{
-                    throw new IllegalArgumentException("Question Category already exists");
+                    throw new EntityExistsException("Question Category already exists");
                 }
             }else{
                 throw new EntityNotFoundException("Can't save Question Category. Invalid Question Category");
@@ -63,7 +64,7 @@ public class QuestionCategoryServiceImpl implements IQuestionCategoryService {
 
     @Override
     public void delete(long id) {
-        QuestionCategory questionCategory = questionCategoryRepository.getOne(id);
+        QuestionCategory questionCategory = questionCategoryRepository.findQuestionCategoryByIdAndDeleted(id,false);
         if(questionCategory != null){
             questionCategory.setDeleted(true);
             questionCategoryRepository.save(questionCategory);
