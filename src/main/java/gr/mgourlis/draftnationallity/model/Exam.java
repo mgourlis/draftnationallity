@@ -1,6 +1,7 @@
 package gr.mgourlis.draftnationallity.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class Exam extends BaseEntity {
     @NotNull
     private Boolean isChecked;
 
+    @Column(name = "local_file_number")
+    @NotEmpty
+    private String localFileNumber;
+
     @Column(name = "file_number")
     private String fileNumber;
 
@@ -28,8 +33,9 @@ public class Exam extends BaseEntity {
     @JoinColumn(name="exam_settings_id",referencedColumnName="exam_settings_id")
     private ExamSetting examSetting;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy="exams")
-    private List<Question> questions;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="exam")
+    private List<ExamQuestion> examQuestions;
+
 
     public String getName() {
         return name;
@@ -55,7 +61,11 @@ public class Exam extends BaseEntity {
 
     public void setExamSetting(ExamSetting examSetting) { this.examSetting = examSetting; }
 
-    public List<Question> getQuestions() { return questions; }
+    public List<ExamQuestion> getExamQuestions() {
+        return examQuestions;
+    }
 
-    public void setQuestions(List<Question> questions) { this.questions = questions; }
+    public void setExamQuestions(List<ExamQuestion> examQuestions) {
+        this.examQuestions = examQuestions;
+    }
 }
