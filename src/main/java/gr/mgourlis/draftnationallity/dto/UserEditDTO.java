@@ -71,7 +71,7 @@ public class UserEditDTO {
         this.roles = roles;
     }
 
-    public void init(User user){
+    public void init(User user) throws IllegalArgumentException{
         setId(user.getId());
         setEmail(user.getEmail());
         setName(user.getName());

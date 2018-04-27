@@ -27,7 +27,7 @@ public class QuestionCategoryDTO {
         this.name = name;
     }
 
-    public void init(QuestionCategory questionCategory){
+    public void init(QuestionCategory questionCategory) throws IllegalArgumentException{
         this.setId(questionCategory.getId());
         this.setName(questionCategory.getName());
     }

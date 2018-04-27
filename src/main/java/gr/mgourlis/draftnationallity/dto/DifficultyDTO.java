@@ -39,7 +39,7 @@ public class DifficultyDTO {
         this.levelNumber = levelNumber;
     }
 
-    public void init(Difficulty difficulty){
+    public void init(Difficulty difficulty) throws IllegalArgumentException{
         this.setId(difficulty.getId());
         this.setLevel(difficulty.getLevel());
         this.setLevelNumber(difficulty.getLevelNumber());

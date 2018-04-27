@@ -3,7 +3,6 @@ package gr.mgourlis.draftnationallity.model;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
@@ -50,7 +49,7 @@ public class ExamSetting extends BaseEntity {
         this.numOfQuestions = numOfQuestions;
     }
 
-    public Boolean getEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 
@@ -84,7 +83,7 @@ public class ExamSetting extends BaseEntity {
 
         if (getNumOfQuestions() != that.getNumOfQuestions()) return false;
         if (!getName().equals(that.getName())) return false;
-        return getEnabled().equals(that.getEnabled());
+        return isEnabled().equals(that.isEnabled());
     }
 
     @Override
@@ -92,7 +91,7 @@ public class ExamSetting extends BaseEntity {
         int result = super.hashCode();
         result = 31 * result + getName().hashCode();
         result = 31 * result + getNumOfQuestions();
-        result = 31 * result + getEnabled().hashCode();
+        result = 31 * result + isEnabled().hashCode();
         return result;
     }
 }

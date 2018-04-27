@@ -9,8 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service("ExamSettingService")
 public class ExamSettingServiceImpl implements IExamSettingService {
@@ -69,7 +72,25 @@ public class ExamSettingServiceImpl implements IExamSettingService {
 
     @Override
     public void save(ExamSetting examSetting) {
-
+        if(examSetting.getId() == null){
+            if(examSettingRepository.findExamSettingByNameAndDeleted(examSetting.getName(),false) == null){
+                examSettingRepository.save(examSetting);
+            }else{
+                throw new EntityExistsException("Exam Setting already exists");
+            }
+        }else{
+            ExamSetting oldExamSetting = examSettingRepository.findExamSettingByIdAndDeleted(examSetting.getId(),false);
+            if(oldExamSetting != null){
+                oldExamSetting.setName(examSetting.getName());
+                oldExamSetting.setNumOfQuestions(examSetting.getNumOfQuestions());
+                oldExamSetting.setEnabled(examSetting.isEnabled());
+                oldExamSetting.setQuestionCategories(examSetting.getQuestionCategories());
+                oldExamSetting.setDifficultySettings(examSetting.getDifficultySettings());
+                examSettingRepository.save(oldExamSetting);
+            }else{
+                throw new EntityNotFoundException("Can't save Exam Setting. Invalid Exam Setting");
+            }
+        }
     }
 
     @Override
@@ -77,6 +98,9 @@ public class ExamSettingServiceImpl implements IExamSettingService {
         ExamSetting examSetting = examSettingRepository.findExamSettingByIdAndDeleted(id,false);
         if(examSetting != null){
             examSetting.setDeleted(true);
+            for (DifficultySetting difficultySetting : examSetting.getDifficultySettings()) {
+                difficultySetting.setDeleted(true);
+            }
             examSettingRepository.save(examSetting);
         }else{
             throw new EntityNotFoundException("Invalid Exam Setting");

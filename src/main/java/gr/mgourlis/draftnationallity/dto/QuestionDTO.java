@@ -59,7 +59,7 @@ public class QuestionDTO {
         this.questionDifficulty = questionDifficulty;
     }
 
-    public void init(Question question){
+    public void init(Question question) throws IllegalArgumentException{
         this.setId(question.getId());
         this.setShortname(question.getShortname());
         this.setQuestiontext(question.getQuestiontext());

@@ -32,7 +32,8 @@
 					<div class="col-sm-9">
 						<ul>
 							<li th:each="questionCategory : ${questionCategories}">
-								<input type="checkbox" th:field="*{questionCategories}" th:value="${questionCategory}" />
+								<label	th:if="${#fields.hasErrors('*{questionCategories}')}" th:errors="*{questionCategories}" class="validation-message"></label>
+								<input type="checkbox" th:field="*{questionCategories}" th:value="${questionCategory.getId()}" />
 								<label th:for="${#ids.prev('questionCategories')}" th:text="${questionCategory.name}">Category</label>
 							</li>
 						</ul>
@@ -42,9 +43,10 @@
 				<div class="form-group">
 					<div class="col-sm-9">
 						<ul>
-							<li th:each="difficultySetting,iterationStatus : *{difficultySettings}">
-								<input type="text" th:field="*{difficultySettings[__${iterationStatus.index}__]}" th:value="${difficultySetting.percentage}" />
-								<label th:for="*{difficultySettings[__${iterationStatus.index}__]}" th:text="${difficultySetting.difficulty.level}">Category</label>
+							<li th:each="difficulty,iterationStatus : ${difficulties}">
+								<label	th:if="${#fields.hasErrors('*{difficultySettings[__${iterationStatus.index}__]}')}" th:errors="*{difficultySettings[__${iterationStatus.index}__]}" class="validation-message"></label>
+								<label th:for="*{difficultySettings[__${iterationStatus.index}__]}" th:text="${difficulty.level}">Difficulty</label>
+								<input type="text" th:field="*{difficultySettings[__${iterationStatus.index}__]}" th:value="*{difficultySettings[__${iterationStatus.index}__]}" />
 							</li>
 						</ul>
 					</div>
