@@ -27,7 +27,7 @@ public class ExamSetting extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval=true)
     @JoinColumn(name="exam_setting_id", referencedColumnName="exam_setting_id")
     @NotEmpty
-    private Set<DifficultySetting> difficultySettings;
+    private List<DifficultySetting> difficultySettings;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "questioncategory_examsetting", joinColumns = @JoinColumn(name = "exam_settings_id"), inverseJoinColumns = @JoinColumn(name = "question_category_id"))
@@ -58,12 +58,20 @@ public class ExamSetting extends BaseEntity {
         this.enabled = enabled;
     }
 
-    public Set<DifficultySetting> getDifficultySettings() {
+    public List<DifficultySetting> getDifficultySettings() {
         return difficultySettings;
     }
 
-    public void setDifficultySettings(Set<DifficultySetting> difficultySettings) {
+    public void setDifficultySettings(List<DifficultySetting> difficultySettings) {
         this.difficultySettings = difficultySettings;
+    }
+
+    public Set<QuestionCategory> getQuestionCategories() {
+        return questionCategories;
+    }
+
+    public void setQuestionCategories(Set<QuestionCategory> questionCategories) {
+        this.questionCategories = questionCategories;
     }
 
     @Override

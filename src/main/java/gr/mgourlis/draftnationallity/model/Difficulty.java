@@ -12,7 +12,7 @@ import javax.validation.constraints.Min;
 @Table(name = "difficulty")
 @AttributeOverride(name = "id", column = @Column(name = "difficulty_id",
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
-public class Difficulty extends BaseEntity {
+public class Difficulty extends BaseEntity implements Comparable<Difficulty> {
 
     @Column(name = "level")
     @NotEmpty(message = "*Please provide a level for the difficulty")
@@ -56,5 +56,16 @@ public class Difficulty extends BaseEntity {
         result = 31 * result + getLevel().hashCode();
         result = 31 * result + getLevelNumber();
         return result;
+    }
+
+    @Override
+    public int compareTo(Difficulty o) {
+        if(this.levelNumber > o.levelNumber){
+            return 1;
+        }else if(this.levelNumber < o.levelNumber){
+            return -1;
+        }else{
+            return 0;
+        }
     }
 }

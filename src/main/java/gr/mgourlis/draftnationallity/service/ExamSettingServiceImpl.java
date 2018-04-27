@@ -3,7 +3,6 @@ package gr.mgourlis.draftnationallity.service;
 import gr.mgourlis.draftnationallity.model.Difficulty;
 import gr.mgourlis.draftnationallity.model.DifficultySetting;
 import gr.mgourlis.draftnationallity.model.ExamSetting;
-import gr.mgourlis.draftnationallity.repository.DifficultyRepository;
 import gr.mgourlis.draftnationallity.repository.ExamSettingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,9 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service("ExamSettingService")
 public class ExamSettingServiceImpl implements IExamSettingService {
@@ -58,7 +55,8 @@ public class ExamSettingServiceImpl implements IExamSettingService {
     public ExamSetting createExamSetting() {
         ExamSetting examSetting = new ExamSetting();
         List<Difficulty> difficulties = difficultyService.findAll();
-        Set<DifficultySetting> difficultySettings = new HashSet<>();
+        Collections.sort(difficulties);
+        List<DifficultySetting> difficultySettings = new ArrayList<>();
         for (Difficulty difficulty: difficulties) {
             DifficultySetting difficultySetting = new DifficultySetting();
             difficultySetting.setDifficulty(difficulty);

@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "examquestions")
 @AttributeOverride(name = "id", column = @Column(name = "exam_question_id",
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
-public class ExamQuestion extends BaseEntity {
+public class ExamQuestion extends BaseEntity implements Comparable<ExamQuestion>{
 
     @Column(name = "short_number")
     private int sortNumber;
@@ -61,5 +61,16 @@ public class ExamQuestion extends BaseEntity {
         result = 31 * result + (question != null ? question.hashCode() : 0);
         result = 31 * result + (answer != null ? answer.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(ExamQuestion o) {
+        if(this.sortNumber > o.sortNumber){
+            return 1;
+        }else if(this.sortNumber < o.sortNumber){
+            return -1;
+        }else{
+            return 0;
+        }
     }
 }

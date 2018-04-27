@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}" >
+<body>
+<div id="main" layout:fragment="content">
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<form autocomplete="off" th:action="@{'/admin/exam-setting/new'}" th:object="${examSetting}" method="post" class="form-horizontal" role="form">
+				<h2>Create New Exam Setting</h2>
+				<div class="form-group">
+					<div class="col-sm-9">
+						<label	th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="validation-message"></label>
+						<input type="text" th:field="*{name}" placeholder="Name" class="form-control" />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-9">
+						<label	th:if="${#fields.hasErrors('numOfQuestions')}" th:errors="*{numOfQuestions}" class="validation-message"></label>
+						<input type="text" th:field="*{numOfQuestions}" placeholder="Number Of Questions" class="form-control" />
+					</div>
+				</div>
+
+				<div class="form-check">
+					<label th:if="${#fields.hasErrors('enabled')}" th:errors="*{enabled}" class="validation-message"></label>
+					<input type="checkbox" th:field="*{enabled}" th:value="*{enabled}" class="form-check-input" />
+					<label class="form-check-label">Enabled</label>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-9">
+						<ul>
+							<li th:each="questionCategory : ${questionCategories}">
+								<input type="checkbox" th:field="*{questionCategories}" th:value="${questionCategory}" />
+								<label th:for="${#ids.prev('questionCategories')}" th:text="${questionCategory.name}">Category</label>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-9">
+						<ul>
+							<li th:each="difficultySetting,iterationStatus : *{difficultySettings}">
+								<input type="text" th:field="*{difficultySettings[__${iterationStatus.index}__]}" th:value="${difficultySetting.percentage}" />
+								<label th:for="*{difficultySettings[__${iterationStatus.index}__]}" th:text="${difficultySetting.difficulty.level}">Category</label>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-3">
+						<button type="submit" class="btn btn-primary btn-block">Submit</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>
