@@ -48,11 +48,11 @@ public class DifficultyController {
     public ModelAndView showDifficulty(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
         Difficulty difficulty = difficultyService.getOne(id);
-        try {
+        if(difficulty != null){
             modelAndView.addObject("difficulties", difficulty);
             modelAndView.setViewName("admin/difficulty/showDifficulty");
             return modelAndView;
-        }catch (EntityNotFoundException e){
+        }else {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
         }
     }

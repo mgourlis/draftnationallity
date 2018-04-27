@@ -67,11 +67,11 @@ public class QuestionController {
     public ModelAndView showQuestion(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
         Question question = questionService.getOne(id);
-        try {
+        if(question != null) {
             modelAndView.addObject("question", question);
             modelAndView.setViewName("admin/question/showQuestion");
             return modelAndView;
-        }catch (EntityNotFoundException e){
+        }else {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
         }
     }

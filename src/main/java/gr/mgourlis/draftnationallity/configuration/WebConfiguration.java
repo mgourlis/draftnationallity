@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
@@ -31,6 +32,11 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
         filterRegBean.setName("Reset Password");
         filterRegBean.setAsyncSupported(Boolean.TRUE);
         return filterRegBean;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/upload-dir/**").addResourceLocations("classpath:/META-INF/resources/static/upload-dir/");
     }
 
 }

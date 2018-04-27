@@ -57,13 +57,9 @@ public class UserController {
     public ModelAndView showUser(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
         User user = userService.findUserById(id);
-        try {
-            modelAndView.addObject("users", user);
-            modelAndView.setViewName("admin/user/showUser");
-            return modelAndView;
-        }catch (EntityNotFoundException e){
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-        }
+        modelAndView.addObject("users", user);
+        modelAndView.setViewName("admin/user/showUser");
+        return modelAndView;
     }
 
     @RequestMapping(value="/edit/{id}", method = RequestMethod.GET)

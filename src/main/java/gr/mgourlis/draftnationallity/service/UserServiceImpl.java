@@ -77,7 +77,7 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public User findUserById(Long id) {
+	public User findUserById(Long id) throws EntityNotFoundException {
 		 return userRepository.getOne(id);
 	}
 

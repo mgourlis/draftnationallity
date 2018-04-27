@@ -38,6 +38,10 @@ public class User implements UserDetails {
 	@NotEmpty(message = "*Please provide your last name")
 	private String lastName;
 
+	@Column(name = "foreas")
+	@NotEmpty(message = "*Please provide the forea")
+	private String foreas;
+
 	@Column(name = "active")
 	private boolean active;
 
@@ -103,7 +107,15 @@ public class User implements UserDetails {
 		this.lastName = lastName;
 	}
 
-	public String getEmail() {
+    public String getForeas() {
+        return foreas;
+    }
+
+    public void setForeas(String foreas) {
+        this.foreas = foreas;
+    }
+
+    public String getEmail() {
 		return email;
 	}
 

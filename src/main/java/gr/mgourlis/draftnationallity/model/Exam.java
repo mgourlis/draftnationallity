@@ -2,9 +2,8 @@ package gr.mgourlis.draftnationallity.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "exam")
@@ -23,9 +22,16 @@ public class Exam extends BaseEntity {
     @Column(name = "file_number")
     private String fileNumber;
 
-    @Column(name = "is_validated")
-    @NotNull
-    private Boolean isValidated;
+    @Column(name = "foreas")
+    @NotEmpty
+    private String foreas;
+
+    @Column(name = "graded")
+    @Temporal(TemporalType.DATE)
+    private Date gratedDate;
+
+    @Column(name = "validated")
+    private Boolean validated;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
     @JoinColumn(name = "exam_setting_id", referencedColumnName = "exam_setting_id")
@@ -59,12 +65,28 @@ public class Exam extends BaseEntity {
         this.fileNumber = fileNumber;
     }
 
+    public String getForeas() {
+        return foreas;
+    }
+
+    public void setForeas(String foreas) {
+        this.foreas = foreas;
+    }
+
+    public Date getGratedDate() {
+        return gratedDate;
+    }
+
+    public void setGratedDate(Date gratedDate) {
+        this.gratedDate = gratedDate;
+    }
+
     public Boolean getValidated() {
-        return isValidated;
+        return validated;
     }
 
     public void setValidated(Boolean validated) {
-        isValidated = validated;
+        this.validated = validated;
     }
 
     public ExamSetting getExamSetting() {

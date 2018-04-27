@@ -55,11 +55,11 @@ public class ExamSettingController {
     public ModelAndView showExamSetting(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
         ExamSetting examSetting = examSettingService.getOne(id);
-        try {
+        if(examSetting != null){
             modelAndView.addObject("examSetting", examSetting);
             modelAndView.setViewName("admin/examsetting/showExamSetting");
             return modelAndView;
-        }catch (EntityNotFoundException e){
+        }else{
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
         }
     }

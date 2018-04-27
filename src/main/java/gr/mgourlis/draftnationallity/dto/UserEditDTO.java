@@ -18,6 +18,9 @@ public class UserEditDTO {
     @NotEmpty
     private String lastName;
 
+    @NotEmpty
+    private String foreas;
+
     private boolean active;
 
     @NotEmpty
@@ -53,6 +56,14 @@ public class UserEditDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getApokentromeniDioikisi() {
+        return foreas;
+    }
+
+    public void setApokentromeniDioikisi(String foreas) {
+        this.foreas = foreas;
     }
 
     public boolean isActive() {

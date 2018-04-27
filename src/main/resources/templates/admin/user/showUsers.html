@@ -47,6 +47,7 @@
                         <th><a class="sorted" sd:pagination-sort="name" >Name</a></th>
                         <th><a class="sorted" sd:pagination-sort="lastName" >Lastname</a></th>
                         <th><a class="sorted" sd:pagination-sort="email" >Email</a></th>
+                        <th><a class="sorted" sd:pagination-sort="foreas" >Foreas</a></th>
                         <th><a class="sorted" sd:pagination-sort="active" >Active</a></th>
                         <th><a>Roles</a></th>
                         <th>View</th>
@@ -60,6 +61,7 @@
                         <td th:text="${user.name}">Name</td>
                         <td th:text="${user.lastName}">Lastname</td>
                         <td th:text="${user.email}">Email</td>
+                        <td th:text="${user.foreas}">foreas</td>
                         <td th:text="${user.active}">Active</td>
                         <td>
                             <span th:each="role,iterationRoleStatus : ${user.getRoles()}">

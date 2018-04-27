@@ -70,6 +70,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/resetpass").fullyAuthenticated()
 				.antMatchers("/").fullyAuthenticated()
 				.antMatchers("/admin/**").hasRole("ADMIN")
+				.antMatchers("/upload-dir/**").hasRole("ADMIN")
+				.antMatchers("/static").permitAll()
 				.anyRequest()
 				.fullyAuthenticated()
 				.and()

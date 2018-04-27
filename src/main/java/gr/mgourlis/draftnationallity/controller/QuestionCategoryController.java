@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -49,11 +48,11 @@ public class QuestionCategoryController {
     public ModelAndView showQuestionCategory(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
         QuestionCategory questionCategory = questionCategoryService.getOne(id);
-        try {
+        if(questionCategory != null) {
             modelAndView.addObject("questionCategory", questionCategory);
             modelAndView.setViewName("admin/category/showCategory");
             return modelAndView;
-        }catch (EntityNotFoundException e){
+        }else {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
         }
     }
