@@ -26,15 +26,19 @@ public class Exam extends BaseEntity {
     @NotEmpty
     private String foreas;
 
-    @Column(name = "graded")
+    @Column(name = "rated_date")
     @Temporal(TemporalType.DATE)
-    private Date gratedDate;
+    private Date ratedDate;
 
     @Column(name = "validated")
     private Boolean validated;
 
+    @Column(name = "validated_date")
+    @Temporal(TemporalType.DATE)
+    private Boolean validatedDate;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
-    @JoinColumn(name = "exam_setting_id", referencedColumnName = "exam_setting_id")
+    @JoinColumn(name = "exam_setting_id", referencedColumnName = "exam_setting_id", nullable = false)
     private ExamSetting examSetting;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
@@ -73,12 +77,12 @@ public class Exam extends BaseEntity {
         this.foreas = foreas;
     }
 
-    public Date getGratedDate() {
-        return gratedDate;
+    public Date getRatedDate() {
+        return ratedDate;
     }
 
-    public void setGratedDate(Date gratedDate) {
-        this.gratedDate = gratedDate;
+    public void setRatedDate(Date rateddDate) {
+        this.ratedDate = rateddDate;
     }
 
     public Boolean getValidated() {
@@ -87,6 +91,14 @@ public class Exam extends BaseEntity {
 
     public void setValidated(Boolean validated) {
         this.validated = validated;
+    }
+
+    public Boolean getValidatedDate() {
+        return validatedDate;
+    }
+
+    public void setValidatedDate(Boolean validatedDate) {
+        this.validatedDate = validatedDate;
     }
 
     public ExamSetting getExamSetting() {
