@@ -50,7 +50,6 @@ public class QuestionCategoryServiceImpl implements IQuestionCategoryService {
             if(oldQuestionCategory != null){
                 if(questionCategoryRepository.findQuestionCategoryByNameAndDeleted(questionCategory.getName(),false) == null){
                     oldQuestionCategory.setName(questionCategory.getName());
-                    oldQuestionCategory.setQuestions(questionCategory.getQuestions());
                     questionCategoryRepository.save(oldQuestionCategory);
                 }else{
                     throw new EntityExistsException("Question Category already exists");

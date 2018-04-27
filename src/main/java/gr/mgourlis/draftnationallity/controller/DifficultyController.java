@@ -3,7 +3,9 @@ package gr.mgourlis.draftnationallity.controller;
 
 import gr.mgourlis.draftnationallity.dto.DifficultyDTO;
 import gr.mgourlis.draftnationallity.model.Difficulty;
+import gr.mgourlis.draftnationallity.model.Question;
 import gr.mgourlis.draftnationallity.service.IDifficultyService;
+import gr.mgourlis.draftnationallity.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @Secured("ADMIN")
@@ -28,6 +31,9 @@ public class DifficultyController {
 
     @Autowired
     IDifficultyService difficultyService;
+
+    @Autowired
+    IQuestionService questionService;
 
     @RequestMapping(value="/", method = RequestMethod.GET)
     public ModelAndView getDifficulties(ModelAndView modelAndView, Pageable pageable){
@@ -120,8 +126,19 @@ public class DifficultyController {
     @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
     public ModelAndView deleteUser(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
+        Difficulty difficulty = difficultyService.getOne(id);
 
-        //TODO - Check if difficulty exists in question or difficulty setting
+        if (difficulty != null){
+            List<Question> questionList = questionService.findQuestionsByDifficultyLevelNumber(difficulty.getLevelNumber());
+            if(!questionList.isEmpty()){
+                modelAndView.addObject("errorMessageBox","Questions exists with this Difficulty. Please delete the questions first");
+                modelAndView.setViewName("admin/category/showDifficulties");
+            }
+        }else{
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+        }
+
+        //TODO - Check difficulty settings before delete
 
         difficultyService.delete(id);
         modelAndView.setViewName("redirect:/admin/difficulty/");

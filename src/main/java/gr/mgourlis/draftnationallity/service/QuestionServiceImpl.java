@@ -48,6 +48,26 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
+    public List<Question> findQuestionsByDifficultyLevelNumber(int difficultyLevelNumber) {
+        return questionRepository.findQuestionsByQuestionDifficulty_LevelNumberAndDeleted(difficultyLevelNumber,false);
+    }
+
+    @Override
+    public Page<Question> findQuestionsByDifficultyLevelNumber(int difficultyLevelNumber, Pageable pageable) {
+        return questionRepository.findQuestionsByQuestionDifficulty_LevelNumberAndDeleted(difficultyLevelNumber,false, pageable);
+    }
+
+    @Override
+    public List<Question> findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber) {
+        return questionRepository.findQuestionsByQuestionCategory_NameAndQuestionDifficulty_LevelNumberAndDeleted(questionCategoryName, difficultyLevelNumber,false);
+    }
+
+    @Override
+    public Page<Question> findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber, Pageable pageable) {
+        return questionRepository.findQuestionsByQuestionCategory_NameAndQuestionDifficulty_LevelNumberAndDeleted(questionCategoryName, difficultyLevelNumber,false, pageable);
+    }
+
+    @Override
     public void save(Question question) {
         if(question.getId() == null){
             if(questionRepository.findQuestionByShortnameAndDeleted(question.getShortname(),false) == null){

@@ -10,6 +10,6 @@ import java.util.List;
 public interface ExamRepository extends JpaRepository<Exam,Long> {
     public Exam findFirstByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, Boolean deleted);
     public Exam findExamsByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, Boolean deleted);
-    public Exam findExamByUIDAndDeleted(String UID, Boolean deleted);
+    public Exam findExamByUIDAndDeleted(String uID, Boolean deleted);
     public List<Exam> findAllByDeleted(Boolean deleted);
 }

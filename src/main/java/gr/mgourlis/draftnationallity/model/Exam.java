@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "exam")
@@ -11,16 +12,9 @@ import java.util.List;
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
 public class Exam extends BaseEntity {
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "uID" , unique = true)
-    @NotNull
+    @Column(name = "uID", unique = true)
+    @NotEmpty
     private String uID;
-
-    @Column(name = "is_checked")
-    @NotNull
-    private Boolean isChecked;
 
     @Column(name = "local_file_number")
     @NotEmpty
@@ -29,37 +23,57 @@ public class Exam extends BaseEntity {
     @Column(name = "file_number")
     private String fileNumber;
 
-    @ManyToOne(optional=false, fetch = FetchType.LAZY)
-    @JoinColumn(name="exam_settings_id",referencedColumnName="exam_settings_id")
+    @Column(name = "is_validated")
+    @NotNull
+    private Boolean isValidated;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
+    @JoinColumn(name = "exam_setting_id", referencedColumnName = "exam_setting_id")
     private ExamSetting examSetting;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="exam")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
+    @JoinColumn(name = "exam_id", referencedColumnName = "exam_id", nullable = false)
     private List<ExamQuestion> examQuestions;
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUID() {
+    public String getuID() {
         return uID;
     }
 
-    public void setUID(String UID) {
+    public void setuID(String uID) {
         this.uID = uID;
     }
 
-    public Boolean getChecked() { return isChecked; }
+    public String getLocalFileNumber() {
+        return localFileNumber;
+    }
 
-    public void setChecked(Boolean checked) { isChecked = checked; }
+    public void setLocalFileNumber(String localFileNumber) {
+        this.localFileNumber = localFileNumber;
+    }
 
-    public ExamSetting getExamSetting() { return examSetting; }
+    public String getFileNumber() {
+        return fileNumber;
+    }
 
-    public void setExamSetting(ExamSetting examSetting) { this.examSetting = examSetting; }
+    public void setFileNumber(String fileNumber) {
+        this.fileNumber = fileNumber;
+    }
+
+    public Boolean getValidated() {
+        return isValidated;
+    }
+
+    public void setValidated(Boolean validated) {
+        isValidated = validated;
+    }
+
+    public ExamSetting getExamSetting() {
+        return examSetting;
+    }
+
+    public void setExamSetting(ExamSetting examSetting) {
+        this.examSetting = examSetting;
+    }
 
     public List<ExamQuestion> getExamQuestions() {
         return examQuestions;
@@ -67,5 +81,23 @@ public class Exam extends BaseEntity {
 
     public void setExamQuestions(List<ExamQuestion> examQuestions) {
         this.examQuestions = examQuestions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Exam)) return false;
+        if (!super.equals(o)) return false;
+
+        Exam exam = (Exam) o;
+
+        return uID.equals(exam.uID);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + uID.hashCode();
+        return result;
     }
 }

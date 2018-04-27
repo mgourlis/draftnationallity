@@ -16,4 +16,8 @@ public interface QuestionRepository extends JpaRepository<Question,Long> {
     public Question findQuestionByShortnameAndDeleted(String shortname, boolean deleted);
     public List<Question> findQuestionsByQuestionCategory_NameAndDeleted(String categoryName, boolean deleted);
     public Page<Question> findQuestionsByQuestionCategory_NameAndDeleted(String categoryName, boolean deleted, Pageable pageable);
+    public List<Question> findQuestionsByQuestionDifficulty_LevelNumberAndDeleted(int difficultyLevelNumber, boolean deleted);
+    public Page<Question> findQuestionsByQuestionDifficulty_LevelNumberAndDeleted(int difficultyLevelNumber, boolean deleted, Pageable pageable);
+    public List<Question> findQuestionsByQuestionCategory_NameAndQuestionDifficulty_LevelNumberAndDeleted(String categoryName, int difficultyLevelNumber, boolean deleted);
+    public Page<Question> findQuestionsByQuestionCategory_NameAndQuestionDifficulty_LevelNumberAndDeleted(String categoryName, int difficultyLevelNumber, boolean deleted, Pageable pageable);
 }

@@ -5,27 +5,23 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "difficultysettings")
-@AttributeOverride(name = "id", column = @Column(name = "difficulty_settings_id",
+@AttributeOverride(name = "id", column = @Column(name = "difficulty_setting_id",
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
 public class DifficultySetting extends BaseEntity {
 
     @Column(name = "percentage")
     @NotNull(message = "*Please set the percentage for this question difficulty")
-    private int percentage;
+    private float percentage;
 
     @ManyToOne(optional=false, fetch = FetchType.LAZY)
-    @JoinColumn(name="difficulty_id",referencedColumnName="difficulty_id")
+    @JoinColumn(name="difficulty_id",referencedColumnName="difficulty_id", nullable = false)
     private Difficulty difficulty;
 
-    @ManyToOne(optional=false, fetch = FetchType.LAZY)
-    @JoinColumn(name="exam_settings_id",referencedColumnName="exam_settings_id")
-    private ExamSetting examSetting;
-
-    public int getPercentage() {
+    public float getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(int percentage) {
+    public void setPercentage(float percentage) {
         this.percentage = percentage;
     }
 
@@ -37,11 +33,23 @@ public class DifficultySetting extends BaseEntity {
         this.difficulty = difficulty;
     }
 
-    public ExamSetting getExamSetting() {
-        return examSetting;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DifficultySetting)) return false;
+        if (!super.equals(o)) return false;
+
+        DifficultySetting that = (DifficultySetting) o;
+
+        if (Float.compare(that.getPercentage(), getPercentage()) != 0) return false;
+        return getDifficulty() != null ? getDifficulty().equals(that.getDifficulty()) : that.getDifficulty() == null;
     }
 
-    public void setExamSetting(ExamSetting examSetting) {
-        this.examSetting = examSetting;
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (getPercentage() != +0.0f ? Float.floatToIntBits(getPercentage()) : 0);
+        result = 31 * result + (getDifficulty() != null ? getDifficulty().hashCode() : 0);
+        return result;
     }
 }

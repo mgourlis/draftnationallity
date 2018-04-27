@@ -20,19 +20,12 @@ public class Question extends BaseEntity {
     private String questiontext;
 
     @ManyToOne(optional=false, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
-    @JoinColumn(name="question_category_id",referencedColumnName="question_category_id")
+    @JoinColumn(name="question_category_id",referencedColumnName="question_category_id", nullable = false)
     private QuestionCategory questionCategory;
 
     @ManyToOne(optional=false, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
-    @JoinColumn(name="difficulty_id",referencedColumnName="difficulty_id")
+    @JoinColumn(name="difficulty_id",referencedColumnName="difficulty_id", nullable = false)
     private Difficulty questionDifficulty;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name="question_packet",
-            joinColumns=@JoinColumn(name="question_id", referencedColumnName="question_id"),
-            inverseJoinColumns=@JoinColumn(name="exam_id", referencedColumnName="exam_id"))
-    private List<Exam> exams;
 
     public String getShortname() {
         return shortname;
@@ -55,9 +48,6 @@ public class Question extends BaseEntity {
     }
 
     public void setQuestionCategory(QuestionCategory questionCategory) {
-        if(this.questionCategory != null){
-            this.questionCategory.getQuestions().remove(this);
-        }
         this.questionCategory = questionCategory;
     }
 

@@ -1,29 +1,38 @@
 package gr.mgourlis.draftnationallity.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "examsettings")
-@AttributeOverride(name = "id", column = @Column(name = "exam_settings_id",
+@AttributeOverride(name = "id", column = @Column(name = "exam_setting_id",
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
 public class ExamSetting extends BaseEntity {
 
-    @Column(name = "name", unique=true)
-    @NotNull(message = "*Please provide a name for the exam settings")
+    @Column(name = "name")
+    @NotEmpty(message = "*Please provide a name for the exam settings")
     private String name;
 
     @Column(name = "number_of_questions")
-    @NotNull(message = "*Please how many questions this exam settings has")
+    @Min(1)
     private int numOfQuestions;
 
     @Column(name = "enabled")
-    @NotNull(message = "*Please set if this exam settings is enabled")
     private Boolean enabled;
 
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval=true, mappedBy = "examSetting")
-    private List<DifficultySetting> difficultySettings;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval=true)
+    @JoinColumn(name="exam_setting_id", referencedColumnName="exam_setting_id")
+    @NotEmpty
+    private Set<DifficultySetting> difficultySettings;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "questioncategory_examsetting", joinColumns = @JoinColumn(name = "exam_settings_id"), inverseJoinColumns = @JoinColumn(name = "question_category_id"))
+    @NotEmpty
+    private Set<QuestionCategory> questionCategories;
 
     public String getName() {
         return name;
@@ -49,11 +58,33 @@ public class ExamSetting extends BaseEntity {
         this.enabled = enabled;
     }
 
-    public List<DifficultySetting> getDifficultySettings() {
+    public Set<DifficultySetting> getDifficultySettings() {
         return difficultySettings;
     }
 
-    public void setDifficultySettings(List<DifficultySetting> difficultySettings) {
+    public void setDifficultySettings(Set<DifficultySetting> difficultySettings) {
         this.difficultySettings = difficultySettings;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExamSetting)) return false;
+        if (!super.equals(o)) return false;
+
+        ExamSetting that = (ExamSetting) o;
+
+        if (getNumOfQuestions() != that.getNumOfQuestions()) return false;
+        if (!getName().equals(that.getName())) return false;
+        return getEnabled().equals(that.getEnabled());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getNumOfQuestions();
+        result = 31 * result + getEnabled().hashCode();
+        return result;
     }
 }

@@ -4,6 +4,7 @@ import gr.mgourlis.draftnationallity.dto.QuestionCategoryDTO;
 import gr.mgourlis.draftnationallity.model.Question;
 import gr.mgourlis.draftnationallity.model.QuestionCategory;
 import gr.mgourlis.draftnationallity.service.IQuestionCategoryService;
+import gr.mgourlis.draftnationallity.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @Secured("ADMIN")
@@ -29,6 +31,9 @@ public class QuestionCategoryController {
 
     @Autowired
     IQuestionCategoryService questionCategoryService;
+
+    @Autowired
+    IQuestionService questionService;
 
     @RequestMapping("/")
     public ModelAndView getQuestionCategories(ModelAndView modelAndView, Pageable pageable){
@@ -113,7 +118,6 @@ public class QuestionCategoryController {
         } else {
             QuestionCategory questionCategory = new QuestionCategory();
             questionCategory.setName(questionCategoryDTO.getName());
-            questionCategory.setQuestions(new ArrayList<Question>());
             questionCategoryService.save(questionCategory);
             modelAndView.addObject("successMessageBox", "Question Category has been created successfully");
             modelAndView.addObject("questionCategory", new QuestionCategory());
@@ -124,10 +128,19 @@ public class QuestionCategoryController {
     }
 
     @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteQuestionCategoty(@PathVariable("id") long id){
+    public ModelAndView deleteQuestionCategoty(@PathVariable("id") long id) {
         ModelAndView modelAndView = new ModelAndView();
+        QuestionCategory questionCategory = questionCategoryService.getOne(id);
 
-        //TODO - Check if questionCategory exists in question
+        if (questionCategory != null){
+            List<Question> questionList = questionService.findQuestionsByQuestionCategoryName(questionCategory.getName());
+            if(!questionList.isEmpty()){
+                modelAndView.addObject("errorMessageBox","Questions exists in this Question category. Please delete the questions first");
+                modelAndView.setViewName("admin/category/showCategories");
+            }
+        }else{
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+        }
 
         questionCategoryService.delete(id);
         modelAndView.setViewName("redirect:/admin/question-category/");

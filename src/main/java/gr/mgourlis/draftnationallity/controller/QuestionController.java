@@ -14,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -39,9 +36,27 @@ public class QuestionController {
     IDifficultyService difficultyService;
 
     @RequestMapping("/")
-    public ModelAndView getQuestions(ModelAndView modelAndView, Pageable pageable){
-        modelAndView = new ModelAndView();
-        Page<Question> categoryPage = questionService.findAll(pageable);
+    public ModelAndView getQuestions(@RequestParam(value = "qcategory", required=false, defaultValue = "") String qcategory,
+                                     @RequestParam(value = "qdifficulty", required=false, defaultValue = "0") String qdifficulty,
+                                     ModelAndView modelAndView, Pageable pageable){
+        Page<Question> categoryPage;
+        int difficulty;
+        try{
+           difficulty = Integer.parseInt(qdifficulty);
+        }catch (NumberFormatException e){
+            difficulty = 0;
+        }
+        if(qcategory.equals("") && difficulty == 0) {
+            categoryPage = questionService.findAll(pageable);
+        }else if(difficulty == 0){
+            categoryPage = questionService.findQuestionsByQuestionCategoryName(qcategory,pageable);
+        }else if(qcategory.equals("")){
+            categoryPage = questionService.findQuestionsByDifficultyLevelNumber(difficulty, pageable);
+        }else{
+            categoryPage = questionService.findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(qcategory,difficulty, pageable);
+        }
+        modelAndView.addObject("difficulties",difficultyService.findAll());
+        modelAndView.addObject("questionCategories",questionCategoryService.findAll());
         modelAndView.addObject("questions", categoryPage.getContent());
         modelAndView.addObject("page",categoryPage);
         modelAndView.setViewName("admin/question/showQuestions");

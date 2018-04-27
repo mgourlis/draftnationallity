@@ -21,6 +21,31 @@
             <div class="col-md-4">
                 <div class="btn-group dropdown" sd:page-size-selector="dropdown"></div>
             </div>
+            <div class="col-md-8">
+                <div class="pull-right">
+                    <form th:action="@{/admin/question/}" method="GET" class="form-inline">
+                        <div class="form-group mb-2">
+                            <select class="form-control" id="qdifficulty" name="qdifficulty" >
+                                <option value="">Difficulty</option>
+                                <option th:each="difficulty : ${difficulties}"
+                                        th:value="${difficulty.getLevelNumber()}"
+                                        th:text="${difficulty.getLevel()}"
+                                        th:selected="(${param.qdifficulty == difficulty.getLevelNumber()})">Difficulty</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <select class="form-control" id="qcategory" name="qcategory" >
+                                <option value="">Category</option>
+                                <option th:each="questionCategory : ${questionCategories}"
+                                        th:value="${questionCategory.getName()}"
+                                        th:text="${questionCategory.getName()}"
+                                        th:selected="(${param.qcategory == questionCategory.getName()})">Category</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary mb-2" type="Submit" th:text="Search"></button>
+                    </form>
+                </div>
+            </div>
         </div>
         <div th:if="${!questions.isEmpty()}">
             <table class="table table-striped table-hover">
@@ -41,9 +66,9 @@
                     <td th:text="${question.getShortname()}">Short Name</td>
                     <td th:text="${question.getQuestionCategory().getName()}">Category</td>
                     <td th:text="${question.getQuestionDifficulty().getLevel()}">Difficulty</td>
-                    <td><a th:href="${'/admin/question/' + question.getId()}" class="btn btn-success btn-xs">View</a></td>
-                    <td><a th:href="${'/admin/question/edit/' + question.getId()}" class="btn btn-warning btn-xs">Edit</a></td>
-                    <td><a th:href="${'/admin/question/delete/' + question.getId()}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
+                    <td><a th:href="@{'/admin/question/' + ${question.getId()}}" class="btn btn-success btn-xs">View</a></td>
+                    <td><a th:href="@{'/admin/question/edit/' + ${question.getId()}}" class="btn btn-warning btn-xs">Edit</a></td>
+                    <td><a th:href="@{'/admin/question/delete/' + ${question.getId()}}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
                 </tr>
                 </tbody>
             </table>

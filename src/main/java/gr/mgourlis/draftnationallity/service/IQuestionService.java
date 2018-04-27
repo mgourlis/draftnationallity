@@ -13,6 +13,10 @@ public interface IQuestionService {
     public Question findQuestionByShortname(String name);
     public List<Question> findQuestionsByQuestionCategoryName(String questionCategoryName);
     public Page<Question> findQuestionsByQuestionCategoryName(String questionCategoryName, Pageable pageable);
+    public List<Question> findQuestionsByDifficultyLevelNumber(int difficultyLevelNumber);
+    public Page<Question> findQuestionsByDifficultyLevelNumber(int difficultyLevelNumber, Pageable pageable);
+    public List<Question> findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber);
+    public Page<Question> findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber, Pageable pageable);
     public void save(Question question);
     public void delete(long id);
 }

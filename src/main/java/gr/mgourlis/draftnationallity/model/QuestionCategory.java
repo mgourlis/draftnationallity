@@ -14,23 +14,12 @@ public class QuestionCategory extends BaseEntity {
     @NotNull(message = "*Please provide a name for the category")
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH}, mappedBy = "questionCategory")
-    private List<Question> questions;
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
     }
 
     @Override
