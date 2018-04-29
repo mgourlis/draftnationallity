@@ -2,6 +2,7 @@ package gr.mgourlis.draftnationallity.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class Exam extends BaseEntity {
 
     @Column(name = "validated_date")
     @Temporal(TemporalType.DATE)
-    private Boolean validatedDate;
+    private Date validatedDate;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
     @JoinColumn(name = "exam_setting_id", referencedColumnName = "exam_setting_id", nullable = false)
@@ -93,11 +94,11 @@ public class Exam extends BaseEntity {
         this.validated = validated;
     }
 
-    public Boolean getValidatedDate() {
+    public Date getValidatedDate() {
         return validatedDate;
     }
 
-    public void setValidatedDate(Boolean validatedDate) {
+    public void setValidatedDate(Date validatedDate) {
         this.validatedDate = validatedDate;
     }
 

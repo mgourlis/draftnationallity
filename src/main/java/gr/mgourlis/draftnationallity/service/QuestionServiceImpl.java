@@ -73,7 +73,7 @@ public class QuestionServiceImpl implements IQuestionService {
             if(questionRepository.findQuestionByShortnameAndDeleted(question.getShortname(),false) == null){
                 questionRepository.save(question);
             }else{
-                throw new EntityExistsException("Difficulty already exists");
+                throw new EntityExistsException("Question already exists");
             }
         }else{
             Question oldQuestion = questionRepository.findQuestionByIdAndDeleted(question.getId(),false);
@@ -84,7 +84,7 @@ public class QuestionServiceImpl implements IQuestionService {
                 oldQuestion.setQuestionDifficulty(question.getQuestionDifficulty());
                 questionRepository.save(oldQuestion);
             }else{
-                throw new EntityNotFoundException("Can't save difficulty. Invalid difficulty");
+                throw new EntityNotFoundException("Can't save Question. Invalid Question");
             }
         }
     }
@@ -99,4 +99,5 @@ public class QuestionServiceImpl implements IQuestionService {
             throw new EntityNotFoundException("Invalid Question");
         }
     }
+
 }

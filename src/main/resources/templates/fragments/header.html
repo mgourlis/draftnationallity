@@ -16,19 +16,18 @@
         <ul class="nav navbar-nav">
             <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/user/">Users</a></li>
             <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/role/">Roles</a></li>
-            <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/question-category/">Question Categories</a></li>
             <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/question/">Questions</a></li>
             <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Settings</a>
                 <ul class="dropdown-menu">
+                    <li><a href="/admin/question-category/">Question Categories</a></li>
                     <li><a href="/admin/difficulty/">Difficulties</a></li>
                     <li><a href="/admin/exam-setting/">Exam Settings</a></li>
                 </ul>
             </li>
             <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Import/Export</a>
                 <ul class="dropdown-menu">
-                    <li><a href="/admin/upload/">Upload File</a></li>
-                    <li><a href="/admin/bulkaction/import">Import File</a></li>
-                    <li><a href="/admin/ebulkaction/export">Export File</a></li>
+                    <li><a href="/admin/import/">Import Questions</a></li>
+                    <li><a href="/admin/export/questions">Export Questions</a></li>
                 </ul>
             </li>
             <li sec:authorize="hasRole('ROLE_MODERATOR')"><a href="/moderator/exam/">Exams</a></li>

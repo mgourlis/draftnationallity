@@ -13,8 +13,8 @@ public interface ExamRepository extends JpaRepository<Exam,Long> {
     public Exam findFirstByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, Boolean deleted);
     public Exam findExamsByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, Boolean deleted);
     public Exam findExamByUIDAndDeleted(String uID, Boolean deleted);
-    public Exam findExamByLocalFileNumberAAndDeleted(String localFileNumber, Boolean deleted);
-    public Exam findExamByFileNumberAAndDeleted(String fileNumber, Boolean deleted);
+    public Exam findExamByLocalFileNumberAndDeleted(String localFileNumber, Boolean deleted);
+    public Exam findExamByFileNumberAndDeleted(String fileNumber, Boolean deleted);
     public List<Exam> findExamsByDeleted(Boolean deleted);
     public Page<Exam> findExamsByDeleted(Boolean deleted, Pageable pageable);
 }

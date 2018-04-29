@@ -46,14 +46,12 @@ public class Difficulty extends BaseEntity implements Comparable<Difficulty> {
 
         Difficulty that = (Difficulty) o;
 
-        if (getLevelNumber() != that.getLevelNumber()) return false;
-        return getLevel().equals(that.getLevel());
+        return getLevelNumber() == that.getLevelNumber();
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + getLevel().hashCode();
         result = 31 * result + getLevelNumber();
         return result;
     }

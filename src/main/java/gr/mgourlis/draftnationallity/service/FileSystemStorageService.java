@@ -46,6 +46,7 @@ public class FileSystemStorageService implements IStorageService {
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, this.rootLocation.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
+                inputStream.close();
             }
         }
         catch (IOException e) {
