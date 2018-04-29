@@ -1,6 +1,8 @@
 package gr.mgourlis.draftnationallity.service;
 
+import gr.mgourlis.draftnationallity.model.Difficulty;
 import gr.mgourlis.draftnationallity.model.Question;
+import gr.mgourlis.draftnationallity.model.QuestionCategory;
 import gr.mgourlis.draftnationallity.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,7 +11,10 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service("QuestionService")
 public class QuestionServiceImpl implements IQuestionService {
@@ -65,6 +70,17 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
     public Page<Question> findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber, Pageable pageable) {
         return questionRepository.findQuestionsByQuestionCategory_NameAndQuestionDifficulty_LevelNumberAndDeleted(questionCategoryName, difficultyLevelNumber,false, pageable);
+    }
+
+    @Override
+    public Set<Question> getRandomQuestionsByCategoryAndDifficulty(QuestionCategory questionCategory, Difficulty difficulty, int size) {
+        List<Question> questions =findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(questionCategory.getName(),difficulty.getLevelNumber());
+        Set<Question> randomQuestions = new LinkedHashSet<>();
+        while(randomQuestions.size() < size) {
+            int index = (int) (Math.random() * questions.size());
+            randomQuestions.add(questions.get(index));
+        }
+        return randomQuestions;
     }
 
     @Override

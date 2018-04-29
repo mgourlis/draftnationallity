@@ -1,10 +1,13 @@
 package gr.mgourlis.draftnationallity.service;
 
+import gr.mgourlis.draftnationallity.model.Difficulty;
 import gr.mgourlis.draftnationallity.model.Question;
+import gr.mgourlis.draftnationallity.model.QuestionCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IQuestionService {
     public Question getOne(long id);
@@ -17,6 +20,7 @@ public interface IQuestionService {
     public Page<Question> findQuestionsByDifficultyLevelNumber(int difficultyLevelNumber, Pageable pageable);
     public List<Question> findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber);
     public Page<Question> findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber, Pageable pageable);
+    public Set<Question> getRandomQuestionsByCategoryAndDifficulty(QuestionCategory questionCategory , Difficulty difficulty, int size);
     public void save(Question question);
     public void delete(long id);
 }

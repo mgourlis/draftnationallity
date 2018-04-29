@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -203,7 +204,7 @@ public class ExamSettingController {
             errorMessageBox += "Select at least one Question Category.\n";
             checkFlag = true;
         }
-        Set<QuestionCategory> inputCategories = new HashSet<>();
+        Set<QuestionCategory> inputCategories = new LinkedHashSet<>();
         for (long questionCategoryId : examSettingDTO.getQuestionCategories()) {
             if(questionCategoryId != 0) {
                 QuestionCategory questionCategory = questionCategoryService.getOne(questionCategoryId);

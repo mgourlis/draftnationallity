@@ -10,11 +10,12 @@ import java.util.List;
 
 @Repository("ExamRepository")
 public interface ExamRepository extends JpaRepository<Exam,Long> {
-    public Exam findFirstByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, Boolean deleted);
-    public Exam findExamsByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, Boolean deleted);
-    public Exam findExamByUIDAndDeleted(String uID, Boolean deleted);
-    public Exam findExamByLocalFileNumberAndDeleted(String localFileNumber, Boolean deleted);
-    public Exam findExamByFileNumberAndDeleted(String fileNumber, Boolean deleted);
-    public List<Exam> findExamsByDeleted(Boolean deleted);
-    public Page<Exam> findExamsByDeleted(Boolean deleted, Pageable pageable);
+    public Exam findExamByIdAndDeleted(long id, boolean deleted);
+    public Exam findExamByUIDAndDeleted(String uID, boolean deleted);
+    public Exam findExamByLocalFileNumberAndDeleted(String localFileNumber, boolean deleted);
+    public Exam findExamByFileNumberAndDeleted(String fileNumber, boolean deleted);
+    public List<Exam> findExamsByDeleted(boolean deleted);
+    public Page<Exam> findExamsByDeleted(boolean deleted, Pageable pageable);
+    public List<Exam> findExamsByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, boolean deleted);
+    public Page<Exam> findExamsByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, boolean deleted, Pageable pageable);
 }

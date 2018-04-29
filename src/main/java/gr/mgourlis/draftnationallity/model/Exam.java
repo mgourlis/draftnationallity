@@ -31,20 +31,45 @@ public class Exam extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Date ratedDate;
 
-    @Column(name = "validated")
-    private Boolean validated;
+    @Column(name = "language_exemption")
+    private boolean languageExemption;
+
+    @Column(name = "language_exemption_notes", length = 512)
+    private String languageExemptionNotes;
+
+    @Column(name = "deaf")
+    private boolean deaf;
+
+    @Column(name = "deaf_notes", length = 512)
+    private String deafNotes;
 
     @Column(name = "validated_date")
     @Temporal(TemporalType.DATE)
     private Date validatedDate;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.ORDINAL)
+    private ExamStatus status;
+
+    @Lob
+    @Column(name = "exam_general_notes", length = 1024)
+    private String examGeneralNotes;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
     @JoinColumn(name = "exam_setting_id", referencedColumnName = "exam_setting_id", nullable = false)
     private ExamSetting examSetting;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "exam_id", referencedColumnName = "exam_id", nullable = false)
     private List<ExamQuestion> examQuestions;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "exam_rating_id", referencedColumnName = "exam_rating_id", nullable = false)
+    private List<ExamRating> examRatings;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "committee_member_id", referencedColumnName = "committee_member_id", nullable = false)
+    private List<CommitteeMember> committeeMembers;
 
     public String getuID() {
         return uID;
@@ -82,16 +107,40 @@ public class Exam extends BaseEntity {
         return ratedDate;
     }
 
-    public void setRatedDate(Date rateddDate) {
-        this.ratedDate = rateddDate;
+    public void setRatedDate(Date ratedDate) {
+        this.ratedDate = ratedDate;
     }
 
-    public Boolean getValidated() {
-        return validated;
+    public boolean isLanguageExemption() {
+        return languageExemption;
     }
 
-    public void setValidated(Boolean validated) {
-        this.validated = validated;
+    public void setLanguageExemption(boolean languageExemption) {
+        this.languageExemption = languageExemption;
+    }
+
+    public String getLanguageExemptionNotes() {
+        return languageExemptionNotes;
+    }
+
+    public void setLanguageExemptionNotes(String languageExemptionNotes) {
+        this.languageExemptionNotes = languageExemptionNotes;
+    }
+
+    public boolean isDeaf() {
+        return deaf;
+    }
+
+    public void setDeaf(boolean deaf) {
+        this.deaf = deaf;
+    }
+
+    public String getDeafNotes() {
+        return deafNotes;
+    }
+
+    public void setDeafNotes(String deafNotes) {
+        this.deafNotes = deafNotes;
     }
 
     public Date getValidatedDate() {
@@ -100,6 +149,22 @@ public class Exam extends BaseEntity {
 
     public void setValidatedDate(Date validatedDate) {
         this.validatedDate = validatedDate;
+    }
+
+    public ExamStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ExamStatus status) {
+        this.status = status;
+    }
+
+    public String getExamGeneralNotes() {
+        return examGeneralNotes;
+    }
+
+    public void setExamGeneralNotes(String examGeneralNotes) {
+        this.examGeneralNotes = examGeneralNotes;
     }
 
     public ExamSetting getExamSetting() {
@@ -116,6 +181,22 @@ public class Exam extends BaseEntity {
 
     public void setExamQuestions(List<ExamQuestion> examQuestions) {
         this.examQuestions = examQuestions;
+    }
+
+    public List<ExamRating> getExamRatings() {
+        return examRatings;
+    }
+
+    public void setExamRatings(List<ExamRating> examRatings) {
+        this.examRatings = examRatings;
+    }
+
+    public List<CommitteeMember> getCommitteeMembers() {
+        return committeeMembers;
+    }
+
+    public void setCommitteeMembers(List<CommitteeMember> committeeMembers) {
+        this.committeeMembers = committeeMembers;
     }
 
     @Override

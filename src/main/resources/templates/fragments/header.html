@@ -40,13 +40,17 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li sec:authorize="isFullyAuthenticated()">
-                <a href="#"><span class="glyphicon glyphicon-user"></span>
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span class="glyphicon glyphicon-user"></span>
                 <span th:utext="${#request.userPrincipal.principal.name}"></span>
                 <span> </span>
                 <span th:text ="${#request.userPrincipal.principal.lastName}"></span>
                 <span>(</span>
                 <span th:text ="${#request.userPrincipal.principal.email}"></span>
-                <span>)</span></a></li>
+                <span>)</span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="/resetpass">Reset Password</a></li>
+                </ul>
+            </li>
             <li sec:authorize="isFullyAuthenticated()">
                 <a href="#">
                     <form th:action="@{/logout}" method="post">
