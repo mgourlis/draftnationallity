@@ -100,7 +100,7 @@ public class DifficultyController {
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public ModelAndView createNewUser(@Valid @ModelAttribute("difficulty") DifficultyDTO difficultyDTO, BindingResult bindingResult) {
+    public ModelAndView createNewDifficulty(@Valid @ModelAttribute("difficulty") DifficultyDTO difficultyDTO, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         Difficulty difficultyExists = difficultyService.findByLevelNumber(difficultyDTO.getLevelNumber());
         if (difficultyExists != null) {
@@ -116,7 +116,7 @@ public class DifficultyController {
             difficulty.setLevelNumber(difficultyDTO.getLevelNumber());
             difficultyService.save(difficulty);
             modelAndView.addObject("successMessageBox", "Difficulty has been created successfully");
-            modelAndView.addObject("difficulty", new Difficulty());
+            modelAndView.addObject("difficulty", new DifficultyDTO());
             modelAndView.setViewName("admin/difficulty/newDifficulty");
 
         }
@@ -124,7 +124,7 @@ public class DifficultyController {
     }
 
     @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteUser(@PathVariable("id") long id){
+    public ModelAndView deleteDifficulty(@PathVariable("id") long id){
         ModelAndView modelAndView = new ModelAndView();
         Difficulty difficulty = difficultyService.getOne(id);
 

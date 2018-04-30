@@ -58,11 +58,11 @@ public class UserEditDTO {
         this.lastName = lastName;
     }
 
-    public String getApokentromeniDioikisi() {
+    public String getForeas() {
         return foreas;
     }
 
-    public void setApokentromeniDioikisi(String foreas) {
+    public void setForeas(String foreas) {
         this.foreas = foreas;
     }
 
@@ -87,6 +87,7 @@ public class UserEditDTO {
         setEmail(user.getEmail());
         setName(user.getName());
         setLastName(user.getLastName());
+        setForeas(user.getForeas());
         setActive(user.isActive());
         setRoles(user.getRoles());
     }

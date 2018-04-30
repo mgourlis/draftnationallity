@@ -17,7 +17,7 @@ public interface IExamService {
     public Page<Exam> findAll(Pageable pageable);
     public List<Exam> findExamsByUser(String email);
     public Page<Exam> findExamsByUser(String email, Pageable pageable);
-    public Exam createExam(Exam exam, long examSettingId);
+    public String createExam(Exam exam, long examSettingId);
     public void setExamAnswers(Exam exam, List<ExamQuestion> examQuestions);
     public void rateExam(Exam exam, List<ExamRating> examRatings);
     public void validateExam(Exam exam);

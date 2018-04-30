@@ -86,12 +86,14 @@ public class UserController {
             throw new EntityNotFoundException();
         }
         else if (bindingResult.hasErrors()){
+            modelAndView.addObject("roles", roleService.findAll());
             modelAndView.setViewName("/admin/user/editUser");
         }
         else{
             edituser.setActive(userDto.isActive());
             edituser.setName(userDto.getName());
             edituser.setLastName(userDto.getLastName());
+            edituser.setForeas(userDto.getForeas());
             edituser.setRoles(userDto.getRoles());
             userService.save(edituser);
             modelAndView.setViewName("redirect:/admin/user/" + edituser.getId());

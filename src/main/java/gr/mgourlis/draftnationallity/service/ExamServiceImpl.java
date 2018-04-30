@@ -63,10 +63,10 @@ public class ExamServiceImpl implements IExamService {
     }
 
     @Override
-    public Exam createExam(Exam exam, long examSettingId) {
+    public String createExam(Exam exam, long examSettingId) {
         ExamSetting examSetting = examSettingService.getOne(examSettingId);
         if(examSetting != null) {
-            if(!exam.getForeas().equals("") || !exam.getFileNumber().equals("")){
+            if(exam.getForeas().equals("") || exam.getLocalFileNumber().equals("")){
                 throw new IllegalArgumentException("Foreas or Local File Number can not be empty");
             }
             if(exam.isLanguageExemption()){
@@ -82,32 +82,49 @@ public class ExamServiceImpl implements IExamService {
             exam.setStatus(ExamStatus.PENDING);
             exam.setuID(Long.toString(Calendar.getInstance(TimeZone.getTimeZone("Europe/Athens")).getTimeInMillis()));
             exam.setExamSetting(examSetting);
-            Set<QuestionCategory> questionCategories = examSetting.getQuestionCategories();
+            List<QuestionCategory> questionCategories = examSetting.getQuestionCategories();
             List<DifficultySetting> difficultySettings = examSetting.getDifficultySettings();
             if(!questionCategories.isEmpty()){
-                Set<ExamQuestion> examQuestions = new LinkedHashSet<>();
+                List<Set<ExamQuestion>> examQuestionsList = new ArrayList<>();
                 int questionsSize = questionCategories.size();
                 for (QuestionCategory questionCategory : questionCategories) {
-                    int questionCategorySize = (int) examSetting.getNumOfQuestions() / questionsSize;
+                    Set<ExamQuestion> categoryQuestions = new LinkedHashSet<>();
+                    int questionCategorySize = ((int) examSetting.getNumOfQuestions() / questionsSize) + 1;
                     for (DifficultySetting difficultySetting : difficultySettings){
                         int questionsCategoryDifficultySize = (int)((questionCategorySize * difficultySetting.getPercentage())/100.0);
                         Set<Question> randQuestions = questionService.getRandomQuestionsByCategoryAndDifficulty
                                 (questionCategory,difficultySetting.getDifficulty(),questionsCategoryDifficultySize);
                         for (Question question : randQuestions) {
                             ExamQuestion examQuestion = new ExamQuestion();
-                            examQuestion.setSortNumber(examQuestions.size());
+                            examQuestion.setSortNumber(categoryQuestions.size());
                             examQuestion.setQuestion(question);
-                            examQuestions.add(examQuestion);
+                            categoryQuestions.add(examQuestion);
                         }
                     }
+                    examQuestionsList.add(categoryQuestions);
                 }
-
-                return exam;
+                int categoryIndex = questionCategories.size() -1;
+                while ((examSetting.getNumOfQuestions() - countExamQuestions(examQuestionsList)) < 0){
+                    if(categoryIndex < 0 )
+                        categoryIndex = questionCategories.size() -1;
+                    examQuestionsList.get(categoryIndex).remove(examQuestionsList.get(categoryIndex).toArray()[examQuestionsList.get(categoryIndex).size() -1]);
+                }
+                int count = 0;
+                List<ExamQuestion> allExamQuestions = new ArrayList<>();
+                for (Set<ExamQuestion> examQuestions :examQuestionsList) {
+                    for (ExamQuestion examQuestion : examQuestions) {
+                        examQuestion.setSortNumber(count);
+                        allExamQuestions.add(examQuestion);
+                    }
+                }
+                exam.setExamQuestions(allExamQuestions);
+                examRepository.save(exam);
+                return exam.getuID();
             }else   {
                 throw new IllegalArgumentException("Something went wrong with Exam Setting");
             }
         }else {
-            throw new EntityNotFoundException("Exam Service does not exist");
+            throw new EntityNotFoundException("Exam Setting does not exist");
         }
     }
 
@@ -121,13 +138,15 @@ public class ExamServiceImpl implements IExamService {
                             throw new IllegalArgumentException("Answer on Question " + examQuestion.getSortNumnber() + " can not be empty");
                         }
                     }
+                    exam.setAnsweredDate(new Date());
+                    exam.setStatus(ExamStatus.ANSWERED);
                     exam.setExamQuestions(examQuestions);
                     examRepository.save(exam);
                 }else {
                     throw new IllegalArgumentException("Ratings can not be empty");
                 }
             } else {
-                throw new IllegalArgumentException("Can not give answers after pending status");
+                throw new IllegalArgumentException("Can not set status to answered");
             }
         }else{
             throw new EntityNotFoundException("Exam does not exists");
@@ -137,7 +156,7 @@ public class ExamServiceImpl implements IExamService {
     @Override
     public void rateExam(Exam exam, List<ExamRating> examRatings) {
         if(getOne(exam.getId()) != null) {
-            if (exam.getStatus().equals(ExamStatus.PENDING)) {
+            if (exam.getStatus().equals(ExamStatus.ANSWERED)) {
                 if(examRatings.isEmpty()) {
                     exam.setRatedDate(new Date());
                     exam.setExamRatings(examRatings);
@@ -187,5 +206,13 @@ public class ExamServiceImpl implements IExamService {
         }else{
             throw new EntityNotFoundException("Invalid Exam");
         }
+    }
+
+    private int countExamQuestions(List<Set<ExamQuestion>> examQuestionsList){
+        int count = 0;
+        for (Set<ExamQuestion> examQuestions :examQuestionsList) {
+            count += examQuestions.size();
+        }
+        return count;
     }
 }

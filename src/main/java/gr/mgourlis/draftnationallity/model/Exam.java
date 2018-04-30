@@ -2,7 +2,6 @@ package gr.mgourlis.draftnationallity.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +25,10 @@ public class Exam extends BaseEntity {
     @Column(name = "foreas")
     @NotEmpty
     private String foreas;
+
+    @Column(name = "answered_date")
+    @Temporal(TemporalType.DATE)
+    private Date answeredDate;
 
     @Column(name = "rated_date")
     @Temporal(TemporalType.DATE)
@@ -64,11 +67,11 @@ public class Exam extends BaseEntity {
     private List<ExamQuestion> examQuestions;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "exam_rating_id", referencedColumnName = "exam_rating_id", nullable = false)
+    @JoinColumn(name = "exam_id", referencedColumnName = "exam_id", nullable = false)
     private List<ExamRating> examRatings;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "committee_member_id", referencedColumnName = "committee_member_id", nullable = false)
+    @JoinColumn(name = "exam_id", referencedColumnName = "exam_id", nullable = false)
     private List<CommitteeMember> committeeMembers;
 
     public String getuID() {
@@ -101,6 +104,14 @@ public class Exam extends BaseEntity {
 
     public void setForeas(String foreas) {
         this.foreas = foreas;
+    }
+
+    public Date getAnsweredDate() {
+        return answeredDate;
+    }
+
+    public void setAnsweredDate(Date answeredDate) {
+        this.answeredDate = answeredDate;
     }
 
     public Date getRatedDate() {

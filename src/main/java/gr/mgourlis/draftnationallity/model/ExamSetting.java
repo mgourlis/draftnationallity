@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "examsettings")
@@ -31,7 +30,7 @@ public class ExamSetting extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "questioncategory_examsetting", joinColumns = @JoinColumn(name = "exam_settings_id"), inverseJoinColumns = @JoinColumn(name = "question_category_id"))
     @NotEmpty
-    private Set<QuestionCategory> questionCategories;
+    private List<QuestionCategory> questionCategories;
 
     public String getName() {
         return name;
@@ -65,11 +64,11 @@ public class ExamSetting extends BaseEntity {
         this.difficultySettings = difficultySettings;
     }
 
-    public Set<QuestionCategory> getQuestionCategories() {
+    public List<QuestionCategory> getQuestionCategories() {
         return questionCategories;
     }
 
-    public void setQuestionCategories(Set<QuestionCategory> questionCategories) {
+    public void setQuestionCategories(List<QuestionCategory> questionCategories) {
         this.questionCategories = questionCategories;
     }
 

@@ -1,16 +1,11 @@
 package gr.mgourlis.draftnationallity.configuration;
 
-import gr.mgourlis.draftnationallity.model.Role;
-import gr.mgourlis.draftnationallity.model.User;
 import gr.mgourlis.draftnationallity.repository.*;
 import gr.mgourlis.draftnationallity.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.HashSet;
 
 @Service
 public class Initializer {
@@ -39,6 +34,8 @@ public class Initializer {
 
     @EventListener
     public void inititialize(ApplicationReadyEvent event){
+
+        /*
 
         //-------------INIT ROLES---------------
         Role roleAdmin = new Role();
@@ -192,5 +189,6 @@ public class Initializer {
         IUserService.save(userUser9);
         //--------------------------------------
 
+        */
     }
 }

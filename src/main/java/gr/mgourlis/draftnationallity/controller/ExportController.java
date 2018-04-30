@@ -1,6 +1,5 @@
 package gr.mgourlis.draftnationallity.controller;
 
-import com.sun.xml.internal.stream.writers.UTF8OutputStreamWriter;
 import gr.mgourlis.draftnationallity.service.IImportExportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -13,7 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 
 @Controller
 @Secured("ADMIN")
@@ -28,9 +28,9 @@ public class ExportController {
     public ResponseEntity<Resource> exportQuestions() {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            UTF8OutputStreamWriter utf8OutputStreamWriter = new UTF8OutputStreamWriter(byteArrayOutputStream);
+            ObjectOutputStream utf8OutputStreamWriter = new ObjectOutputStream(byteArrayOutputStream);
             byteArrayOutputStream.reset();
-            utf8OutputStreamWriter.write(importExportService.exportQuestions());
+            utf8OutputStreamWriter.writeObject(importExportService.exportQuestions());
 
             Resource file = new ByteArrayResource(byteArrayOutputStream.toByteArray());
             utf8OutputStreamWriter.close();
