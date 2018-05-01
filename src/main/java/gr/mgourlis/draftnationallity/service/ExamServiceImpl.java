@@ -1,5 +1,6 @@
 package gr.mgourlis.draftnationallity.service;
 
+import gr.mgourlis.draftnationallity.dto.CommitteeMemberDTO;
 import gr.mgourlis.draftnationallity.dto.EditExamDTO;
 import gr.mgourlis.draftnationallity.dto.ExamQuestionDTO;
 import gr.mgourlis.draftnationallity.dto.ExamRatingDTO;
@@ -74,6 +75,16 @@ public class ExamServiceImpl implements IExamService {
     @Override
     public Page<Exam> findExamsByUser(String email, Pageable pageable) {
         return examRepository.findExamsByCreatedByAndDeletedOrderByCreatedAtDesc(email,false,pageable);
+    }
+
+    @Override
+    public List<Exam> findExamsByLocalFileNumberAndUser(String localFileNumber, String email) {
+        return examRepository.findExamsByLocalFileNumberAndCreatedByAndDeleted(localFileNumber, email,false);
+    }
+
+    @Override
+    public Page<Exam> findExamsByLocalFileNumberAndUser(String localFileNumber, String email, Pageable pageable) {
+        return examRepository.findExamsByLocalFileNumberAndCreatedByAndDeleted(localFileNumber, email,false, pageable);
     }
 
     @Override
@@ -219,6 +230,41 @@ public class ExamServiceImpl implements IExamService {
                 }
             } else {
                 throw new IllegalArgumentException("Can not set status to rated");
+            }
+        }else{
+            throw new EntityNotFoundException("Exam does not exists");
+        }
+    }
+
+    @Override
+    public void finalizeExam(Exam exam, List<CommitteeMemberDTO> committeeMembersDTO, boolean finalize) {
+        if(getOne(exam.getId()) != null) {
+            if (exam.getStatus().equals(ExamStatus.RATED)) {
+                if(!committeeMembersDTO.isEmpty()) {
+                    List<CommitteeMember> committeeMembers = new ArrayList<>();
+                    for(CommitteeMemberDTO committeeMemberDTO : committeeMembersDTO){
+                        if(committeeMemberDTO.getName().equals("") || committeeMemberDTO.getLastName().equals("") || committeeMemberDTO.getCommitteeRole() == null){
+                            throw new IllegalArgumentException("Committee Members must have a name, a lastname and a role.");
+                        }
+                        CommitteeMember committeeMember = new CommitteeMember();
+                        committeeMember.setName(committeeMemberDTO.getName());
+                        committeeMember.setLastName(committeeMemberDTO.getLastName());
+                        committeeMember.setCommitteeRole(committeeMemberDTO.getCommitteeRole());
+                        committeeMembers.add(committeeMember);
+                    }
+                    exam.setFinalizedDate(new Date());
+                    exam.getCommitteeMembers().clear();
+                    for (CommitteeMember committeeMember : committeeMembers) {
+                        exam.getCommitteeMembers().add(committeeMember);
+                    }
+                    if(finalize)
+                        exam.setStatus(ExamStatus.FINALIZED);
+                    examRepository.save(exam);
+                }else {
+                    throw new IllegalArgumentException("Committee members can not be empty");
+                }
+            } else {
+                throw new IllegalArgumentException("Can not set status to finalized");
             }
         }else{
             throw new EntityNotFoundException("Exam does not exists");

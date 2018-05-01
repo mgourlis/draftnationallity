@@ -19,4 +19,6 @@ public interface ExamRepository extends JpaRepository<Exam,Long> {
     public Page<Exam> findExamsByDeleted(boolean deleted, Pageable pageable);
     public List<Exam> findExamsByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, boolean deleted);
     public Page<Exam> findExamsByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, boolean deleted, Pageable pageable);
+    public List<Exam> findExamsByLocalFileNumberAndCreatedByAndDeleted(String localFileNumber, String email, boolean deleted);
+    public Page<Exam> findExamsByLocalFileNumberAndCreatedByAndDeleted(String localFileNumber, String email, boolean deleted, Pageable pageable);
 }

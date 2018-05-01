@@ -1,8 +1,10 @@
 package gr.mgourlis.draftnationallity.service;
 
+import gr.mgourlis.draftnationallity.dto.CommitteeMemberDTO;
 import gr.mgourlis.draftnationallity.dto.EditExamDTO;
 import gr.mgourlis.draftnationallity.dto.ExamQuestionDTO;
 import gr.mgourlis.draftnationallity.dto.ExamRatingDTO;
+import gr.mgourlis.draftnationallity.model.CommitteeMember;
 import gr.mgourlis.draftnationallity.model.Exam;
 import gr.mgourlis.draftnationallity.model.ExamQuestion;
 import gr.mgourlis.draftnationallity.model.ExamRating;
@@ -21,10 +23,13 @@ public interface IExamService {
     public Page<Exam> findAll(Pageable pageable);
     public List<Exam> findExamsByUser(String email);
     public Page<Exam> findExamsByUser(String email, Pageable pageable);
+    public List<Exam> findExamsByLocalFileNumberAndUser(String localFileNumber, String email);
+    public Page<Exam> findExamsByLocalFileNumberAndUser(String localFileNumber, String email, Pageable pageable);
     public String createExam(Exam exam, long examSettingId);
     public void editExam(Exam exam, EditExamDTO editExamDTO);
     public void setExamAnswers(Exam exam, List<ExamQuestionDTO> examQuestionsDTO, boolean finalAnswers);
     public void rateExam(Exam exam, List<ExamRatingDTO> examRatingsDTO, boolean finalRatings);
+    public void finalizeExam(Exam exam, List<CommitteeMemberDTO> committeeMembersDTO, boolean finalize);
     public void validateExam(Exam exam);
     public void delete(long id);
 

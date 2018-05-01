@@ -46,6 +46,10 @@ public class Exam extends BaseEntity {
     @Column(name = "deaf_notes", length = 512)
     private String deafNotes;
 
+    @Column(name = "finalized_date")
+    @Temporal(TemporalType.DATE)
+    private Date finalizedDate;
+
     @Column(name = "validated_date")
     @Temporal(TemporalType.DATE)
     private Date validatedDate;
@@ -152,6 +156,14 @@ public class Exam extends BaseEntity {
 
     public void setDeafNotes(String deafNotes) {
         this.deafNotes = deafNotes;
+    }
+
+    public Date getFinalizedDate() {
+        return finalizedDate;
+    }
+
+    public void setFinalizedDate(Date finalizedDate) {
+        this.finalizedDate = finalizedDate;
     }
 
     public Date getValidatedDate() {

@@ -24,6 +24,7 @@
             <div class="col-md-8">
                 <div class="pull-right">
                     <form th:action="@{/user/exam/}" method="GET" class="form-inline">
+                        <div class="form-group mb-2"><input type="text" id="lfile" name="lfile"  th:placeholder="Local-File" class="form-control" th:value="${param.lfile}" /></div>
                         <button class="btn btn-primary mb-2" type="Submit" th:text="Search"></button>
                     </form>
                 </div>
@@ -38,11 +39,9 @@
                         <th>Local File Number</th>
                         <th>Created Date</th>
                         <th>Rated Date</th>
-                        <th>Status</th>
                         <th>View</th>
                         <th>Edit</th>
-                        <th>Set Answers</th>
-                        <th>Set Rating</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,11 +51,11 @@
                         <td th:text="${exam.getLocalFileNumber()}">Local File Number</td>
                         <td th:text="${exam.getCreatedAt()}">Created Date/td>
                         <td th:text="${exam.getRatedDate()}">Rated Date</td>
-                        <td th:text="${exam.getStatus()}">Status</td>
                         <td><a th:href="@{'/user/exam/' + ${exam.getId()}}" class="btn btn-success btn-xs">View</a></td>
-                        <td><span th:if="${exam.getStatus().toString() != 'RATED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Edit</a></span></td>
-                        <td><span th:if="${exam.getStatus().toString() == 'PENDING'}"><a th:href="@{'/user/exam/setanswers/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Set Answers</a></span></td>
-                        <td><span th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Set Ratings</a></span></td>
+                        <td><span th:if="${exam.getStatus().toString() != 'RATED' and exam.getStatus().toString() != 'FINALIZED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Edit</a></span></td>
+                        <td th:if="${exam.getStatus().toString() == 'PENDING'}"><a th:href="@{'/user/exam/setanswers/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Set Answers</a></td>
+                        <td th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Set Ratings</a></td>
+                        <td th:if="${exam.getStatus().toString() == 'RATED'}"><a th:href="@{'/user/exam/finalize/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Finalize Exam</a></td>
                     </tr>
                 </tbody>
             </table>

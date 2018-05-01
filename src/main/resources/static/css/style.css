@@ -49,3 +49,7 @@ legend.info-border {
     border-bottom:none;
 }
 
+.validation-message{
+    color: red;
+}
+

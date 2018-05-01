@@ -4,5 +4,6 @@ public enum ExamStatus {
     PENDING,
     ANSWERED,
     RATED,
+    FINALIZED,
     VALIDATED;
 }

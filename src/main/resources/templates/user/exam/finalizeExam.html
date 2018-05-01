@@ -4,7 +4,69 @@
       layout:decorate="~{layouts/default}" >
 <body>
 <div id="main" layout:fragment="content">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="row">
+            <a th:href="@{'/user/exam/' + ${exam.getId()}}" class="btn btn-success btn-md">go to View</a>
+            <div class="pull-right">
+                <form th:action="@{'/user/exam/finalize/' + ${exam.getId()}}" method="GET" class="form-inline">
+                    <div class="form-group mb-2"><input type="number" id="committeesize" name="committeesize" th:value="${committeesize}" class="form-control" /></div>
+                    <button type="submit" class="btn btn-primary mb-2">Set Committee Size</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <form autocomplete="off" action="#" th:action="@{'/user/exam/finalize/' + ${exam.getId()}}" th:object="${exam}" method="post" class="form-horizontal" role="form">
+                <h2>Set Committee Members and Notes</h2>
 
+                <input type="hidden" th:field="*{id}" th:value="*{id}"/>
+                <input type="hidden" th:field="${committeesize}" th:value="${committeesize}"/>
+
+                <div class="col-sm-9" th:each="committeeMemberDTO,stat : *{committeeMembersDTO}">
+                    <div class="row">
+                        <span th:with="memberNumber= ${stat.index + 1}">
+                        <label>Committee Member <span th:text="' ' + ${memberNumber}"></span></label><br/>
+                        </span>
+                        <label>Name</label><br/>
+                        <label	th:if="${#fields.hasErrors('*{committeeMembersDTO[__${stat.index}__].name}')}" th:errors="*{committeeMembersDTO[__${stat.index}__].name}" class="validation-message"></label>
+                        <input type="text" th:field="*{committeeMembersDTO[__${stat.index}__].name}" class="form-control" th:value="${committeeMemberDTO.getName()}" /><br/>
+                        <label>Lastname</label><br/>
+                        <label	th:if="${#fields.hasErrors('*{committeeMembersDTO[__${stat.index}__].lastName}')}" th:errors="*{committeeMembersDTO[__${stat.index}__].lastName}" class="validation-message"></label>
+                        <input type="text" th:field="*{committeeMembersDTO[__${stat.index}__].lastName}" class="form-control" th:value="${committeeMemberDTO.getLastName()}" /><br/>
+                        <label>Member Role</label><br/>
+                        <label	th:if="${#fields.hasErrors('*{committeeMembersDTO[__${stat.index}__].committeeRole}')}" th:errors="*{committeeMembersDTO[__${stat.index}__].committeeRole}" class="validation-message"></label>
+                        <select class="form-control" th:field="*{committeeMembersDTO[__${stat.index}__].committeeRole}" >
+                            <option th:each="role : ${T(gr.mgourlis.draftnationallity.model.CommitteeRole).values()}"
+                                    th:value="${role}"
+                                    th:text="${role}"
+                                    th:selected="(${committeeMemberDTO.getCommitteeRole() == role})">Member Role</option>
+                        </select><br/>
+                        <input type="hidden" th:field="*{committeeMembersDTO[__${stat.index}__].id}" th:value="${committeeMemberDTO.getId()}"/>
+                    </div>
+                    <br/>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <label>Exam General Notes</label><br/>
+                        <label	th:if="${#fields.hasErrors('examGeneralNotes')}" th:errors="*{examGeneralNotes}"
+                                  class="validation-message"></label>
+                        <textarea th:field="*{examGeneralNotes}" class="form-control" rows="10">
+                            <span th:text="*{examGeneralNotes}"></span>
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-9">
+                            <span class="col-sm-4"><button type="submit" class="btn btn-primary btn-block" name="action" value="tempsave">Temporary Save</button></span>
+                            <span class="col-sm-4"><button type="submit" class="btn btn-warning btn-block" name="action" value="save">Finalize</button></span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>

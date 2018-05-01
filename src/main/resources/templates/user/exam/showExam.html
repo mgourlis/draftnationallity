@@ -6,9 +6,10 @@
 <div id="main" layout:fragment="content">
     <div class="col-md-6 col-md-offset-3">
         <div class="col-sm-9">
-            <span th:if="${exam.getStatus().toString() != 'RATED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-md">Edit</a></span>
+            <span th:if="${exam.getStatus().toString() != 'RATED' and exam.getStatus().toString() != 'FINALIZED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-md">Edit</a></span>
             <span th:if="${exam.getStatus().toString() == 'PENDING'}"><a th:href="@{'/user/exam/setanswers/' + ${exam.getId()}}" class="btn btn-warning btn-md">Set Answers</a></span>
             <span th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-md">Set Ratings</a></span>
+            <span th:if="${exam.getStatus().toString() == 'RATED'}"><a th:href="@{'/user/exam/finalize/' + ${exam.getId()}}" class="btn btn-warning btn-md">Finalize Exam</a></span>
             <fieldset class="info-border" >
                 <legend class="info-border">Exam Information</legend>
                 <table class="table">
@@ -90,7 +91,27 @@
         <div class="col-sm-9">
             <fieldset class="info-border">
                 <legend class="info-border">Committee Members</legend>
+                <table class="table">
+                    <tr>
+                        <th>Name</th>
+                        <th>Lastname</th>
+                        <th>Member Role</th>
+                    </tr>
+                    <tr th:each="committeeMember : ${exam.getCommitteeMembers()}">
+                        <td><span th:text="${committeeMember.getName()}"></span></td>
+                        <td><span th:text="${committeeMember.getLastName()}"></span></td>
+                        <td><span th:text="${committeeMember.getCommitteeRole()}"></span></td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
 
+        <br/>
+
+        <div class="col-sm-9">
+            <fieldset class="info-border">
+                <legend class="info-border">General Notes</legend>
+                <div th:text="${exam.getExamGeneralNotes()}"></div>
             </fieldset>
         </div>
     </div>

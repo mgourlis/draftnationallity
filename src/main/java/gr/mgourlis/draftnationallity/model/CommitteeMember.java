@@ -1,10 +1,8 @@
 package gr.mgourlis.draftnationallity.model;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "committee_members")
@@ -21,8 +19,9 @@ public class CommitteeMember extends BaseEntity {
     private String lastName;
 
     @Column(name = "committee_role")
-    @NotEmpty
-    private String committeeRole;
+    @NotNull
+    @Enumerated(EnumType.ORDINAL)
+    private CommitteeRole committeeRole;
 
     public String getName() {
         return name;
@@ -40,11 +39,11 @@ public class CommitteeMember extends BaseEntity {
         this.lastName = lastName;
     }
 
-    public String getCommitteeRole() {
+    public CommitteeRole getCommitteeRole() {
         return committeeRole;
     }
 
-    public void setCommitteeRole(String committeeRole) {
+    public void setCommitteeRole(CommitteeRole committeeRole) {
         this.committeeRole = committeeRole;
     }
 

@@ -47,7 +47,11 @@ public class UserExamController {
                                  ModelAndView modelAndView,
                                  Pageable pageable,
                                  Authentication authentication){
-        Page<Exam> examsPage = examService.findExamsByUser(authentication.getName(),pageable);
+        Page<Exam> examsPage;
+        if(lfile.equals(""))
+            examsPage = examService.findExamsByUser(authentication.getName(),pageable);
+        else
+            examsPage = examService.findExamsByLocalFileNumberAndUser(lfile,authentication.getName(),pageable);
         modelAndView.addObject("successMessageBox",successMessageBox);
         modelAndView.addObject("errorMessageBox",errorMessageBox);
         modelAndView.addObject("exams", examsPage.getContent());
@@ -303,7 +307,7 @@ public class UserExamController {
         } else {
             try {
                 examService.rateExam(exam,rateExamDTO.getExamRatingsDTO(),false);
-                redirectAttributes.addAttribute("successMessageBox", "Exam answers finalized.");
+                redirectAttributes.addAttribute("successMessageBox", "Exam ratings saved temporally, please finalize when you are ready.");
                 modelAndView.setViewName("redirect:/user/exam/" + exam.getId());
             }catch (Exception e){
                 modelAndView.addObject("marks",examRatingMarkService.findAll());
@@ -333,12 +337,182 @@ public class UserExamController {
         } else {
             try {
                 examService.rateExam(exam,rateExamDTO.getExamRatingsDTO(),true);
-                redirectAttributes.addAttribute("successMessageBox", "Exam answers finalized.");
+                redirectAttributes.addAttribute("successMessageBox", "Exam ratings finalized.");
                 modelAndView.setViewName("redirect:/user/exam/" + exam.getId());
             }catch (Exception e){
                 modelAndView.addObject("marks",examRatingMarkService.findAll());
                 modelAndView.addObject("errorMessageBox", "Error: " + e.getMessage());
                 modelAndView.setViewName("user/exam/addRating");
+            }
+        }
+        return modelAndView;
+    }
+
+    @RequestMapping(value= "/finalize/{id}", method = RequestMethod.GET)
+    public ModelAndView finalizeExam(@PathVariable("id") long id,
+                                     @RequestParam(value = "committeesize", required = true, defaultValue = "5") int committesize,
+                                     Authentication authentication,
+                                     RedirectAttributes redirectAttributes) {
+        ModelAndView modelAndView = new ModelAndView();
+        if(committesize < 2){
+            committesize = 2;
+            modelAndView.addObject("errorMessageBox", "Committee size must be at least 2");
+        }
+        if(committesize > 5){
+            committesize = 5;
+            modelAndView.addObject("errorMessageBox", "Committee size must be at most 5");
+        }
+        modelAndView.addObject("committeesize",committesize);
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam != null) {
+            FinalizeExamDTO finalizeExamDTO = new FinalizeExamDTO();
+            finalizeExamDTO.init(exam);
+            int listsize = finalizeExamDTO.getCommitteeMembersDTO().size();
+            if(finalizeExamDTO.getCommitteeMembersDTO().isEmpty()){
+                for (int i=0; i<committesize; i++){
+                    finalizeExamDTO.getCommitteeMembersDTO().add(new CommitteeMemberDTO());
+                }
+            }else if(listsize > committesize){
+                for( int i=0; i<(listsize - committesize); i++){
+                    finalizeExamDTO.getCommitteeMembersDTO().remove(finalizeExamDTO.getCommitteeMembersDTO().size()-1);
+                }
+            }else if(listsize < committesize){
+
+                for( int i=0; i<(committesize - listsize); i++){
+                    finalizeExamDTO.getCommitteeMembersDTO().add(new CommitteeMemberDTO());
+                }
+            }
+            modelAndView.addObject("exam", finalizeExamDTO);
+            modelAndView.setViewName("user/exam/finalizeExam");
+            return modelAndView;
+        }else{
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
+    }
+
+    @RequestMapping(value= "/finalize/{id}", method = RequestMethod.POST, params="action=tempsave")
+    public ModelAndView saveTemporaryExam(@PathVariable("id") long id,
+                                          @RequestParam(value = "committeesize", required = true, defaultValue = "5") int committesize,
+                                          @Valid @ModelAttribute("exam") FinalizeExamDTO finalizeExamDTO,
+                                          BindingResult bindingResult,
+                                          Authentication authentication,
+                                          RedirectAttributes redirectAttributes) {
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam == null){
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
+        Iterator<CommitteeMemberDTO> committeeMemberDTOIterator = finalizeExamDTO.getCommitteeMembersDTO().iterator();
+        int index = 0;
+        while (committeeMemberDTOIterator.hasNext()) {
+            CommitteeMemberDTO committeeMemberDTO =committeeMemberDTOIterator.next();
+            if(committeeMemberDTO.getName().equals("")){
+                bindingResult.rejectValue("committeeMembersDTO[" + index + "].name", "error.exam", "The name cannot be empty");
+            }
+            if(committeeMemberDTO.getLastName().equals("")){
+                bindingResult.rejectValue("committeeMembersDTO[" + index + "].lastName", "error.exam", "The lastname cannot be empty");
+            }
+            if(committeeMemberDTO.getCommitteeRole() == null){
+                bindingResult.rejectValue("committeeMembersDTO[" + index + "].committeeRole", "error.exam", "The role cannot be empty");
+            }
+            index++;
+        }
+        if (bindingResult.hasErrors()) {
+            if(committesize < 2){
+                committesize = 2;
+                modelAndView.addObject("errorMessageBox", "Committee size must be at least 2");
+            }
+            if(committesize > 5){
+                committesize = 5;
+                modelAndView.addObject("errorMessageBox", "Committee size must be at most 5");
+            }
+            modelAndView.addObject("committeesize",committesize);
+            modelAndView.setViewName("user/exam/finalizeExam");
+        } else {
+            try {
+                exam.setExamGeneralNotes(finalizeExamDTO.getExamGeneralNotes());
+                examService.finalizeExam(exam,finalizeExamDTO.getCommitteeMembersDTO(),false);
+                redirectAttributes.addAttribute("successMessageBox", "Exam committee members and notes are saved temporally, please finalized.");
+                modelAndView.setViewName("redirect:/user/exam/" + exam.getId());
+            }catch (Exception e){
+                if(committesize < 2){
+                    committesize = 2;
+                    modelAndView.addObject("errorMessageBox", "Committee size must be at least 2");
+                }
+                if(committesize > 5){
+                    committesize = 5;
+                    modelAndView.addObject("errorMessageBox", "Committee size must be at most 5");
+                }
+                modelAndView.addObject("committeesize",committesize);
+                modelAndView.addObject("errorMessageBox", "Error: " + e.getMessage());
+                modelAndView.setViewName("user/exam/finalizeExam");
+            }
+        }
+        return modelAndView;
+    }
+
+    @RequestMapping(value= "/finalize/{id}", method = RequestMethod.POST, params="action=save")
+    public ModelAndView saveFinalExam(@PathVariable("id") long id,
+                                      @RequestParam(value = "committeesize", required = true, defaultValue = "5") int committesize,
+                                      @Valid @ModelAttribute("exam") FinalizeExamDTO finalizeExamDTO,
+                                      BindingResult bindingResult,
+                                      Authentication authentication,
+                                      RedirectAttributes redirectAttributes) {
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam == null){
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
+        Iterator<CommitteeMemberDTO> committeeMemberDTOIterator = finalizeExamDTO.getCommitteeMembersDTO().iterator();
+        int index = 0;
+        while (committeeMemberDTOIterator.hasNext()) {
+            CommitteeMemberDTO committeeMemberDTO =committeeMemberDTOIterator.next();
+            if(committeeMemberDTO.getName().equals("")){
+                bindingResult.rejectValue("committeeMembersDTO[" + index + "].name", "error.exam", "The name cannot be empty");
+            }
+            if(committeeMemberDTO.getLastName().equals("")){
+                bindingResult.rejectValue("committeeMembersDTO[" + index + "].lastName", "error.exam", "The lastname cannot be empty");
+            }
+            if(committeeMemberDTO.getCommitteeRole() == null){
+                bindingResult.rejectValue("committeeMembersDTO[" + index + "].committeeRole", "error.exam", "The role cannot be empty");
+            }
+            index++;
+        }
+        if (bindingResult.hasErrors()) {
+            if(committesize < 2){
+                committesize = 2;
+                modelAndView.addObject("errorMessageBox", "Committee size must be at least 2");
+            }
+            if(committesize > 5){
+                committesize = 5;
+                modelAndView.addObject("errorMessageBox", "Committee size must be at most 5");
+            }
+            modelAndView.addObject("committeesize",committesize);
+            modelAndView.setViewName("user/exam/finalizeExam");
+        } else {
+            try {
+                exam.setExamGeneralNotes(finalizeExamDTO.getExamGeneralNotes());
+                examService.finalizeExam(exam,finalizeExamDTO.getCommitteeMembersDTO(),true);
+                redirectAttributes.addAttribute("successMessageBox", "Exam finalized successfully.");
+                modelAndView.setViewName("redirect:/user/exam/" + exam.getId());
+            }catch (Exception e){
+                if(committesize < 2){
+                    committesize = 2;
+                    modelAndView.addObject("errorMessageBox", "Committee size must be at least 2");
+                }
+                if(committesize > 5){
+                    committesize = 5;
+                    modelAndView.addObject("errorMessageBox", "Committee size must be at most 5");
+                }
+                modelAndView.addObject("committeesize",committesize);
+                modelAndView.addObject("errorMessageBox", "Error: " + e.getMessage());
+                modelAndView.setViewName("user/exam/finalizeExam");
             }
         }
         return modelAndView;
