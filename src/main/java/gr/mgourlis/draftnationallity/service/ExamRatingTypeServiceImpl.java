@@ -37,6 +37,11 @@ public class ExamRatingTypeServiceImpl implements IExamRatingTypeService {
     }
 
     @Override
+    public List<ExamRatingType> findByLanguageType(boolean languageType) {
+        return examRatingTypeRepository.findExamRatingTypeByLanguageTypeAndDeleted(languageType,false);
+    }
+
+    @Override
     public void save(ExamRatingType examRatingType) {
         if(examRatingType.getId() == null){
             if(examRatingTypeRepository.findExamRatingTypeByRatingTypeAndDeleted(examRatingType.getRatingType(),false) == null){

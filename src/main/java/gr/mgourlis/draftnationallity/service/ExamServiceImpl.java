@@ -2,6 +2,7 @@ package gr.mgourlis.draftnationallity.service;
 
 import gr.mgourlis.draftnationallity.dto.EditExamDTO;
 import gr.mgourlis.draftnationallity.dto.ExamQuestionDTO;
+import gr.mgourlis.draftnationallity.dto.ExamRatingDTO;
 import gr.mgourlis.draftnationallity.model.*;
 import gr.mgourlis.draftnationallity.repository.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,12 @@ public class ExamServiceImpl implements IExamService {
 
     @Autowired
     IQuestionService questionService;
+
+    @Autowired
+    IExamRatingTypeService examRatingTypeService;
+
+    @Autowired
+    IExamRatingMarkService examRatingMarkService;
 
     @Override
     public Exam getOne(long id) {
@@ -174,13 +181,38 @@ public class ExamServiceImpl implements IExamService {
     }
 
     @Override
-    public void rateExam(Exam exam, List<ExamRating> examRatings) {
+    public void rateExam(Exam exam, List<ExamRatingDTO> examRatingsDTO, boolean finalRatings) {
         if(getOne(exam.getId()) != null) {
             if (exam.getStatus().equals(ExamStatus.ANSWERED)) {
-                if(examRatings.isEmpty()) {
+                if(!examRatingsDTO.isEmpty()) {
+                    List<ExamRating> examRatings = new ArrayList<>();
+                    for (ExamRatingDTO examRatingDTO : examRatingsDTO) {
+                        ExamRating examRating = new ExamRating();
+                        ExamRatingType examRatingType = examRatingTypeService.getOne(examRatingDTO.getRatingTypeId());
+                        ExamRatingMark examRatingMark = examRatingMarkService.getOne(examRatingDTO.getRatingMarkId());
+                        if(examRatingType != null){
+                            if(examRatingType.isLanguageType() == true && exam.isLanguageExemption() == true){
+                                throw new IllegalArgumentException("You can not give language rating. The exam has language exemption checked");
+                            }
+                            if(examRatingMark != null){
+                                examRating.setExamRatingType(examRatingType);
+                                examRating.setExamRatingMark(examRatingMark);
+                                examRating.setRatingNotes(examRatingDTO.getRatingNotes());
+                                examRatings.add(examRating);
+                            }else{
+                                throw new EntityNotFoundException("Exam rating mark, not found.");
+                            }
+                        }else{
+                            throw new EntityNotFoundException("Exam rating type, not found.");
+                        }
+                    }
                     exam.setRatedDate(new Date());
-                    exam.setExamRatings(examRatings);
-                    exam.setStatus(ExamStatus.RATED);
+                    exam.getExamRatings().clear();
+                    for (ExamRating examRating:examRatings) {
+                        exam.getExamRatings().add(examRating);
+                    }
+                    if(finalRatings)
+                        exam.setStatus(ExamStatus.RATED);
                     examRepository.save(exam);
                 }else {
                     throw new IllegalArgumentException("Ratings can not be empty");

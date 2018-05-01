@@ -9,7 +9,7 @@
         <form autocomplete="off" action="#" th:action="@{'/user/exam/setanswers/' + ${exam.getId()}}" th:object="${exam}" method="post" class="form-horizontal" role="form">
             <h2>Give Exam Answers</h2>
 
-            <input type="hidden" th:field="*{id}" th:value="${id}"/>
+            <input type="hidden" th:field="*{id}" th:value="*{id}"/>
 
             <div class="col-sm-9" th:each="examQuestion,stat : *{examQuestionsDTO}">
                 <div class="row">

@@ -4,7 +4,45 @@
       layout:decorate="~{layouts/default}" >
 <body>
 <div id="main" layout:fragment="content">
+    <div class="col-md-6 col-md-offset-3">
+        <a th:href="@{'/user/exam/' + ${exam.getId()}}" class="btn btn-success btn-md">go to View</a>
+        <form autocomplete="off" action="#" th:action="@{'/user/exam/setrating/' + ${exam.getId()}}" th:object="${exam}" method="post" class="form-horizontal" role="form">
+            <h2>Rate the Exam</h2>
 
+            <input type="hidden" th:field="*{id}" th:value="*{id}"/>
+
+            <div class="col-sm-9" th:each="examRatingDTO,stat : *{examRatingsDTO}">
+                <div class="row">
+                    <label><span th:text="${examRatingDTO.getRatingTypeName()}"></span></label><br/>
+                    <label	th:if="${#fields.hasErrors('*{examRatingsDTO[__${stat.index}__].ratingMarkId}')}" th:errors="*{examRatingsDTO[__${stat.index}__].ratingMarkId}" class="validation-message"></label>
+                    <select class="form-control" th:field="*{examRatingsDTO[__${stat.index}__].ratingMarkId}" >
+                        <option th:each="mark : ${marks}"
+                                th:value="${mark.getId()}"
+                                th:text="${mark.getRatingMark()}"
+                                th:selected="(${examRatingDTO.getRatingMarkId()} == ${mark.getId()})">Difficulty</option>
+                    </select>
+                    <label>Notes:</label><br/>
+                    <textarea th:field="*{examRatingsDTO[__${stat.index}__].ratingNotes}" class="form-control">
+                        <span th:text="${examRatingsDTO.getRatingNotes()}"></span>
+                    </textarea>
+                    <input type="hidden" th:field="*{examRatingsDTO[__${stat.index}__].id}" th:value="${examRatingDTO.getId()}"/>
+                    <input type="hidden" th:field="*{examRatingsDTO[__${stat.index}__].ratingTypeName}" th:value="${examRatingDTO.getRatingTypeName()}"/>
+                    <input type="hidden" th:field="*{examRatingsDTO[__${stat.index}__].ratingMarkName}" th:value="${examRatingDTO.getRatingMarkName()}"/>
+                    <input type="hidden" th:field="*{examRatingsDTO[__${stat.index}__].ratingTypeId}" th:value="${examRatingDTO.getRatingTypeId()}"/>
+                </div>
+                <br/>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <span class="col-sm-4"><button type="submit" class="btn btn-primary btn-block" name="action" value="tempsave">Temporary Save</button></span>
+                        <span class="col-sm-4"><button type="submit" class="btn btn-warning btn-block" name="action" value="save">Finalize</button></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 </body>
 </html>

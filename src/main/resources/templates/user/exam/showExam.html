@@ -70,7 +70,18 @@
         <div class="col-sm-9">
             <fieldset class="info-border">
                 <legend class="info-border">Exam Rating</legend>
-
+                <table class="table">
+                    <tr>
+                        <th>Τype</th>
+                        <th>Mark</th>
+                        <th>Notes</th>
+                    </tr>
+                    <tr th:each="examRating : ${exam.getExamRatings()}">
+                        <td><span th:text="${examRating.getExamRatingType().getRatingType()} + ':'"></span></td>
+                        <td><span th:text="${examRating.getExamRatingMark().getRatingMark()}"></span></td>
+                        <td><span th:text="${examRating.getRatingNotes()}"></span></td>
+                    </tr>
+                </table>
             </fieldset>
         </div>
 

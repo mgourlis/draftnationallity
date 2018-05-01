@@ -11,6 +11,7 @@ public interface IExamRatingTypeService {
     public List<ExamRatingType> findAll();
     public Page<ExamRatingType> findAll(Pageable pageable);
     public ExamRatingType findByRatingType(String ratingType);
+    public List<ExamRatingType> findByLanguageType(boolean languageType);
     public void save(ExamRatingType examRatingType);
     public void delete(Long id);
 }

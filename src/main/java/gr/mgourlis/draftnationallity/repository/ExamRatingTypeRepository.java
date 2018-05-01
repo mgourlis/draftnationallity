@@ -14,5 +14,6 @@ public interface ExamRatingTypeRepository extends JpaRepository<ExamRatingType,L
     Page<ExamRatingType> findExamRatingTypesByDeleted(Boolean deleted, Pageable pageable);
     ExamRatingType findExamRatingTypeByIdAndDeleted(long id, boolean deleted);
     ExamRatingType findExamRatingTypeByRatingTypeAndDeleted(String ratingType, boolean deleted);
+    List<ExamRatingType> findExamRatingTypeByLanguageTypeAndDeleted(boolean languageType, boolean deleted);
 
 }

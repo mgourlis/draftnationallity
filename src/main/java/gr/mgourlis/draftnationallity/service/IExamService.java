@@ -2,6 +2,7 @@ package gr.mgourlis.draftnationallity.service;
 
 import gr.mgourlis.draftnationallity.dto.EditExamDTO;
 import gr.mgourlis.draftnationallity.dto.ExamQuestionDTO;
+import gr.mgourlis.draftnationallity.dto.ExamRatingDTO;
 import gr.mgourlis.draftnationallity.model.Exam;
 import gr.mgourlis.draftnationallity.model.ExamQuestion;
 import gr.mgourlis.draftnationallity.model.ExamRating;
@@ -23,7 +24,7 @@ public interface IExamService {
     public String createExam(Exam exam, long examSettingId);
     public void editExam(Exam exam, EditExamDTO editExamDTO);
     public void setExamAnswers(Exam exam, List<ExamQuestionDTO> examQuestionsDTO, boolean finalAnswers);
-    public void rateExam(Exam exam, List<ExamRating> examRatings);
+    public void rateExam(Exam exam, List<ExamRatingDTO> examRatingsDTO, boolean finalRatings);
     public void validateExam(Exam exam);
     public void delete(long id);
 

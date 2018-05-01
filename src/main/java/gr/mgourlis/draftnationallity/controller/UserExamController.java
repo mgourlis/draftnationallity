@@ -2,9 +2,7 @@ package gr.mgourlis.draftnationallity.controller;
 
 import gr.mgourlis.draftnationallity.dto.*;
 import gr.mgourlis.draftnationallity.model.*;
-import gr.mgourlis.draftnationallity.service.IExamService;
-import gr.mgourlis.draftnationallity.service.IExamSettingService;
-import gr.mgourlis.draftnationallity.service.IUserService;
+import gr.mgourlis.draftnationallity.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 
 @Controller
@@ -34,6 +33,12 @@ public class UserExamController {
 
     @Autowired
     IUserService userService;
+
+    @Autowired
+    IExamRatingTypeService examRatingTypeService;
+
+    @Autowired
+    IExamRatingMarkService examRatingMarkService;
 
     @RequestMapping("/")
     public ModelAndView getExams(@RequestParam(name = "lfile", required = false, defaultValue = "") String lfile,
@@ -252,8 +257,23 @@ public class UserExamController {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam = examService.getOneByUser(id, authentication.getName());
         if(exam != null) {
+            List<ExamRatingType> examRatingTypeList;
+            if(exam.isLanguageExemption())
+                examRatingTypeList = examRatingTypeService.findByLanguageType(false);
+            else
+                examRatingTypeList = examRatingTypeService.findAll();
+            List<ExamRatingMark> examRatingMarkList = examRatingMarkService.findAll();
             RateExamDTO rateExamDTO = new RateExamDTO();
             rateExamDTO.init(exam);
+            if(rateExamDTO.getExamRatingsDTO().isEmpty()){
+                for (ExamRatingType examRatingType : examRatingTypeList) {
+                    ExamRatingDTO examRatingDTO = new ExamRatingDTO();
+                    examRatingDTO.setRatingTypeId(examRatingType.getId());
+                    examRatingDTO.setRatingTypeName(examRatingType.getRatingType());
+                    rateExamDTO.getExamRatingsDTO().add(examRatingDTO);
+                }
+            }
+            modelAndView.addObject("marks",examRatingMarkList);
             modelAndView.addObject("exam", rateExamDTO);
             modelAndView.setViewName("user/exam/addRating");
             return modelAndView;
@@ -266,23 +286,61 @@ public class UserExamController {
 
     @RequestMapping(value= "/setrating/{id}", method = RequestMethod.POST, params="action=tempsave")
     public ModelAndView saveTemporaryRating(@PathVariable("id") long id,
-                                            @Valid @ModelAttribute("exam") AnswerExamDTO answerExamDTO,
+                                            @Valid @ModelAttribute("exam") RateExamDTO rateExamDTO,
                                             BindingResult bindingResult,
                                             Authentication authentication,
                                             RedirectAttributes redirectAttributes) {
         ModelAndView modelAndView = new ModelAndView();
-
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam == null){
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
+        if (bindingResult.hasErrors()) {
+            modelAndView.addObject("marks",examRatingMarkService.findAll());
+            modelAndView.setViewName("user/exam/addRating");
+        } else {
+            try {
+                examService.rateExam(exam,rateExamDTO.getExamRatingsDTO(),false);
+                redirectAttributes.addAttribute("successMessageBox", "Exam answers finalized.");
+                modelAndView.setViewName("redirect:/user/exam/" + exam.getId());
+            }catch (Exception e){
+                modelAndView.addObject("marks",examRatingMarkService.findAll());
+                modelAndView.addObject("errorMessageBox", "Error: " + e.getMessage());
+                modelAndView.setViewName("user/exam/addRating");
+            }
+        }
         return modelAndView;
     }
 
     @RequestMapping(value= "/setrating/{id}", method = RequestMethod.POST, params="action=save")
     public ModelAndView saveFinalRating(@PathVariable("id") long id,
-                                            @Valid @ModelAttribute("exam") AnswerExamDTO answerExamDTO,
+                                            @Valid @ModelAttribute("exam") RateExamDTO rateExamDTO,
                                             BindingResult bindingResult,
                                             Authentication authentication,
                                             RedirectAttributes redirectAttributes) {
         ModelAndView modelAndView = new ModelAndView();
-
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam == null){
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
+        if (bindingResult.hasErrors()) {
+            modelAndView.addObject("marks",examRatingMarkService.findAll());
+            modelAndView.setViewName("user/exam/addRating");
+        } else {
+            try {
+                examService.rateExam(exam,rateExamDTO.getExamRatingsDTO(),true);
+                redirectAttributes.addAttribute("successMessageBox", "Exam answers finalized.");
+                modelAndView.setViewName("redirect:/user/exam/" + exam.getId());
+            }catch (Exception e){
+                modelAndView.addObject("marks",examRatingMarkService.findAll());
+                modelAndView.addObject("errorMessageBox", "Error: " + e.getMessage());
+                modelAndView.setViewName("user/exam/addRating");
+            }
+        }
         return modelAndView;
     }
 }

@@ -62,15 +62,15 @@ public class Exam extends BaseEntity {
     @JoinColumn(name = "exam_setting_id", referencedColumnName = "exam_setting_id", nullable = false)
     private ExamSetting examSetting;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval=true)
     @JoinColumn(name = "exam_id", referencedColumnName = "exam_id", nullable = false)
     private List<ExamQuestion> examQuestions;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval=true)
     @JoinColumn(name = "exam_id", referencedColumnName = "exam_id", nullable = false)
     private List<ExamRating> examRatings;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval=true)
     @JoinColumn(name = "exam_id", referencedColumnName = "exam_id", nullable = false)
     private List<CommitteeMember> committeeMembers;
 
