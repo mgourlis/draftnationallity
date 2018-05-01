@@ -4,7 +4,67 @@
       layout:decorate="~{layouts/default}" >
 <body>
 <div id="main" layout:fragment="content">
+    <div class="col-md-6 col-md-offset-3">
+        <a th:href="@{'/user/exam/' + ${exam.getId()}}" class="btn btn-success btn-md">go to View</a>
+            <form autocomplete="off" action="#" th:action="@{'/user/exam/edit/' + ${exam.getId()}}" th:object="${exam}" method="post" class="form-horizontal" role="form">
+                <h2>Edit Exam</h2>
 
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <label>Local File Number</label>
+                        <br/><label	th:if="${#fields.hasErrors('localFileNumber')}" th:errors="*{localFileNumber}" class="validation-message"></label>
+                        <input type="text" th:field="*{localFileNumber}" placeholder="Local File Number" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <label>Foreas</label>
+                        <br/><label	th:if="${#fields.hasErrors('foreas')}" th:errors="*{foreas}" class="validation-message"></label>
+                        <input type="text" th:field="*{foreas}" placeholder="Foreas" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-check">
+                    <label th:if="${#fields.hasErrors('languageExemption')}" th:errors="*{languageExemption}" class="validation-message"></label>
+                    <input type="checkbox" th:field="*{languageExemption}" th:value="*{languageExemption}" class="form-check-input" />
+                    <label class="form-check-label">Language Excemption</label>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <label>Lenguage Exemption Notes</label>
+                        <br/><label	th:if="${#fields.hasErrors('languageExemptionNotes')}" th:errors="*{languageExemptionNotes}" class="validation-message"></label>
+                        <textarea type="text" th:field="*{languageExemptionNotes}" placeholder="Language Exemption Notes" class="form-control">
+                            <span th:text="*{languageExemptionNotes}"></span>
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="form-check">
+                    <label th:if="${#fields.hasErrors('deaf')}" th:errors="*{deaf}" class="validation-message"></label>
+                    <input type="checkbox" th:field="*{deaf}" th:value="*{deaf}" class="form-check-input" />
+                    <label class="form-check-label">Deafness</label>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <label>Deafness Notes</label>
+                        <br/><label	th:if="${#fields.hasErrors('deafNotes')}" th:errors="*{deafNotes}" class="validation-message"></label>
+                        <textarea type="text" th:field="*{deafNotes}" placeholder="Deafness Notes" class="form-control">
+                            <span th:text="*{deafNotes}"></span>
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                    </div>
+                </div>
+
+            </form>
+    </div>
 </div>
 </body>
 </html>

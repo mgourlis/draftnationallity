@@ -54,9 +54,9 @@
                         <td th:text="${exam.getRatedDate()}">Rated Date</td>
                         <td th:text="${exam.getStatus()}">Status</td>
                         <td><a th:href="@{'/user/exam/' + ${exam.getId()}}" class="btn btn-success btn-xs">View</a></td>
-                        <td><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Edit</a></td>
-                        <td><span th:if="${exam.getStatus().toString() == 'PENDING'}"><a th:href="@{'/admin/exam/setanswers/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Set Answers</a></span></td>
-                        <td><span th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/admin/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Set Ratings</a></span></td>
+                        <td><span th:if="${exam.getStatus().toString() != 'RATED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Edit</a></span></td>
+                        <td><span th:if="${exam.getStatus().toString() == 'PENDING'}"><a th:href="@{'/user/exam/setanswers/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Set Answers</a></span></td>
+                        <td><span th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Set Ratings</a></span></td>
                     </tr>
                 </tbody>
             </table>

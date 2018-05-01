@@ -1,9 +1,10 @@
 package gr.mgourlis.draftnationallity.controller;
 
+import gr.mgourlis.draftnationallity.dto.AnswerExamDTO;
 import gr.mgourlis.draftnationallity.dto.CreateExamDTO;
-import gr.mgourlis.draftnationallity.model.Exam;
-import gr.mgourlis.draftnationallity.model.ExamSetting;
-import gr.mgourlis.draftnationallity.model.User;
+import gr.mgourlis.draftnationallity.dto.EditExamDTO;
+import gr.mgourlis.draftnationallity.dto.ExamQuestionDTO;
+import gr.mgourlis.draftnationallity.model.*;
 import gr.mgourlis.draftnationallity.service.IExamService;
 import gr.mgourlis.draftnationallity.service.IExamSettingService;
 import gr.mgourlis.draftnationallity.service.IUserService;
@@ -14,13 +15,12 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Iterator;
 
 
 @Controller
@@ -38,12 +38,40 @@ public class UserExamController {
     IUserService userService;
 
     @RequestMapping("/")
-    public ModelAndView getExams(ModelAndView modelAndView, Pageable pageable, Authentication authentication){
+    public ModelAndView getExams(@RequestParam(name = "lfile", required = false, defaultValue = "") String lfile,
+                                 @RequestParam(name = "successMessageBox", required = false) String successMessageBox,
+                                 @RequestParam(name = "errorMessageBox", required = false) String errorMessageBox,
+                                 ModelAndView modelAndView,
+                                 Pageable pageable,
+                                 Authentication authentication){
         Page<Exam> examsPage = examService.findExamsByUser(authentication.getName(),pageable);
+        modelAndView.addObject("successMessageBox",successMessageBox);
+        modelAndView.addObject("errorMessageBox",errorMessageBox);
         modelAndView.addObject("exams", examsPage.getContent());
         modelAndView.addObject("page",examsPage);
         modelAndView.setViewName("user/exam/showExams");
         return modelAndView;
+    }
+
+    @RequestMapping("/{id}")
+    public ModelAndView showExam(@PathVariable("id") long id,
+                                 @RequestParam(name = "successMessageBox", required = false) String successMessageBox,
+                                 @RequestParam(name = "errorMessageBox", required = false) String errorMessageBox,
+                                 Authentication authentication,
+                                 RedirectAttributes redirectAttributes){
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam != null) {
+            modelAndView.addObject("successMessageBox",successMessageBox);
+            modelAndView.addObject("errorMessageBox",errorMessageBox);
+            modelAndView.addObject("exam", exam);
+            modelAndView.setViewName("user/exam/showExam");
+            return modelAndView;
+        }else{
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
     }
 
     @RequestMapping(value= "/new", method = RequestMethod.GET)
@@ -79,11 +107,141 @@ public class UserExamController {
                 modelAndView.setViewName("redirect:/user/exam/");
             }catch (Exception e){
                 modelAndView.addObject("examSettings", examSettingService.findAll());
-                modelAndView.addObject("errorMessageBox", e.getMessage());
+                modelAndView.addObject("errorMessageBox", "Error: " + e.getMessage());
                 modelAndView.setViewName("user/exam/createExam");
             }
         }
         return modelAndView;
     }
 
+    @RequestMapping(value= "/edit/{id}", method = RequestMethod.GET)
+    public ModelAndView editExam(@PathVariable("id") long id,
+                                   Authentication authentication,
+                                   RedirectAttributes redirectAttributes){
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam != null) {
+            EditExamDTO editExamDTO = new EditExamDTO();
+            editExamDTO.init(exam);
+            modelAndView.addObject("exam", editExamDTO);
+            modelAndView.setViewName("user/exam/editExam");
+            return modelAndView;
+        }else{
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
+    }
+
+    @RequestMapping(value= "/edit/{id}", method = RequestMethod.POST)
+    public ModelAndView editExam(@PathVariable("id") long id,
+                                   @Valid @ModelAttribute("exam") EditExamDTO editExamDTO,
+                                   BindingResult bindingResult,
+                                   Authentication authentication,
+                                   RedirectAttributes redirectAttributes){
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam == null){
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("user/exam/editExam");
+        } else {
+            try {
+                examService.editExam(exam, editExamDTO);
+                redirectAttributes.addAttribute("successMessageBox", "Exam " + exam.getuID() + " edited successfully.");
+                modelAndView.setViewName("redirect:/user/exam/");
+            }catch (Exception e){
+                modelAndView.addObject("errorMessageBox", "Error: " + e.getMessage());
+                modelAndView.setViewName("user/exam/editExam");
+            }
+        }
+        return modelAndView;
+    }
+
+    @RequestMapping(value= "/setanswers/{id}", method = RequestMethod.GET)
+    public ModelAndView answerExam(@PathVariable("id") long id,
+                                   Authentication authentication,
+                                   RedirectAttributes redirectAttributes){
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam != null) {
+            AnswerExamDTO answerExamDTO = new AnswerExamDTO();
+            answerExamDTO.init(exam);
+            modelAndView.addObject("exam", answerExamDTO);
+            modelAndView.setViewName("user/exam/addAnswers");
+            return modelAndView;
+        }else{
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
+    }
+
+    @RequestMapping(value= "/setanswers/{id}", method = RequestMethod.POST, params="action=tempsave")
+    public ModelAndView saveTemporaryAswers(@PathVariable("id") long id,
+                                        @Valid @ModelAttribute("exam") AnswerExamDTO answerExamDTO,
+                                        BindingResult bindingResult,
+                                        Authentication authentication,
+                                        RedirectAttributes redirectAttributes){
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam == null){
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("user/exam/addAnswers");
+        } else {
+            try {
+                examService.setExamAnswers(exam,answerExamDTO.getExamQuestionsDTO(),false);
+                redirectAttributes.addAttribute("successMessageBox", "Exam answers saved temporally, please finalize when you are ready.");
+                modelAndView.setViewName("redirect:/user/exam/" + exam.getId());
+            }catch (Exception e){
+                modelAndView.addObject("errorMessageBox", "Error: " + e.getMessage());
+                modelAndView.setViewName("user/exam/addAnswers");
+            }
+        }
+        return modelAndView;
+    }
+
+    @RequestMapping(value= "/setanswers/{id}", method = RequestMethod.POST, params="action=save")
+    public ModelAndView saveFinalAswers(@PathVariable("id") long id,
+                                 @Valid @ModelAttribute("exam") AnswerExamDTO answerExamDTO,
+                                 BindingResult bindingResult,
+                                 Authentication authentication,
+                                 RedirectAttributes redirectAttributes){
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam == null){
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
+        Iterator<ExamQuestionDTO> iterExamQuestionDTO = answerExamDTO.getExamQuestionsDTO().iterator();
+        int index = 0;
+        while (iterExamQuestionDTO.hasNext()) {
+            ExamQuestionDTO examQuestionDTO =iterExamQuestionDTO.next();
+            if(examQuestionDTO.getAnswertext().equals("")){
+                bindingResult.rejectValue("examQuestionsDTO[" + index + "].answertext", "error.exam", "The answer cannot be empty");
+            }
+            index++;
+        }
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("user/exam/addAnswers");
+        } else {
+            try {
+                examService.setExamAnswers(exam,answerExamDTO.getExamQuestionsDTO(),true);
+                redirectAttributes.addAttribute("successMessageBox", "Exam answers finalized.");
+                modelAndView.setViewName("redirect:/user/exam/" + exam.getId());
+            }catch (Exception e){
+                modelAndView.addObject("errorMessageBox", "Error: " + e.getMessage());
+                modelAndView.setViewName("user/exam/addAnswers");
+            }
+        }
+        return modelAndView;
+    }
 }

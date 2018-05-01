@@ -1,5 +1,7 @@
 package gr.mgourlis.draftnationallity.service;
 
+import gr.mgourlis.draftnationallity.dto.EditExamDTO;
+import gr.mgourlis.draftnationallity.dto.ExamQuestionDTO;
 import gr.mgourlis.draftnationallity.model.*;
 import gr.mgourlis.draftnationallity.repository.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,11 @@ public class ExamServiceImpl implements IExamService {
     @Override
     public Exam getOne(long id) {
         return examRepository.findExamByIdAndDeleted(id,false);
+    }
+
+    @Override
+    public Exam getOneByUser(long id, String email) {
+        return examRepository.findExamByIdAndCreatedByAndDeleted(id,email,false);
     }
 
     @Override
@@ -63,84 +70,97 @@ public class ExamServiceImpl implements IExamService {
     }
 
     @Override
-    public String createExam(Exam exam, long examSettingId) {
+    public String createExam(Exam exam, long examSettingId) throws IllegalArgumentException,EntityNotFoundException{
         ExamSetting examSetting = examSettingService.getOne(examSettingId);
         if(examSetting != null) {
+            if(!canGenerateQuestions(examSetting)){
+                throw new IllegalArgumentException("Can not generate exam with this Exam Setting.");
+            }
             if(exam.getForeas().equals("") || exam.getLocalFileNumber().equals("")){
-                throw new IllegalArgumentException("Foreas or Local File Number can not be empty");
+                throw new IllegalArgumentException("Foreas or Local File Number can not be empty.");
             }
             if(exam.isLanguageExemption()){
                 if(exam.getLanguageExemptionNotes().equals("")){
-                    throw new IllegalArgumentException("Notes on language exception can not be empty");
+                    throw new IllegalArgumentException("Notes on language exception can not be empty.");
                 }
+            }else{
+                exam.setLanguageExemptionNotes("");
             }
             if(exam.isDeaf()){
                 if(exam.getLanguageExemptionNotes().equals("")){
-                    throw new IllegalArgumentException("Notes on deafness can not be empty");
+                    throw new IllegalArgumentException("Notes on deafness can not be empty.");
                 }
+            }else{
+                exam.setDeafNotes("");
             }
             exam.setStatus(ExamStatus.PENDING);
             exam.setuID(Long.toString(Calendar.getInstance(TimeZone.getTimeZone("Europe/Athens")).getTimeInMillis()));
             exam.setExamSetting(examSetting);
-            List<QuestionCategory> questionCategories = examSetting.getQuestionCategories();
-            List<DifficultySetting> difficultySettings = examSetting.getDifficultySettings();
-            if(!questionCategories.isEmpty()){
-                List<Set<ExamQuestion>> examQuestionsList = new ArrayList<>();
-                int questionsSize = questionCategories.size();
-                for (QuestionCategory questionCategory : questionCategories) {
-                    Set<ExamQuestion> categoryQuestions = new LinkedHashSet<>();
-                    int questionCategorySize = ((int) examSetting.getNumOfQuestions() / questionsSize) + 1;
-                    for (DifficultySetting difficultySetting : difficultySettings){
-                        int questionsCategoryDifficultySize = (int)((questionCategorySize * difficultySetting.getPercentage())/100.0);
-                        Set<Question> randQuestions = questionService.getRandomQuestionsByCategoryAndDifficulty
-                                (questionCategory,difficultySetting.getDifficulty(),questionsCategoryDifficultySize);
-                        for (Question question : randQuestions) {
-                            ExamQuestion examQuestion = new ExamQuestion();
-                            examQuestion.setSortNumber(categoryQuestions.size());
-                            examQuestion.setQuestion(question);
-                            categoryQuestions.add(examQuestion);
-                        }
-                    }
-                    examQuestionsList.add(categoryQuestions);
-                }
-                int categoryIndex = questionCategories.size() -1;
-                while ((examSetting.getNumOfQuestions() - countExamQuestions(examQuestionsList)) < 0){
-                    if(categoryIndex < 0 )
-                        categoryIndex = questionCategories.size() -1;
-                    examQuestionsList.get(categoryIndex).remove(examQuestionsList.get(categoryIndex).toArray()[examQuestionsList.get(categoryIndex).size() -1]);
-                }
-                int count = 0;
-                List<ExamQuestion> allExamQuestions = new ArrayList<>();
-                for (Set<ExamQuestion> examQuestions :examQuestionsList) {
-                    for (ExamQuestion examQuestion : examQuestions) {
-                        examQuestion.setSortNumber(count);
-                        allExamQuestions.add(examQuestion);
-                    }
-                }
-                exam.setExamQuestions(allExamQuestions);
-                examRepository.save(exam);
-                return exam.getuID();
-            }else   {
-                throw new IllegalArgumentException("Something went wrong with Exam Setting");
-            }
+            exam.setExamQuestions(generateQuestions(examSetting));
+            examRepository.save(exam);
+            return exam.getuID();
         }else {
-            throw new EntityNotFoundException("Exam Setting does not exist");
+            throw new EntityNotFoundException("Exam Setting does not exist.");
         }
     }
 
     @Override
-    public void setExamAnswers(Exam exam, List<ExamQuestion> examQuestions) {
+    public void editExam(Exam exam, EditExamDTO editExamDTO) {
+        if(exam.getStatus() != ExamStatus.RATED){
+            if(editExamDTO.getForeas().equals("") || editExamDTO.getLocalFileNumber().equals("")){
+                throw new IllegalArgumentException("Foreas or Local File Number can not be empty.");
+            }
+            if(editExamDTO.isLanguageExemption()){
+                if(editExamDTO.getLanguageExemptionNotes().equals("")){
+                    throw new IllegalArgumentException("Notes on language exception can not be empty.");
+                }
+            }else{
+                editExamDTO.setLanguageExemptionNotes("");
+            }
+            if(editExamDTO.isDeaf()){
+                if(editExamDTO.getLanguageExemptionNotes().equals("")){
+                    throw new IllegalArgumentException("Notes on deafness can not be empty.");
+                }
+            }else{
+                editExamDTO.setDeafNotes("");
+            }
+            exam.setLocalFileNumber(editExamDTO.getLocalFileNumber().trim());
+            exam.setForeas(editExamDTO.getForeas().trim());
+            exam.setLanguageExemption(editExamDTO.isLanguageExemption());
+            exam.setLanguageExemptionNotes(editExamDTO.getLanguageExemptionNotes().trim());
+            exam.setDeaf(editExamDTO.isDeaf());
+            exam.setDeafNotes(editExamDTO.getDeafNotes().trim());
+            examRepository.save(exam);
+        }else{
+            throw new IllegalArgumentException("Exam can not be edited at this time.");
+        }
+    }
+
+    @Override
+    public void setExamAnswers(Exam exam, List<ExamQuestionDTO> examQuestionsDTO, boolean finalAnswers) {
         if(getOne(exam.getId()) != null) {
             if (exam.getStatus().equals(ExamStatus.PENDING)) {
-                if(examQuestions.isEmpty()) {
-                    for (ExamQuestion examQuestion : examQuestions) {
-                        if(examQuestion.getAnswer().equals("")){
-                            throw new IllegalArgumentException("Answer on Question " + examQuestion.getSortNumnber() + " can not be empty");
+                if(!examQuestionsDTO.isEmpty()) {
+                    for (ExamQuestionDTO examQuestionDTO : examQuestionsDTO) {
+                        if(examQuestionDTO.getAnswertext().equals("") && finalAnswers){
+                            throw new IllegalArgumentException("Answer on Question " + examQuestionDTO.getSortNumber() + " can not be empty");
                         }
                     }
                     exam.setAnsweredDate(new Date());
-                    exam.setStatus(ExamStatus.ANSWERED);
-                    exam.setExamQuestions(examQuestions);
+                    if(finalAnswers) {
+                        exam.setStatus(ExamStatus.ANSWERED);
+                    }
+                    for (ExamQuestionDTO examQuestionDTO :examQuestionsDTO) {
+                        if(!examQuestionDTO.getAnswertext().equals("")) {
+                            for (ExamQuestion examQuestion : exam.getExamQuestions()) {
+                                if (examQuestionDTO.getId() == examQuestion.getId()) {
+                                    Answer answer = new Answer();
+                                    answer.setAnswertext(examQuestionDTO.getAnswertext());
+                                    examQuestion.setAnswer(answer);
+                                }
+                            }
+                        }
+                    }
                     examRepository.save(exam);
                 }else {
                     throw new IllegalArgumentException("Ratings can not be empty");
@@ -214,5 +234,70 @@ public class ExamServiceImpl implements IExamService {
             count += examQuestions.size();
         }
         return count;
+    }
+
+    private boolean canGenerateQuestions(ExamSetting examSetting){
+        List<QuestionCategory> questionCategories = examSetting.getQuestionCategories();
+        List<DifficultySetting> difficultySettings = examSetting.getDifficultySettings();
+        int questionsSize = questionCategories.size();
+        if(questionCategories.isEmpty())
+            return false;
+        if(difficultySettings.isEmpty())
+            return false;
+        for (QuestionCategory category : questionCategories) {
+            int questionCategorySize = ((int) examSetting.getNumOfQuestions() / questionsSize) + 1;
+            for (DifficultySetting difficultySetting: difficultySettings) {
+                int questionsCategoryDifficultySize = (int)((questionCategorySize * difficultySetting.getPercentage())/100.0);
+                int qnum = questionService.countQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(category.getName(),difficultySetting.getDifficulty().getLevelNumber());
+                if(questionsCategoryDifficultySize > qnum){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private List<ExamQuestion> generateQuestions(ExamSetting examSetting){
+        List<QuestionCategory> questionCategories = examSetting.getQuestionCategories();
+        List<DifficultySetting> difficultySettings = examSetting.getDifficultySettings();
+        if(!questionCategories.isEmpty()) {
+            List<Set<ExamQuestion>> examQuestionsList = new ArrayList<>();
+            int questionsSize = questionCategories.size();
+            for (QuestionCategory questionCategory : questionCategories) {
+                Set<ExamQuestion> categoryQuestions = new LinkedHashSet<>();
+                int questionCategorySize = ((int) examSetting.getNumOfQuestions() / questionsSize) + 1;
+                for (DifficultySetting difficultySetting : difficultySettings) {
+                    int questionsCategoryDifficultySize = (int) ((questionCategorySize * difficultySetting.getPercentage()) / 100.0);
+                    Set<Question> randQuestions = questionService.getRandomQuestionsByCategoryAndDifficulty
+                            (questionCategory, difficultySetting.getDifficulty(), questionsCategoryDifficultySize);
+                    for (Question question : randQuestions) {
+                        ExamQuestion examQuestion = new ExamQuestion();
+                        examQuestion.setSortNumber(categoryQuestions.size());
+                        examQuestion.setQuestion(question);
+                        categoryQuestions.add(examQuestion);
+                    }
+                }
+                examQuestionsList.add(categoryQuestions);
+            }
+            int categoryIndex = questionCategories.size() - 1;
+            while ((examSetting.getNumOfQuestions() - countExamQuestions(examQuestionsList)) < 0) {
+                if (categoryIndex < 0)
+                    categoryIndex = questionCategories.size() - 1;
+                examQuestionsList.get(categoryIndex).remove(examQuestionsList.get(categoryIndex).toArray()[examQuestionsList.get(categoryIndex).size() - 1]);
+            }
+            int count = 1;
+            List<ExamQuestion> allExamQuestions = new ArrayList<>();
+            for (Set<ExamQuestion> examQuestions : examQuestionsList) {
+                for (ExamQuestion examQuestion : examQuestions) {
+                    examQuestion.setSortNumber(count);
+                    allExamQuestions.add(examQuestion);
+                    count++;
+                }
+            }
+            Collections.sort(allExamQuestions);
+            return allExamQuestions;
+        }else{
+            throw new IllegalArgumentException("Failed two generate questions with this Exam Setting");
+        }
     }
 }

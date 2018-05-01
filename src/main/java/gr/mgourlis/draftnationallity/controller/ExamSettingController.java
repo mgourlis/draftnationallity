@@ -140,7 +140,7 @@ public class ExamSettingController {
             }
             modelAndView.addObject("difficulties", difficultyService.findAll());
             modelAndView.addObject("questionCategories",questionCategoryService.findAll());
-            modelAndView.setViewName("/admin/examsetting/newExamSetting");
+            modelAndView.setViewName("/admin/examsetting/editExamSetting");
         }
         else{
             editExamSetting.setName(examSettingDTO.getName());

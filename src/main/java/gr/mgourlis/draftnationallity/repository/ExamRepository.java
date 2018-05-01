@@ -11,6 +11,7 @@ import java.util.List;
 @Repository("ExamRepository")
 public interface ExamRepository extends JpaRepository<Exam,Long> {
     public Exam findExamByIdAndDeleted(long id, boolean deleted);
+    public Exam findExamByIdAndCreatedByAndDeleted(long id,String email, boolean deleted);
     public Exam findExamByUIDAndDeleted(String uID, boolean deleted);
     public Exam findExamByLocalFileNumberAndDeleted(String localFileNumber, boolean deleted);
     public Exam findExamByFileNumberAndDeleted(String fileNumber, boolean deleted);

@@ -4,7 +4,59 @@
       layout:decorate="~{layouts/default}" >
 <body>
 <div id="main" layout:fragment="content">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="col-sm-9">
+            <span th:if="${exam.getStatus().toString() != 'RATED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-md">Edit</a></span>
+            <span th:if="${exam.getStatus().toString() == 'PENDING'}"><a th:href="@{'/user/exam/setanswers/' + ${exam.getId()}}" class="btn btn-warning btn-md">Set Answers</a></span>
+            <span th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-md">Set Ratings</a></span>
+            <fieldset class="info-border" >
+                <legend class="info-border">Exam Information</legend>
+                <label>Created Date:  </label><span th:text="${exam.getCreatedAt()}"></span><br/>
+                <label>Exam Unique ID:  </label><span th:text="${exam.getuID()}"></span><br/>
+                <label>Local File Number:  </label><span th:text="${exam.getLocalFileNumber()}"></span><br/>
+                <label>Foreas:  </label><span th:text="${exam.getForeas()}"></span><br/>
+                <label>Language Exemption:  </label><span th:text="${exam.isLanguageExemption()}"></span><br/>
+                <span th:if="${exam.isLanguageExemption()}"><label> </label><span th:text="${exam.getLanguageExemptionNotes()}"></span><br/></span>
+                <label>Deafness:  </label><span th:text="${exam.isDeaf()}"></span><br/>
+                <span th:if="${exam.isDeaf()}"><label> </label><span th:text="${exam.getDeafNotes()}"></span><br/></span>
+            </fieldset>
+        </div>
 
+        <br/>
+
+        <div class="col-sm-9">
+            <fieldset class="info-border">
+                <legend class="info-border">Exam Questions</legend>
+                <div th:each="examQuestion : ${exam.getExamQuestions()}">
+                    <label th:text="'Question ' + ${examQuestion.getSortNumber()}"></label>
+                    <div th:text="${examQuestion.getQuestion().getQuestiontext()}"></div>
+                    <div th:if="${examQuestion.getAnswer() != null}">
+                        <label>Answer</label>
+                        <div th:text="${examQuestion.getAnswer().getAnswertext()}"></div>
+                    </div>
+                    <br/>
+                </div>
+            </fieldset>
+        </div>
+
+        <br/>
+
+        <div class="col-sm-9">
+            <fieldset class="info-border">
+                <legend class="info-border">Exam Rating</legend>
+
+            </fieldset>
+        </div>
+
+        <br/>
+
+        <div class="col-sm-9">
+            <fieldset class="info-border">
+                <legend class="info-border">Committee Members</legend>
+
+            </fieldset>
+        </div>
+    </div>
 </div>
 </body>
 </html>

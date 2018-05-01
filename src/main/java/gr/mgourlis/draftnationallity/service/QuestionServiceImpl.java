@@ -53,6 +53,11 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
+    public int countQuestionsByQuestionCategoryName(String questionCategoryName) {
+        return questionRepository.countQuestionsByQuestionCategory_NameAndDeleted(questionCategoryName,false);
+    }
+
+    @Override
     public List<Question> findQuestionsByDifficultyLevelNumber(int difficultyLevelNumber) {
         return questionRepository.findQuestionsByQuestionDifficulty_LevelNumberAndDeleted(difficultyLevelNumber,false);
     }
@@ -70,6 +75,11 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
     public Page<Question> findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber, Pageable pageable) {
         return questionRepository.findQuestionsByQuestionCategory_NameAndQuestionDifficulty_LevelNumberAndDeleted(questionCategoryName, difficultyLevelNumber,false, pageable);
+    }
+
+    @Override
+    public int countQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber) {
+        return questionRepository.countQuestionsByQuestionCategory_NameAndQuestionDifficulty_LevelNumberAndDeleted(questionCategoryName, difficultyLevelNumber,false);
     }
 
     @Override

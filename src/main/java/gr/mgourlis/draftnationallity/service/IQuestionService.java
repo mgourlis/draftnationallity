@@ -16,10 +16,12 @@ public interface IQuestionService {
     public Question findQuestionByShortname(String name);
     public List<Question> findQuestionsByQuestionCategoryName(String questionCategoryName);
     public Page<Question> findQuestionsByQuestionCategoryName(String questionCategoryName, Pageable pageable);
+    public int countQuestionsByQuestionCategoryName(String questionCategoryName);
     public List<Question> findQuestionsByDifficultyLevelNumber(int difficultyLevelNumber);
     public Page<Question> findQuestionsByDifficultyLevelNumber(int difficultyLevelNumber, Pageable pageable);
     public List<Question> findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber);
     public Page<Question> findQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber, Pageable pageable);
+    public int countQuestionsByQuestionCategoryNameAndDifficultyLevelNumber(String questionCategoryName, int difficultyLevelNumber);
     public Set<Question> getRandomQuestionsByCategoryAndDifficulty(QuestionCategory questionCategory , Difficulty difficulty, int size);
     public void save(Question question);
     public void delete(long id);

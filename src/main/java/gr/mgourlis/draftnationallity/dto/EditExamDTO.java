@@ -1,14 +1,13 @@
 package gr.mgourlis.draftnationallity.dto;
 
 import gr.mgourlis.draftnationallity.model.Exam;
-import gr.mgourlis.draftnationallity.model.ExamSetting;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-public class CreateExamDTO {
+public class EditExamDTO {
 
-    private long examSettingId;
+    private long id;
 
     @NotEmpty
     private String localFileNumber;
@@ -26,12 +25,12 @@ public class CreateExamDTO {
     @Size(max = 512)
     private String deafNotes;
 
-    public long getExamSettingId() {
-        return examSettingId;
+    public long getId() {
+        return id;
     }
 
-    public void setExamSettingId(long examSettingId) {
-        this.examSettingId = examSettingId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getLocalFileNumber() {
@@ -83,25 +82,12 @@ public class CreateExamDTO {
     }
 
     public void init(Exam exam){
+        this.setId(exam.getId());
         this.setDeaf(exam.isDeaf());
         this.setDeafNotes(exam.getDeafNotes());
-        if(exam.getExamSetting() != null)
-            this.setExamSettingId(exam.getExamSetting().getId());
         this.setForeas(exam.getForeas());
         this.setLanguageExemption(exam.isLanguageExemption());
         this.setLanguageExemptionNotes(exam.getLanguageExemptionNotes());
         this.setLocalFileNumber(exam.getLocalFileNumber());
-    }
-
-    public Exam getExam(ExamSetting examSetting){
-        Exam exam = new Exam();
-        exam.setExamSetting(examSetting);
-        exam.setDeaf(this.isDeaf());
-        exam.setDeafNotes(this.getDeafNotes().trim());
-        exam.setForeas(this.getForeas().trim());
-        exam.setLanguageExemption(this.isLanguageExemption());
-        exam.setLanguageExemptionNotes(this.getLanguageExemptionNotes().trim());
-        exam.setLocalFileNumber(this.getLocalFileNumber().trim());
-        return exam;
     }
 }

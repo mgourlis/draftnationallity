@@ -19,7 +19,7 @@ public class ExamQuestion extends BaseEntity implements Comparable<ExamQuestion>
     @JoinColumn(name="answer_id")
     private Answer answer;
 
-    public int getSortNumnber() {
+    public int getSortNumber() {
         return sortNumber;
     }
 
