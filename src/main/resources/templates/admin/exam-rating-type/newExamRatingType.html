@@ -17,6 +17,12 @@
 					</div>
 				</div>
 
+				<div class="form-check">
+					<label th:if="${#fields.hasErrors('languageType')}" th:errors="*{languageType}" class="validation-message"></label>
+					<input type="checkbox" th:field="*{languageType}" th:value="*{languageType}" class="form-check-input" />
+					<label class="form-check-label">Language Type</label>
+				</div>
+
 
 				<div class="form-group">
 					<div class="col-sm-3">

@@ -16,12 +16,23 @@ public class ExamRatingType extends BaseEntity {
     @NotEmpty
     private String ratingType;
 
+    @Column(name = "language_type")
+    private boolean languageType;
+
     public String getRatingType() {
         return ratingType;
     }
 
     public void setRatingType(String ratingType) {
         this.ratingType = ratingType;
+    }
+
+    public boolean isLanguageType() {
+        return languageType;
+    }
+
+    public void setLanguageType(boolean languageType) {
+        this.languageType = languageType;
     }
 
     @Override

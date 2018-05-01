@@ -11,14 +11,40 @@
             <span th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-md">Set Ratings</a></span>
             <fieldset class="info-border" >
                 <legend class="info-border">Exam Information</legend>
-                <label>Created Date:  </label><span th:text="${exam.getCreatedAt()}"></span><br/>
-                <label>Exam Unique ID:  </label><span th:text="${exam.getuID()}"></span><br/>
-                <label>Local File Number:  </label><span th:text="${exam.getLocalFileNumber()}"></span><br/>
-                <label>Foreas:  </label><span th:text="${exam.getForeas()}"></span><br/>
-                <label>Language Exemption:  </label><span th:text="${exam.isLanguageExemption()}"></span><br/>
-                <span th:if="${exam.isLanguageExemption()}"><label> </label><span th:text="${exam.getLanguageExemptionNotes()}"></span><br/></span>
-                <label>Deafness:  </label><span th:text="${exam.isDeaf()}"></span><br/>
-                <span th:if="${exam.isDeaf()}"><label> </label><span th:text="${exam.getDeafNotes()}"></span><br/></span>
+                <table class="table">
+                    <tr>
+                        <td>Created Date:</td>
+                        <td><span th:text="${exam.getCreatedAt()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Exam Unique ID:</td>
+                        <td><span th:text="${exam.getuID()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Local File Number:</td>
+                        <td><span th:text="${exam.getLocalFileNumber()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Foreas:</td>
+                        <td><span th:text="${exam.getForeas()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Language Exemption:</td>
+                        <td><span th:text="${exam.isLanguageExemption()}"></span></td>
+                    </tr>
+                    <tr th:if="${exam.isLanguageExemption()}">
+                        <td>Language Exemption Notes:</td>
+                        <td><span th:text="${exam.getLanguageExemptionNotes()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Deafness:</td>
+                        <td><span th:text="${exam.isDeaf()}"></span></td>
+                    </tr>
+                    <tr th:if="${exam.isDeaf()}">
+                        <td>Deafness Notes: </td>
+                        <td><span th:text="${exam.getDeafNotes()}"></span></td>
+                    </tr>
+                </table>
             </fieldset>
         </div>
 

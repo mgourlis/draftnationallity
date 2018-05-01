@@ -1,9 +1,6 @@
 package gr.mgourlis.draftnationallity.controller;
 
-import gr.mgourlis.draftnationallity.dto.AnswerExamDTO;
-import gr.mgourlis.draftnationallity.dto.CreateExamDTO;
-import gr.mgourlis.draftnationallity.dto.EditExamDTO;
-import gr.mgourlis.draftnationallity.dto.ExamQuestionDTO;
+import gr.mgourlis.draftnationallity.dto.*;
 import gr.mgourlis.draftnationallity.model.*;
 import gr.mgourlis.draftnationallity.service.IExamService;
 import gr.mgourlis.draftnationallity.service.IExamSettingService;
@@ -20,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.Iterator;
 
 
@@ -64,6 +62,7 @@ public class UserExamController {
         if(exam != null) {
             modelAndView.addObject("successMessageBox",successMessageBox);
             modelAndView.addObject("errorMessageBox",errorMessageBox);
+            Collections.sort(exam.getExamQuestions());
             modelAndView.addObject("exam", exam);
             modelAndView.setViewName("user/exam/showExam");
             return modelAndView;
@@ -169,6 +168,7 @@ public class UserExamController {
         Exam exam = examService.getOneByUser(id, authentication.getName());
         if(exam != null) {
             AnswerExamDTO answerExamDTO = new AnswerExamDTO();
+            Collections.sort(exam.getExamQuestions());
             answerExamDTO.init(exam);
             modelAndView.addObject("exam", answerExamDTO);
             modelAndView.setViewName("user/exam/addAnswers");
@@ -242,6 +242,47 @@ public class UserExamController {
                 modelAndView.setViewName("user/exam/addAnswers");
             }
         }
+        return modelAndView;
+    }
+
+    @RequestMapping(value= "/setrating/{id}", method = RequestMethod.GET)
+    public ModelAndView rateExam(@PathVariable("id") long id,
+                                   Authentication authentication,
+                                   RedirectAttributes redirectAttributes) {
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam = examService.getOneByUser(id, authentication.getName());
+        if(exam != null) {
+            RateExamDTO rateExamDTO = new RateExamDTO();
+            rateExamDTO.init(exam);
+            modelAndView.addObject("exam", rateExamDTO);
+            modelAndView.setViewName("user/exam/addRating");
+            return modelAndView;
+        }else{
+            redirectAttributes.addAttribute("errorMessageBox", "Can not access exam with id " + id);
+            modelAndView.setViewName("redirect:/user/exam/");
+            return modelAndView;
+        }
+    }
+
+    @RequestMapping(value= "/setrating/{id}", method = RequestMethod.POST, params="action=tempsave")
+    public ModelAndView saveTemporaryRating(@PathVariable("id") long id,
+                                            @Valid @ModelAttribute("exam") AnswerExamDTO answerExamDTO,
+                                            BindingResult bindingResult,
+                                            Authentication authentication,
+                                            RedirectAttributes redirectAttributes) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value= "/setrating/{id}", method = RequestMethod.POST, params="action=save")
+    public ModelAndView saveFinalRating(@PathVariable("id") long id,
+                                            @Valid @ModelAttribute("exam") AnswerExamDTO answerExamDTO,
+                                            BindingResult bindingResult,
+                                            Authentication authentication,
+                                            RedirectAttributes redirectAttributes) {
+        ModelAndView modelAndView = new ModelAndView();
+
         return modelAndView;
     }
 }

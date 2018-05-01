@@ -48,6 +48,7 @@ public class ExamRatingTypeServiceImpl implements IExamRatingTypeService {
             ExamRatingType oldExamRatingType = examRatingTypeRepository.findExamRatingTypeByIdAndDeleted(examRatingType.getId(),false);
             if(oldExamRatingType != null){
                 oldExamRatingType.setRatingType(examRatingType.getRatingType());
+                oldExamRatingType.setLanguageType(examRatingType.isLanguageType());
                 examRatingTypeRepository.save(oldExamRatingType);
             }else{
                 throw new EntityNotFoundException("Can't save Exam Rating Type. Invalid Exam Rating Type");

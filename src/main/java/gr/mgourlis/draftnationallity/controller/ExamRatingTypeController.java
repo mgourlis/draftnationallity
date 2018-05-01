@@ -77,6 +77,7 @@ public class ExamRatingTypeController {
         }
         else{
             editExamRatingType.setRatingType(examRatingTypeDTO.getRatingType());
+            editExamRatingType.setLanguageType(examRatingTypeDTO.isLanguageType());
             examRatingTypeService.save(editExamRatingType);
             modelAndView.setViewName("redirect:/admin/exam-rating-type/" + editExamRatingType.getId());
         }
@@ -106,6 +107,7 @@ public class ExamRatingTypeController {
         } else {
             ExamRatingType examRatingType = new ExamRatingType();
             examRatingType.setRatingType(examRatingTypeDTO.getRatingType());
+            examRatingType.setLanguageType(examRatingTypeDTO.isLanguageType());
             examRatingTypeService.save(examRatingType);
             modelAndView.addObject("successMessageBox", "Exam Rating Type has been created successfully");
             modelAndView.addObject("examRatingType", new ExamRatingTypeDTO());

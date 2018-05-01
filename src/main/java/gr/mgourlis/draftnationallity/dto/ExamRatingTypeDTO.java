@@ -11,6 +11,8 @@ public class ExamRatingTypeDTO {
     @NotEmpty
     private String ratingType;
 
+    private boolean languageType;
+
     public long getId() {
         return id;
     }
@@ -27,8 +29,17 @@ public class ExamRatingTypeDTO {
         this.ratingType = ratingType;
     }
 
+    public boolean isLanguageType() {
+        return languageType;
+    }
+
+    public void setLanguageType(boolean languageType) {
+        this.languageType = languageType;
+    }
+
     public void init(ExamRatingType examRatingType) throws IllegalArgumentException{
         this.setId(examRatingType.getId());
         this.setRatingType(examRatingType.getRatingType());
+        this.setLanguageType(examRatingType.isLanguageType());
     }
 }

@@ -28,6 +28,7 @@
                 <tr>
                     <th><a class="sorted" sd:pagination-sort="id" >ID</a></th>
                     <th><a class="sorted" sd:pagination-sort="ratingType" >Name</a></th>
+                    <th><a class="sorted" sd:pagination-sort="languageType" >Language Type</a></th>
                     <th>View</th>
                     <th>Edit</th>
                     <th>Delete</th>
@@ -37,6 +38,7 @@
                 <tr th:each="examRatingType,iterationStatus : ${examRatingTypes}">
                     <td th:text="${examRatingType.getId()}">ID</td>
                     <td th:text="${examRatingType.getRatingType()}">Name</td>
+                    <td th:text="${examRatingType.isLanguageType()}">Name</td>
                     <td><a th:href="${'/admin/exam-rating-type/' + examRatingType.getId()}" class="btn btn-success btn-xs">View</a></td>
                     <td><a th:href="${'/admin/exam-rating-type/edit/' + examRatingType.getId()}" class="btn btn-warning btn-xs">Edit</a></td>
                     <td><a th:href="${'/admin/exam-rating-type/delete/' + examRatingType.getId()}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
