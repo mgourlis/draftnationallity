@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}" >
+<body>
+<div id="main" layout:fragment="content">
+    <div class="col-md-6 col-md-offset-3">
+        <a th:href="@{'/moderator/exam/' + ${exam.getId()}}" class="btn btn-success btn-md">go to View</a>
+        <form autocomplete="off" action="#" th:action="@{'/moderator/exam/validate/' + ${exam.getId()}}" th:object="${exam}" method="post" class="form-horizontal" role="form">
+            <h2>Validate Exam</h2>
+
+            <div class="form-group">
+                <div class="col-sm-9">
+                    <label>File Number</label>
+                    <br/><label	th:if="${#fields.hasErrors('fileNumber')}" th:errors="*{fileNumber}" class="validation-message"></label>
+                    <input type="text" th:field="*{fileNumber}" placeholder="Local File Number" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-9">
+                    <span class="col-sm-4"><button type="submit" class="btn btn-primary btn-block" name="action" value="tempsave">Temporary Save</button></span>
+                    <span class="col-sm-4"><button type="submit" class="btn btn-warning btn-block" name="action" value="save">Validate</button></span>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

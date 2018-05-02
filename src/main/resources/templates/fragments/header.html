@@ -33,6 +33,7 @@
                 </ul>
             </li>
             <li sec:authorize="hasRole('ROLE_MODERATOR')"><a href="/moderator/exam/">Exams</a></li>
+            <li sec:authorize="hasRole('ROLE_MODERATOR')"><a href="/moderator/exam/validated">Validated Exams</a></li>
             <li sec:authorize="hasRole('ROLE_USER')" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Exams</a>
                 <ul class="dropdown-menu">
                     <li><a href="/user/exam/new">New Exam</a></li>

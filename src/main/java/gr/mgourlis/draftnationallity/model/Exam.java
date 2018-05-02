@@ -11,7 +11,7 @@ import java.util.List;
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
 public class Exam extends BaseEntity {
 
-    @Column(name = "uID", unique = true)
+    @Column(name = "uid", unique = true)
     @NotEmpty
     private String uID;
 
@@ -54,8 +54,11 @@ public class Exam extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Date validatedDate;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "validation_user")
+    private String validationUser;
+
+    @Column(name = "status", length = 15)
+    @Enumerated(EnumType.STRING)
     private ExamStatus status;
 
     @Lob
@@ -172,6 +175,14 @@ public class Exam extends BaseEntity {
 
     public void setValidatedDate(Date validatedDate) {
         this.validatedDate = validatedDate;
+    }
+
+    public String getValidationUser() {
+        return validationUser;
+    }
+
+    public void setValidationUser(String validationUser) {
+        this.validationUser = validationUser;
     }
 
     public ExamStatus getStatus() {

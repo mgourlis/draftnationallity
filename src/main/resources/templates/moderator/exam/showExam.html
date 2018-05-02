@@ -4,7 +4,126 @@
       layout:decorate="~{layouts/default}" >
 <body>
 <div id="main" layout:fragment="content">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="col-sm-9">
+            <span th:if="${exam.getStatus().toString() == 'FINALIZED'}"><a th:href="@{'/moderator/exam/validate/' + ${exam.getId()}}" class="btn btn-warning btn-md">Validate</a></span>
+            <fieldset class="info-border" >
+                <legend class="info-border">Exam Information</legend>
+                <table class="table">
+                    <tr>
+                        <td>Created Date:</td>
+                        <td><span th:text="${exam.getCreatedAt()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Rated Date:</td>
+                        <td><span th:text="${exam.getRatedDate()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Finalized Date:</td>
+                        <td><span th:text="${exam.getFinalizedDate()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Exam Unique ID:</td>
+                        <td><span th:text="${exam.getuID()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Local File Number:</td>
+                        <td><span th:text="${exam.getLocalFileNumber()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>File Number:</td>
+                        <td><span th:text="${exam.getFileNumber()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Organization:</td>
+                        <td><span th:text="${exam.getForeas()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Language Exemption:</td>
+                        <td><span th:text="${exam.isLanguageExemption()}"></span></td>
+                    </tr>
+                    <tr th:if="${exam.isLanguageExemption()}">
+                        <td>Language Exemption Notes:</td>
+                        <td><span th:text="${exam.getLanguageExemptionNotes()}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Deafness:</td>
+                        <td><span th:text="${exam.isDeaf()}"></span></td>
+                    </tr>
+                    <tr th:if="${exam.isDeaf()}">
+                        <td>Deafness Notes: </td>
+                        <td><span th:text="${exam.getDeafNotes()}"></span></td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
 
+        <br/>
+
+        <div class="col-sm-9">
+            <fieldset class="info-border">
+                <legend class="info-border">Exam Questions</legend>
+                <div th:each="examQuestion : ${exam.getExamQuestions()}">
+                    <label th:text="'Question ' + ${examQuestion.getSortNumber()}"></label>
+                    <div th:text="${examQuestion.getQuestion().getQuestiontext()}"></div>
+                    <div th:if="${examQuestion.getAnswer() != null}">
+                        <label>Answer</label>
+                        <div th:text="${examQuestion.getAnswer().getAnswertext()}"></div>
+                    </div>
+                    <br/>
+                </div>
+            </fieldset>
+        </div>
+
+        <br/>
+
+        <div class="col-sm-9">
+            <fieldset class="info-border">
+                <legend class="info-border">Exam Rating</legend>
+                <table class="table">
+                    <tr>
+                        <th>Τype</th>
+                        <th>Mark</th>
+                        <th>Notes</th>
+                    </tr>
+                    <tr th:each="examRating : ${exam.getExamRatings()}">
+                        <td><span th:text="${examRating.getExamRatingType().getRatingType()} + ':'"></span></td>
+                        <td><span th:text="${examRating.getExamRatingMark().getRatingMark()}"></span></td>
+                        <td><span th:text="${examRating.getRatingNotes()}"></span></td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+
+        <br/>
+
+        <div class="col-sm-9">
+            <fieldset class="info-border">
+                <legend class="info-border">Committee Members</legend>
+                <table class="table">
+                    <tr>
+                        <th>Name</th>
+                        <th>Lastname</th>
+                        <th>Member Role</th>
+                    </tr>
+                    <tr th:each="committeeMember : ${exam.getCommitteeMembers()}">
+                        <td><span th:text="${committeeMember.getName()}"></span></td>
+                        <td><span th:text="${committeeMember.getLastName()}"></span></td>
+                        <td><span th:text="${committeeMember.getCommitteeRole()}"></span></td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+
+        <br/>
+
+        <div class="col-sm-9">
+            <fieldset class="info-border">
+                <legend class="info-border">General Notes</legend>
+                <div th:text="${exam.getExamGeneralNotes()}"></div>
+            </fieldset>
+        </div>
+    </div>
 </div>
 </body>
 </html>

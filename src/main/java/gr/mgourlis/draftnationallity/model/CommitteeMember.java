@@ -18,9 +18,9 @@ public class CommitteeMember extends BaseEntity {
     @NotEmpty
     private String lastName;
 
-    @Column(name = "committee_role")
+    @Column(name = "committee_role", length = 15)
     @NotNull
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private CommitteeRole committeeRole;
 
     public String getName() {

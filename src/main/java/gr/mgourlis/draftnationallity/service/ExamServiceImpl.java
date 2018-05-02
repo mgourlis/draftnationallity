@@ -79,12 +79,32 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public List<Exam> findExamsByLocalFileNumberAndUser(String localFileNumber, String email) {
-        return examRepository.findExamsByLocalFileNumberAndCreatedByAndDeleted(localFileNumber, email,false);
+        return examRepository.findExamsByLocalFileNumberContainingAndCreatedByAndDeleted(localFileNumber, email,false);
     }
 
     @Override
     public Page<Exam> findExamsByLocalFileNumberAndUser(String localFileNumber, String email, Pageable pageable) {
-        return examRepository.findExamsByLocalFileNumberAndCreatedByAndDeleted(localFileNumber, email,false, pageable);
+        return examRepository.findExamsByLocalFileNumberContainingAndCreatedByAndDeleted(localFileNumber, email,false, pageable);
+    }
+
+    @Override
+    public List<Exam> findAllByStatus(ExamStatus status) {
+        return examRepository.findExamsByStatusAndDeleted(status,false);
+    }
+
+    @Override
+    public Page<Exam> findAllByStatus(ExamStatus status, Pageable pageable) {
+        return examRepository.findExamsByStatusAndDeleted(status,false, pageable);
+    }
+
+    @Override
+    public List<Exam> findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatus(String localFileNumber, String FileNumber, String uID, ExamStatus status) {
+        return examRepository.findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(localFileNumber, FileNumber, uID, status,false);
+    }
+
+    @Override
+    public Page<Exam> findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatus(String localFileNumber, String FileNumber, String uID, ExamStatus status, Pageable pageable) {
+        return examRepository.findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(localFileNumber, FileNumber, uID, status,false, pageable);
     }
 
     @Override
@@ -272,11 +292,15 @@ public class ExamServiceImpl implements IExamService {
     }
 
     @Override
-    public void validateExam(Exam exam) {
+    public void validateExam(Exam exam, String fileNumber, String email, boolean finalValidation) {
         if(getOne(exam.getId()) != null) {
-            if (exam.getStatus().equals(ExamStatus.RATED)) {
-                exam.setValidatedDate(new Date());
-                exam.setStatus(ExamStatus.VALIDATED);
+            if (exam.getStatus().equals(ExamStatus.FINALIZED)) {
+                exam.setFileNumber(fileNumber);
+                if (finalValidation) {
+                    exam.setValidationUser(email);
+                    exam.setValidatedDate(new Date());
+                    exam.setStatus(ExamStatus.VALIDATED);
+                }
                 examRepository.save(exam);
             } else {
                 throw new IllegalArgumentException("Can not set status to validated");
