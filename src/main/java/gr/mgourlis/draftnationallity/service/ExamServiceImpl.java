@@ -144,7 +144,7 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public void editExam(Exam exam, EditExamDTO editExamDTO) {
-        if(exam.getStatus() != ExamStatus.RATED){
+        if(exam.getStatus() == ExamStatus.PENDING || exam.getStatus() == ExamStatus.ANSWERED){
             if(editExamDTO.getForeas().equals("") || editExamDTO.getLocalFileNumber().equals("")){
                 throw new IllegalArgumentException("Foreas or Local File Number can not be empty.");
             }

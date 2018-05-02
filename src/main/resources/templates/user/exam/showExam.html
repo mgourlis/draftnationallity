@@ -6,7 +6,7 @@
 <div id="main" layout:fragment="content">
     <div class="col-md-6 col-md-offset-3">
         <div class="col-sm-9">
-            <span th:if="${exam.getStatus().toString() != 'RATED' and exam.getStatus().toString() != 'FINALIZED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-md">Edit</a></span>
+            <span th:if="${exam.getStatus().toString() == 'PENDING' or exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-md">Edit</a></span>
             <span th:if="${exam.getStatus().toString() == 'PENDING'}"><a th:href="@{'/user/exam/setanswers/' + ${exam.getId()}}" class="btn btn-warning btn-md">Set Answers</a></span>
             <span th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-md">Set Ratings</a></span>
             <span th:if="${exam.getStatus().toString() == 'RATED'}"><a th:href="@{'/user/exam/finalize/' + ${exam.getId()}}" class="btn btn-warning btn-md">Finalize Exam</a></span>
