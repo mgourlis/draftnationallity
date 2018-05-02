@@ -156,7 +156,7 @@ public class ExamServiceImpl implements IExamService {
                 editExamDTO.setLanguageExemptionNotes("");
             }
             if(editExamDTO.isDeaf()){
-                if(editExamDTO.getLanguageExemptionNotes().equals("")){
+                if(editExamDTO.getDeafNotes().equals("")){
                     throw new IllegalArgumentException("Notes on deafness can not be empty.");
                 }
             }else{
