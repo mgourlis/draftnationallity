@@ -7,11 +7,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <h2>Users</h2>
+                <h2 th:text="#{user.users}"></h2>
             </div>
             <div class="col-md-6">
                 <div class="pull-right">
-                    <a th:href="${'/admin/user/new'}" class="btn btn-primary mb-2">Create User</a>
+                    <a th:href="${'/admin/user/new'}" class="btn btn-primary mb-2"><span th:text="#{user.createuser}"></span></a>
                 </div>
             </div>
         </div>
@@ -24,17 +24,17 @@
             <div class="col-md-8">
                 <div class="pull-right">
                      <form th:action="@{/admin/user/}" method="GET" class="form-inline">
-                         <div class="form-group mb-2"><input type="text" id="user" name="user"  th:placeholder="Email" class="form-control" th:value="${param.user}" /></div>
+                         <div class="form-group mb-2"><input type="text" id="user" name="user"  th:placeholder="#{general.email}" class="form-control" th:value="${param.user}" /></div>
                          <div class="form-group mb-2">
                                  <select class="form-control" id="role" name="role" >
-                                     <option value=""></option>
+                                     <option value=""><span th:text="#{user.selectrole}"></span></option>
                                      <option th:each="role : ${roles}"
                                              th:value="${role.toString()}"
                                              th:text="${role.toString()}"
                                              th:selected="${param.role} == ${role.toString()}">Role name</option>
                                  </select>
                          </div>
-                         <button class="btn btn-primary mb-2" type="Submit" th:text="Search"></button>
+                         <button class="btn btn-primary mb-2" type="Submit" th:text="#{general.search}"></button>
                     </form>
                 </div>
             </div>
@@ -43,26 +43,24 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th><a class="sorted" sd:pagination-sort="id" >ID</a></th>
-                        <th><a class="sorted" sd:pagination-sort="name" >Name</a></th>
-                        <th><a class="sorted" sd:pagination-sort="lastName" >Lastname</a></th>
-                        <th><a class="sorted" sd:pagination-sort="email" >Email</a></th>
-                        <th><a class="sorted" sd:pagination-sort="foreas" >Foreas</a></th>
-                        <th><a class="sorted" sd:pagination-sort="active" >Active</a></th>
-                        <th><a>Roles</a></th>
-                        <th>View</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th><a class="sorted" sd:pagination-sort="name" ><span th:text="#{user.name}"></span></a></th>
+                        <th><a class="sorted" sd:pagination-sort="lastName" ><span th:text="#{user.lastName}"></span></a></th>
+                        <th><a class="sorted" sd:pagination-sort="email" ><span th:text="#{general.email}"></span></a></th>
+                        <th><a class="sorted" sd:pagination-sort="foreas" ><span th:text="#{user.foreas}"></span></a></th>
+                        <th><a class="sorted" sd:pagination-sort="active" ><span th:text="#{user.active}"></span></a></th>
+                        <th><a><span th:text="#{role.roles}"></span></a></th>
+                        <th><span th:text="#{general.view}"></span></th>
+                        <th><span th:text="#{general.edit}"></span></th>
+                        <th><span th:text="#{general.delete}"></span></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="user,iterationStatus : ${users}">
-                        <td th:text="${user.id}">ID</td>
                         <td th:text="${user.name}">Name</td>
                         <td th:text="${user.lastName}">Lastname</td>
                         <td th:text="${user.email}">Email</td>
                         <td th:text="${user.foreas}">foreas</td>
-                        <td th:text="${user.active}">Active</td>
+                        <td><span th:if="${user.active}" th:text="#{general.yes}"></span><span th:if="${!user.active}" th:text="#{general.no}"></span></td>
                         <td>
                             <span th:each="role,iterationRoleStatus : ${user.getRoles()}">
                                 <span th:text="${role.role.split('ROLE_')[1]}"></span>
@@ -71,9 +69,9 @@
                                 </span>
                             </span>
                         </td>
-                        <td><a th:href="@{'/admin/user/' + ${user.id}}" class="btn btn-success btn-xs">View</a></td>
-                        <td><a th:href="@{'/admin/user/edit/' + ${user.id}}" class="btn btn-warning btn-xs">Edit</a></td>
-                        <td><a th:href="@{'/admin/user/delete/ + ${user.id}}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
+                        <td><a th:href="@{'/admin/user/' + ${user.id}}" class="btn btn-success btn-xs"><span th:text="#{general.view}"></span></a></td>
+                        <td><a th:href="@{'/admin/user/edit/' + ${user.id}}" class="btn btn-warning btn-xs"><span th:text="#{general.edit}"></span></a></td>
+                        <td><a th:href="@{'/admin/user/delete/ + ${user.id}}" class="btn btn-danger btn-xs" th:onclick="'return confirm(\''+#{general.delete.confirm}+'\');'"><span th:text="#{general.delete}"></span></a></td>
                     </tr>
                 </tbody>
             </table>
