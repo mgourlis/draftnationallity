@@ -59,6 +59,7 @@ public class UserExamController {
             examsPage = examService.findExamsByStatusAndUser(estatus, authentication.getName(), pageable);
         else
             examsPage = examService.findExamsByLocalFileNumberAndStatusAndUser(lfile, estatus, authentication.getName(), pageable);
+        modelAndView.addObject("paramestatus",estatus);
         modelAndView.addObject("successMessageBox",successMessageBox);
         modelAndView.addObject("errorMessageBox",errorMessageBox);
         modelAndView.addObject("exams", examsPage.getContent());

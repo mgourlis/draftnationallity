@@ -28,7 +28,7 @@
                         <select class="form-control" id="estatus" name="estatus" >
                             <option value=""><span th:text="#{estatus.status}"></span></option>
                             <span th:each="estatus : ${T(gr.mgourlis.draftnationallity.model.ExamStatus).values()}">
-                                <option th:if="${estatus.toString() != 'VALIDATED'}" th:value="${estatus.toString()}" th:selected="${estatus.toString() eq param.estatus}">
+                                <option th:if="${estatus.toString() != 'VALIDATED'}" th:value="${estatus.toString()}" th:selected="${estatus.toString() == paramestatus}">
                                     <span th:if="${estatus.toString() == 'PENDING'}"><span th:text="#{estatus.pending}"></span></span>
                                     <span th:if="${estatus.toString() == 'ANSWERED'}"><span th:text="#{estatus.answered}"></span></span>
                                     <span th:if="${estatus.toString() == 'RATED'}"><span th:text="#{estatus.rated}"></span></span>
