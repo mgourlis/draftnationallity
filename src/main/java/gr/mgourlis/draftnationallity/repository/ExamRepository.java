@@ -30,9 +30,17 @@ public interface ExamRepository extends JpaRepository<Exam,Long> {
 
     public Page<Exam> findExamsByCreatedByAndDeletedOrderByCreatedAtDesc(String createdBy, boolean deleted, Pageable pageable);
 
-    public List<Exam> findExamsByLocalFileNumberContainingAndCreatedByAndDeleted(String localFileNumber, String email, boolean deleted);
+    public List<Exam> findExamsByLocalFileNumberContainingAndCreatedByAndDeletedOrderByCreatedAtDesc(String localFileNumber, String email, boolean deleted);
 
-    public Page<Exam> findExamsByLocalFileNumberContainingAndCreatedByAndDeleted(String localFileNumber, String email, boolean deleted, Pageable pageable);
+    public Page<Exam> findExamsByLocalFileNumberContainingAndCreatedByAndDeletedOrderByCreatedAtDesc(String localFileNumber, String email, boolean deleted, Pageable pageable);
+
+    public List<Exam> findExamsByStatusAndCreatedByAndDeletedOrderByCreatedAtDesc(ExamStatus status, String email, boolean deleted);
+
+    public Page<Exam> findExamsByStatusAndCreatedByAndDeletedOrderByCreatedAtDesc(ExamStatus status, String email, boolean deleted, Pageable pageable);
+
+    public List<Exam> findExamsByLocalFileNumberContainingAndStatusAndCreatedByAndDeletedOrderByCreatedAtDesc(String localFileNumber, ExamStatus status, String email, boolean deleted);
+
+    public Page<Exam> findExamsByLocalFileNumberContainingAndStatusAndCreatedByAndDeletedOrderByCreatedAtDesc(String localFileNumber, ExamStatus status, String email, boolean deleted, Pageable pageable);
 
     public List<Exam> findExamsByStatusAndDeleted(ExamStatus status, boolean deleted);
 

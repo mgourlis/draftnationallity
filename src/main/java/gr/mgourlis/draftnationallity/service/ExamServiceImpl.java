@@ -79,12 +79,52 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public List<Exam> findExamsByLocalFileNumberAndUser(String localFileNumber, String email) {
-        return examRepository.findExamsByLocalFileNumberContainingAndCreatedByAndDeleted(localFileNumber, email,false);
+        return examRepository.findExamsByLocalFileNumberContainingAndCreatedByAndDeletedOrderByCreatedAtDesc(localFileNumber, email,false);
     }
 
     @Override
     public Page<Exam> findExamsByLocalFileNumberAndUser(String localFileNumber, String email, Pageable pageable) {
-        return examRepository.findExamsByLocalFileNumberContainingAndCreatedByAndDeleted(localFileNumber, email,false, pageable);
+        return examRepository.findExamsByLocalFileNumberContainingAndCreatedByAndDeletedOrderByCreatedAtDesc(localFileNumber, email,false, pageable);
+    }
+
+    @Override
+    public List<Exam> findExamsByStatusAndUser(String status, String email) {
+        try {
+            ExamStatus examStatus = ExamStatus.valueOf(status);
+            return examRepository.findExamsByStatusAndCreatedByAndDeletedOrderByCreatedAtDesc(examStatus, email,false);
+        } catch (IllegalArgumentException e){
+            return examRepository.findExamsByCreatedByAndDeletedOrderByCreatedAtDesc(email, false);
+        }
+    }
+
+    @Override
+    public Page<Exam> findExamsByStatusAndUser(String status, String email, Pageable pageable) {
+        try {
+            ExamStatus examStatus = ExamStatus.valueOf(status);
+            return examRepository.findExamsByStatusAndCreatedByAndDeletedOrderByCreatedAtDesc(examStatus, email,false, pageable);
+        } catch (IllegalArgumentException e){
+            return examRepository.findExamsByCreatedByAndDeletedOrderByCreatedAtDesc(email,false, pageable);
+        }
+    }
+
+    @Override
+    public List<Exam> findExamsByLocalFileNumberAndStatusAndUser(String localFileNumber, String status, String email) {
+        try {
+            ExamStatus examStatus = ExamStatus.valueOf(status);
+            return examRepository.findExamsByLocalFileNumberContainingAndStatusAndCreatedByAndDeletedOrderByCreatedAtDesc(localFileNumber, examStatus, email,false);
+        } catch (IllegalArgumentException e){
+            return examRepository.findExamsByLocalFileNumberContainingAndCreatedByAndDeletedOrderByCreatedAtDesc(localFileNumber, email,false);
+        }
+    }
+
+    @Override
+    public Page<Exam> findExamsByLocalFileNumberAndStatusAndUser(String localFileNumber, String status, String email, Pageable pageable) {
+        try {
+            ExamStatus examStatus = ExamStatus.valueOf(status);
+            return examRepository.findExamsByLocalFileNumberContainingAndStatusAndCreatedByAndDeletedOrderByCreatedAtDesc(localFileNumber, examStatus, email,false,pageable);
+        } catch (IllegalArgumentException e){
+            return examRepository.findExamsByLocalFileNumberContainingAndCreatedByAndDeletedOrderByCreatedAtDesc(localFileNumber, email,false, pageable);
+        }
     }
 
     @Override
@@ -262,15 +302,24 @@ public class ExamServiceImpl implements IExamService {
             if (exam.getStatus().equals(ExamStatus.RATED)) {
                 if(!committeeMembersDTO.isEmpty()) {
                     List<CommitteeMember> committeeMembers = new ArrayList<>();
+                    int president = 0;
+                    int secretary = 0;
                     for(CommitteeMemberDTO committeeMemberDTO : committeeMembersDTO){
                         if(committeeMemberDTO.getName().equals("") || committeeMemberDTO.getLastName().equals("") || committeeMemberDTO.getCommitteeRole() == null){
                             throw new IllegalArgumentException("Committee Members must have a name, a lastname and a role.");
                         }
+                        if(committeeMemberDTO.getCommitteeRole() == CommitteeRole.PRESIDENT)
+                            president++;
+                        if(committeeMemberDTO.getCommitteeRole() == CommitteeRole.SECRETARY)
+                            secretary++;
                         CommitteeMember committeeMember = new CommitteeMember();
                         committeeMember.setName(committeeMemberDTO.getName());
                         committeeMember.setLastName(committeeMemberDTO.getLastName());
                         committeeMember.setCommitteeRole(committeeMemberDTO.getCommitteeRole());
                         committeeMembers.add(committeeMember);
+                    }
+                    if(president != 1 || secretary != 1){
+                        throw new IllegalArgumentException("Committee must have one president and one secretary.");
                     }
                     exam.setFinalizedDate(new Date());
                     exam.getCommitteeMembers().clear();

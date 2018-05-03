@@ -47,9 +47,9 @@
                     <td th:text="${exam.getForeas()}">Organization</td>
                     <td th:text="${exam.getLocalFileNumber()}">Local File Number</td>
                     <td th:text="${exam.getFileNumber()}">File Number</td>
-                    <td th:text="${exam.getCreatedAt()}">Created Date</td>
-                    <td th:text="${exam.getRatedDate()}">Rated Date</td>
-                    <td th:text="${exam.getValidatedDate()}">Validated Date</td>
+                    <td th:text="{#dates.format(exam.getCreatedAt(), 'dd-MM-yyyy')}">Created Date</td>
+                    <td th:text="${#dates.format(exam.getRatedDate(), 'dd-MM-yyyy')}">Rated Date</td>
+                    <td th:text="${#dates.format(exam.getValidatedDate(), 'dd-MM-yyyy')}">Validated Date</td>
                     <td th:text="${exam.getValidationUser()}">Validation User</td>
                     <td><a th:href="@{'/moderator/exam/' + ${exam.getId()}}" class="btn btn-success btn-xs"><span th:text="#{general.view}"></span></a></td>
                     <td th:if="${exam.getStatus().toString() == 'FINALIZED'}"><a th:href="@{'/moderator/exam/validate/' + ${exam.getId()}}" class="btn btn-warning btn-xs">

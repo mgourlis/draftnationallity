@@ -7,11 +7,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <h2>Exams</h2>
+                <h2><span th:text="#{exam.exams}"></span></h2>
             </div>
             <div class="col-md-6">
                 <div class="pull-right">
-                    <a th:href="${'/user/exam/new'}" class="btn btn-primary mb-2">Create Exam</a>
+                    <a th:href="${'/user/exam/new'}" class="btn btn-primary mb-2"><span th:text="#{exam.createexam}"></span></a>
                 </div>
             </div>
         </div>
@@ -24,8 +24,19 @@
             <div class="col-md-8">
                 <div class="pull-right">
                     <form th:action="@{/user/exam/}" method="GET" class="form-inline">
-                        <div class="form-group mb-2"><input type="text" id="lfile" name="lfile"  th:placeholder="Local-File" class="form-control" th:value="${param.lfile}" /></div>
-                        <button class="btn btn-primary mb-2" type="Submit" th:text="Search"></button>
+                        <div class="form-group mb-2"><input type="text" id="lfile" name="lfile"  th:placeholder="#{exam.localfilenumber}" class="form-control" th:value="${param.lfile}" /></div>
+                        <select class="form-control" id="estatus" name="estatus" >
+                            <option value=""><span th:text="#{estatus.status}"></span></option>
+                            <span th:each="estatus : ${T(gr.mgourlis.draftnationallity.model.ExamStatus).values()}">
+                                <option th:if="${estatus.toString() != 'VALIDATED'}" th:value="${estatus.toString()}" th:selected="${estatus.toString() eq param.estatus}">
+                                    <span th:if="${estatus.toString() == 'PENDING'}"><span th:text="#{estatus.pending}"></span></span>
+                                    <span th:if="${estatus.toString() == 'ANSWERED'}"><span th:text="#{estatus.answered}"></span></span>
+                                    <span th:if="${estatus.toString() == 'RATED'}"><span th:text="#{estatus.rated}"></span></span>
+                                    <span th:if="${estatus.toString() == 'FINALIZED'}"><span th:text="#{estatus.finalized}"></span></span>
+                                </option>
+                            </span>
+                        </select>
+                        <button class="btn btn-primary mb-2" type="Submit" th:text="#{general.search}"></button>
                     </form>
                 </div>
             </div>
@@ -34,14 +45,14 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>UID</th>
-                        <th>Type</th>
-                        <th>Local File Number</th>
-                        <th>Created Date</th>
-                        <th>Rated Date</th>
-                        <th>View</th>
-                        <th>Edit</th>
-                        <th>Action</th>
+                        <th><span th:text="#{exam.uniqueid}"></span></th>
+                        <th><span th:text="#{exam.type}"></span></th>
+                        <th><span th:text="#{exam.localfilenumber}"></span></th>
+                        <th><span th:text="#{exam.createddate}"></span></th>
+                        <th><span th:text="#{exam.rateddate}"></span></th>
+                        <th><span th:text="#{general.view}"></span></th>
+                        <th><span th:text="#{general.edit}"></span></th>
+                        <th><span th:text="#{general.action}"></span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,13 +60,13 @@
                         <td th:text="${exam.getuID()}">UID</td>
                         <td th:text="${exam.getExamSetting().getName()}">Type/td>
                         <td th:text="${exam.getLocalFileNumber()}">Local File Number</td>
-                        <td th:text="${exam.getCreatedAt()}">Created Date/td>
-                        <td th:text="${exam.getRatedDate()}">Rated Date</td>
-                        <td><a th:href="@{'/user/exam/' + ${exam.getId()}}" class="btn btn-success btn-xs">View</a></td>
-                        <td><span th:if="${exam.getStatus().toString() == 'PENDING' or exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Edit</a></span></td>
-                        <td th:if="${exam.getStatus().toString() == 'PENDING'}"><a th:href="@{'/user/exam/setanswers/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Set Answers</a></td>
-                        <td th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Set Ratings</a></td>
-                        <td th:if="${exam.getStatus().toString() == 'RATED'}"><a th:href="@{'/user/exam/finalize/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Finalize Exam</a></td>
+                        <td th:text="${#dates.format(exam.getCreatedAt(), 'dd-MM-yyyy')}">Created Date</td>
+                        <td th:text="${#dates.format(exam.getRatedDate(), 'dd-MM-yyyy')}">Rated Date</td>
+                        <td><a th:href="@{'/user/exam/' + ${exam.getId()}}" class="btn btn-success btn-xs"><span th:text="#{general.view}"></span></a></td>
+                        <td><span th:if="${exam.getStatus().toString() == 'PENDING' or exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-xs"><span th:text="#{general.edit}"></span></a></span></td>
+                        <td th:if="${exam.getStatus().toString() == 'PENDING'}"><a th:href="@{'/user/exam/setanswers/' + ${exam.getId()}}" class="btn btn-warning btn-xs"><span th:text="#{general.setanswers}"></span></a></td>
+                        <td th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-xs"><span th:text="#{general.setratings}"></span></a></td>
+                        <td th:if="${exam.getStatus().toString() == 'RATED'}"><a th:href="@{'/user/exam/finalize/' + ${exam.getId()}}" class="btn btn-warning btn-xs"><span th:text="#{general.finalizeexam}"></span></a></td>
                     </tr>
                 </tbody>
             </table>

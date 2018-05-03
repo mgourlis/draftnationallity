@@ -27,31 +27,33 @@ public class Exam extends BaseEntity {
     private String foreas;
 
     @Column(name = "answered_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date answeredDate;
 
     @Column(name = "rated_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date ratedDate;
 
     @Column(name = "language_exemption")
     private boolean languageExemption;
 
-    @Column(name = "language_exemption_notes", length = 512)
+    @Lob
+    @Column(name = "language_exemption_notes", length = 1024)
     private String languageExemptionNotes;
 
     @Column(name = "deaf")
     private boolean deaf;
 
-    @Column(name = "deaf_notes", length = 512)
+    @Lob
+    @Column(name = "deaf_notes", length = 1024)
     private String deafNotes;
 
     @Column(name = "finalized_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date finalizedDate;
 
     @Column(name = "validated_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date validatedDate;
 
     @Column(name = "validation_user")
@@ -62,7 +64,7 @@ public class Exam extends BaseEntity {
     private ExamStatus status;
 
     @Lob
-    @Column(name = "exam_general_notes", length = 1024)
+    @Column(name = "exam_general_notes", length = 2048)
     private String examGeneralNotes;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})

@@ -8,7 +8,8 @@ import javax.persistence.*;
         nullable = false, columnDefinition = "BIGINT UNSIGNED"))
 public class ExamRating extends BaseEntity {
 
-    @Column(name = "rating_notes")
+    @Lob
+    @Column(name = "rating_notes", length = 2048)
     private String ratingNotes;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})

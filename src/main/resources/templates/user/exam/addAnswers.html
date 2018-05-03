@@ -4,18 +4,18 @@
       layout:decorate="~{layouts/default}" >
 <body>
 <div id="main" layout:fragment="content">
-    <div class="col-md-6 col-md-offset-3">
-        <a th:href="@{'/user/exam/' + ${exam.getId()}}" class="btn btn-success btn-md">go to View</a>
+    <div class="container">
+        <a th:href="@{'/user/exam/' + ${exam.getId()}}" class="btn btn-success btn-md"><span th:text="#{general.gotoview}"></span></a>
         <form autocomplete="off" action="#" th:action="@{'/user/exam/setanswers/' + ${exam.getId()}}" th:object="${exam}" method="post" class="form-horizontal" role="form">
-            <h2>Give Exam Answers</h2>
+            <h2><span th:text="#{exam.giveexamanswers}"></span></h2>
 
             <input type="hidden" th:field="*{id}" th:value="*{id}"/>
 
-            <div class="col-sm-9" th:each="examQuestion,stat : *{examQuestionsDTO}">
+            <div class="col-sm-10" th:each="examQuestion,stat : *{examQuestionsDTO}">
                 <div class="row">
-                    <label>Question <span th:text="${examQuestion.getSortNumber()}"></span></label><br/>
+                    <label><span th:text="#{exam.question}"></span> <span th:text="${examQuestion.getSortNumber()}"></span></label><br/>
                     <div th:text="${examQuestion.getQuestiontext()}"></div>
-                    <label>Answer to Question <span th:text="${examQuestion.getSortNumber()}"></span></label><br/>
+                    <label><span th:text="#{exam.answertoquestion}"></span> <span th:text="${examQuestion.getSortNumber()}"></span></label><br/>
                     <label	th:if="${#fields.hasErrors('*{examQuestionsDTO[__${stat.index}__].answertext}')}" th:errors="*{examQuestionsDTO[__${stat.index}__].answertext}" class="validation-message"></label>
                     <textarea th:field="*{examQuestionsDTO[__${stat.index}__].answertext}" class="form-control">
                         <span th:text="${examQuestion.getAnswertext()}"></span>
@@ -29,9 +29,11 @@
 
             <div class="row">
                 <div class="form-group">
-                    <div class="col-sm-9">
-                        <span class="col-sm-4"><button type="submit" class="btn btn-primary btn-block" name="action" value="tempsave">Temporary Save</button></span>
-                        <span class="col-sm-4"><button type="submit" class="btn btn-warning btn-block" name="action" value="save">Finalize</button></span>
+                    <div class="col-sm-10">
+                        <span class="col-sm-6"><button type="submit" class="btn btn-primary btn-block" name="action" value="tempsave">
+                            <span th:text="#{general.tempsave}"></span></button></span>
+                        <span class="col-sm-4"><button type="submit" class="btn btn-warning btn-block" name="action" value="save">
+                            <span th:text="#{general.finalize}"></span></button></span>
                     </div>
                 </div>
             </div>

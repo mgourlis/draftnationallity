@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 public class Answer extends BaseEntity {
 
     @Lob
-    @Column(name = "answer_text", length = 1000)
+    @Column(name = "answer_text", length = 2048)
     @NotEmpty
     private String answertext;
 

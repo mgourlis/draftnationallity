@@ -42,16 +42,23 @@ public class UserExamController {
 
     @RequestMapping("/")
     public ModelAndView getExams(@RequestParam(name = "lfile", required = false, defaultValue = "") String lfile,
+                                 @RequestParam(name = "estatus", required = false, defaultValue = "") String estatus,
                                  @RequestParam(name = "successMessageBox", required = false) String successMessageBox,
                                  @RequestParam(name = "errorMessageBox", required = false) String errorMessageBox,
                                  ModelAndView modelAndView,
                                  Pageable pageable,
                                  Authentication authentication){
         Page<Exam> examsPage;
-        if(lfile.equals(""))
-            examsPage = examService.findExamsByUser(authentication.getName(),pageable);
+        if(estatus.equals("VALIDATED"))
+            estatus = "";
+        if(lfile.equals("") && estatus.equals(""))
+            examsPage = examService.findExamsByUser(authentication.getName(), pageable);
+        else if(estatus.equals(""))
+            examsPage = examService.findExamsByLocalFileNumberAndUser(lfile, authentication.getName(), pageable);
+        else if(lfile.equals(""))
+            examsPage = examService.findExamsByStatusAndUser(estatus, authentication.getName(), pageable);
         else
-            examsPage = examService.findExamsByLocalFileNumberAndUser(lfile,authentication.getName(),pageable);
+            examsPage = examService.findExamsByLocalFileNumberAndStatusAndUser(lfile, estatus, authentication.getName(), pageable);
         modelAndView.addObject("successMessageBox",successMessageBox);
         modelAndView.addObject("errorMessageBox",errorMessageBox);
         modelAndView.addObject("exams", examsPage.getContent());

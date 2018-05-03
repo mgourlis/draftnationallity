@@ -4,45 +4,82 @@
       layout:decorate="~{layouts/default}" >
 <body>
 <div id="main" layout:fragment="content">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="container">
         <div class="col-sm-9">
-            <span th:if="${exam.getStatus().toString() == 'PENDING' or exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-md">Edit</a></span>
-            <span th:if="${exam.getStatus().toString() == 'PENDING'}"><a th:href="@{'/user/exam/setanswers/' + ${exam.getId()}}" class="btn btn-warning btn-md">Set Answers</a></span>
-            <span th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-md">Set Ratings</a></span>
-            <span th:if="${exam.getStatus().toString() == 'RATED'}"><a th:href="@{'/user/exam/finalize/' + ${exam.getId()}}" class="btn btn-warning btn-md">Finalize Exam</a></span>
+            <div>
+                <span th:if="${exam.getStatus().toString() == 'PENDING' or exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/edit/' + ${exam.getId()}}" class="btn btn-warning btn-md">
+                    <span th:text="#{general.edit}"></span></a></span>
+
+                <span th:if="${exam.getStatus().toString() != 'PENDING' and exam.getStatus().toString() != 'ANSWERED'}"><button class="btn btn-warning disabled btn-md" disabled>
+                    <span th:text="#{general.edit}"></span></button></span>
+                <span class="glyphicon glyphicon-forward"></span>
+
+                <span th:if="${exam.getStatus().toString() == 'PENDING'}"><a th:href="@{'/user/exam/setanswers/' + ${exam.getId()}}" class="btn btn-warning  btn-md">
+                    <span th:text="#{general.setanswers}"></span></a></span>
+
+                <span th:if="${exam.getStatus().toString() != 'PENDING'}"><button class="btn btn-warning disabled btn-md" disabled>
+                    <span th:text="#{general.setanswers}"></span></button></span>
+                <span class="glyphicon glyphicon-forward"></span>
+
+                <span th:if="${exam.getStatus().toString() == 'ANSWERED'}"><a th:href="@{'/user/exam/setrating/' + ${exam.getId()}}" class="btn btn-warning btn-md">
+                    <span th:text="#{general.setratings}"></span></a></span>
+
+                <span th:if="${exam.getStatus().toString() != 'ANSWERED'}"><button class="btn btn-warning disabled btn-md" disabled>
+                    <span th:text="#{general.setratings}"></span></button></span>
+                <span class="glyphicon glyphicon-forward"></span>
+
+                <span th:if="${exam.getStatus().toString() == 'RATED'}"><a th:href="@{'/user/exam/finalize/' + ${exam.getId()}}" class="btn btn-warning btn-md">
+                    <span th:text="#{general.finalizeexam}"></span></a></span>
+
+                <span th:if="${exam.getStatus().toString() != 'RATED'}"><button class="btn btn-warning disabled btn-md" disabled>
+                    <span th:text="#{general.finalizeexam}"></span></button></span>
+            </div>
+
+            <br/>
+
             <fieldset class="info-border" >
-                <legend class="info-border">Exam Information</legend>
+                <legend class="info-border"><span th:text="#{exam.information}"></span></legend>
                 <table class="table">
                     <tr>
-                        <td>Created Date:</td>
-                        <td><span th:text="${exam.getCreatedAt()}"></span></td>
+                        <td><span th:text="#{exam.createddate}"></span></td>
+                        <td><span th:text="${#dates.format(exam.getCreatedAt(), 'dd-MM-yyyy')}"></span></td>
                     </tr>
                     <tr>
-                        <td>Exam Unique ID:</td>
+                        <td><span th:text="#{exam.rateddate}"></span></td>
+                        <td><span th:text="${#dates.format(exam.getRatedDate(), 'dd-MM-yyyy')}"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span th:text="#{exam.finalizeddate}"></span></td>
+                        <td><span th:text="${#dates.format(exam.getFinalizedDate(), 'dd-MM-yyyy')}"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span th:text="#{exam.uniqueid}"></span></td>
                         <td><span th:text="${exam.getuID()}"></span></td>
                     </tr>
                     <tr>
-                        <td>Local File Number:</td>
+                        <td><span th:text="#{exam.localfilenumber}"></span></td>
                         <td><span th:text="${exam.getLocalFileNumber()}"></span></td>
                     </tr>
                     <tr>
-                        <td>Foreas:</td>
+                        <td><span th:text="#{exam.foreas}"></span></td>
                         <td><span th:text="${exam.getForeas()}"></span></td>
                     </tr>
                     <tr>
-                        <td>Language Exemption:</td>
-                        <td><span th:text="${exam.isLanguageExemption()}"></span></td>
+                        <td><span th:text="#{exam.languageexemption}"></span></td>
+                        <td><span th:if="${exam.isLanguageExemption()}" th:text="#{general.yes}"></span>
+                            <span th:if="${!exam.isLanguageExemption()}" th:text="#{general.no}"></span></td>
                     </tr>
                     <tr th:if="${exam.isLanguageExemption()}">
-                        <td>Language Exemption Notes:</td>
+                        <td><span th:text="#{exam.languageexemptionnotes}"></span></td>
                         <td><span th:text="${exam.getLanguageExemptionNotes()}"></span></td>
                     </tr>
                     <tr>
-                        <td>Deafness:</td>
-                        <td><span th:text="${exam.isDeaf()}"></span></td>
+                        <td><span th:text="#{exam.deaf}"></span></td>
+                        <td><span th:if="${exam.isDeaf()}" th:text="#{general.yes}"></span>
+                            <span th:if="${!exam.isDeaf()}" th:text="#{general.no}"></span></td>
                     </tr>
                     <tr th:if="${exam.isDeaf()}">
-                        <td>Deafness Notes: </td>
+                        <td><span th:text="#{exam.deafnotes}"></span></td>
                         <td><span th:text="${exam.getDeafNotes()}"></span></td>
                     </tr>
                 </table>
@@ -53,12 +90,12 @@
 
         <div class="col-sm-9">
             <fieldset class="info-border">
-                <legend class="info-border">Exam Questions</legend>
+                <legend class="info-border"><span th:text="#{exam.questions}"></span></legend>
                 <div th:each="examQuestion : ${exam.getExamQuestions()}">
-                    <label th:text="'Question ' + ${examQuestion.getSortNumber()}"></label>
+                    <label><span th:text="#{exam.question}"></span> <span th:text="${examQuestion.getSortNumber()}"></span></label>
                     <div th:text="${examQuestion.getQuestion().getQuestiontext()}"></div>
                     <div th:if="${examQuestion.getAnswer() != null}">
-                        <label>Answer</label>
+                        <label><span th:text="#{exam.answer}"></span></label>
                         <div th:text="${examQuestion.getAnswer().getAnswertext()}"></div>
                     </div>
                     <br/>
@@ -70,12 +107,12 @@
 
         <div class="col-sm-9">
             <fieldset class="info-border">
-                <legend class="info-border">Exam Rating</legend>
+                <legend class="info-border"><span th:text="#{exam.ratings}"></span></legend>
                 <table class="table">
                     <tr>
-                        <th>Τype</th>
-                        <th>Mark</th>
-                        <th>Notes</th>
+                        <th><span th:text="#{exam.ratings.type}"></span></th>
+                        <th><span th:text="#{exam.ratings.mark}"></span></th>
+                        <th><span th:text="#{exam.ratings.notes}"></span></th>
                     </tr>
                     <tr th:each="examRating : ${exam.getExamRatings()}">
                         <td><span th:text="${examRating.getExamRatingType().getRatingType()} + ':'"></span></td>
@@ -90,17 +127,19 @@
 
         <div class="col-sm-9">
             <fieldset class="info-border">
-                <legend class="info-border">Committee Members</legend>
+                <legend class="info-border"><span th:text="#{exam.committeemembers}"></span></legend>
                 <table class="table">
                     <tr>
-                        <th>Name</th>
-                        <th>Lastname</th>
-                        <th>Member Role</th>
+                        <th><span th:text="#{exam.committeemembers.name}"></span></th>
+                        <th><span th:text="#{exam.committeemembers.lastname}"></span></th>
+                        <th><span th:text="#{exam.committeemembers.memberrole}"></span></th>
                     </tr>
                     <tr th:each="committeeMember : ${exam.getCommitteeMembers()}">
                         <td><span th:text="${committeeMember.getName()}"></span></td>
                         <td><span th:text="${committeeMember.getLastName()}"></span></td>
-                        <td><span th:text="${committeeMember.getCommitteeRole()}"></span></td>
+                        <td th:if="${committeeMember.getCommitteeRole().toString() == 'PRESIDENT'}"><span th:text="#{exam.committeemembers.memberrole.president}"></span></td>
+                        <td th:if="${committeeMember.getCommitteeRole().toString() == 'SECRETARY'}"><span th:text="#{exam.committeemembers.memberrole.secretary}"></span></td>
+                        <td th:if="${committeeMember.getCommitteeRole().toString() == 'MEMBER'}"><span th:text="#{exam.committeemembers.memberrole.member}"></span></td>
                     </tr>
                 </table>
             </fieldset>
@@ -110,7 +149,7 @@
 
         <div class="col-sm-9">
             <fieldset class="info-border">
-                <legend class="info-border">General Notes</legend>
+                <legend class="info-border"><span th:text="#{exam.generalnotes}"></span></legend>
                 <div th:text="${exam.getExamGeneralNotes()}"></div>
             </fieldset>
         </div>

@@ -4,38 +4,38 @@
       layout:decorate="~{layouts/default}" >
 <body>
 <div id="main" layout:fragment="content">
-    <div class="col-md-6 col-md-offset-3">
-        <a th:href="@{'/user/exam/' + ${exam.getId()}}" class="btn btn-success btn-md">go to View</a>
+    <div class="container">
+        <a th:href="@{'/user/exam/' + ${exam.getId()}}" class="btn btn-success btn-md"><span th:text="#{general.gotoview}"></span></a>
             <form autocomplete="off" action="#" th:action="@{'/user/exam/edit/' + ${exam.getId()}}" th:object="${exam}" method="post" class="form-horizontal" role="form">
-                <h2>Edit Exam</h2>
+                <h2><span th:text="#{exam.editexam}"></span></h2>
 
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <label>Local File Number</label>
+                        <label><span th:text="#{exam.localfilenumber}"></span></label>
                         <br/><label	th:if="${#fields.hasErrors('localFileNumber')}" th:errors="*{localFileNumber}" class="validation-message"></label>
-                        <input type="text" th:field="*{localFileNumber}" placeholder="Local File Number" class="form-control" />
+                        <input type="text" th:field="*{localFileNumber}" th:placeholder="#{exam.localfilenumber}" class="form-control" />
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <label>Foreas</label>
+                        <label><span th:text="#{exam.foreas}"></span></label>
                         <br/><label	th:if="${#fields.hasErrors('foreas')}" th:errors="*{foreas}" class="validation-message"></label>
-                        <input type="text" th:field="*{foreas}" placeholder="Foreas" class="form-control" />
+                        <input type="text" th:field="*{foreas}" th:placeholder="#{exam.foreas}" class="form-control" />
                     </div>
                 </div>
 
                 <div class="form-check">
                     <label th:if="${#fields.hasErrors('languageExemption')}" th:errors="*{languageExemption}" class="validation-message"></label>
                     <input type="checkbox" th:field="*{languageExemption}" th:value="*{languageExemption}" class="form-check-input" />
-                    <label class="form-check-label">Language Excemption</label>
+                    <label class="form-check-label"><span th:text="#{exam.languageexemption}"></span></label>
                 </div>
 
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <label>Lenguage Exemption Notes</label>
+                        <label><span th:text="#{exam.languageexemptionnotes}"></span></label>
                         <br/><label	th:if="${#fields.hasErrors('languageExemptionNotes')}" th:errors="*{languageExemptionNotes}" class="validation-message"></label>
-                        <textarea type="text" th:field="*{languageExemptionNotes}" placeholder="Language Exemption Notes" class="form-control">
+                        <textarea type="text" th:field="*{languageExemptionNotes}" th:placeholder="#{exam.languageexemptionnotes}" class="form-control">
                             <span th:text="*{languageExemptionNotes}"></span>
                         </textarea>
                     </div>
@@ -44,14 +44,14 @@
                 <div class="form-check">
                     <label th:if="${#fields.hasErrors('deaf')}" th:errors="*{deaf}" class="validation-message"></label>
                     <input type="checkbox" th:field="*{deaf}" th:value="*{deaf}" class="form-check-input" />
-                    <label class="form-check-label">Deafness</label>
+                    <label class="form-check-label"><span th:text="#{exam.deaf}"></span></label>
                 </div>
 
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <label>Deafness Notes</label>
+                        <label><span th:text="#{exam.deafnotes}"></span></label>
                         <br/><label	th:if="${#fields.hasErrors('deafNotes')}" th:errors="*{deafNotes}" class="validation-message"></label>
-                        <textarea type="text" th:field="*{deafNotes}" placeholder="Deafness Notes" class="form-control">
+                        <textarea type="text" th:field="*{deafNotes}" th:placeholder="#{exam.deafnotes}" class="form-control">
                             <span th:text="*{deafNotes}"></span>
                         </textarea>
                     </div>
@@ -59,7 +59,7 @@
 
                 <div class="form-group">
                     <div class="col-sm-3">
-                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        <button type="submit" class="btn btn-primary btn-block"><span th:text="#{general.submit}"></span></button>
                     </div>
                 </div>
 

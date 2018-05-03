@@ -4,7 +4,7 @@
       layout:decorate="~{layouts/default}" >
 <body>
 <div id="main" layout:fragment="content">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="container">
         <a th:href="@{'/moderator/exam/' + ${exam.getId()}}" class="btn btn-success btn-md"><span th:text="#{general.gotoview}"></span></a>
         <form autocomplete="off" action="#" th:action="@{'/moderator/exam/validate/' + ${exam.getId()}}" th:object="${exam}" method="post" class="form-horizontal" role="form">
             <h2><span th:text="#{exam.validateexam}"></span></h2>

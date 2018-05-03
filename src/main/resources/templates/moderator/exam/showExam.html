@@ -4,7 +4,7 @@
       layout:decorate="~{layouts/default}" >
 <body>
 <div id="main" layout:fragment="content">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="container">
         <div class="col-sm-9">
             <span th:if="${exam.getStatus().toString() == 'FINALIZED'}"><a th:href="@{'/moderator/exam/validate/' + ${exam.getId()}}" class="btn btn-warning btn-md">Validate</a></span>
             <fieldset class="info-border" >
@@ -12,15 +12,15 @@
                 <table class="table">
                     <tr>
                         <td><span th:text="#{exam.createddate}"></span></td>
-                        <td><span th:text="${exam.getCreatedAt()}"></span></td>
+                        <td><span th:text="${#dates.format(exam.getCreatedAt(), 'dd-MM-yyyy')}"></span></td>
                     </tr>
                     <tr>
                         <td><span th:text="#{exam.rateddate}"></span></td>
-                        <td><span th:text="${exam.getRatedDate()}"></span></td>
+                        <td><span th:text="${#dates.format(exam.getRatedDate(), 'dd-MM-yyyy')}"></span></td>
                     </tr>
                     <tr>
                         <td><span th:text="#{exam.finalizeddate}"></span></td>
-                        <td><span th:text="${exam.getFinalizedDate()}"></span></td>
+                        <td><span th:text="${#dates.format(exam.getFinalizedDate(), 'dd-MM-yyyy')}"></span></td>
                     </tr>
                     <tr>
                         <td><span th:text="#{exam.uniqueid}"></span></td>
@@ -40,7 +40,8 @@
                     </tr>
                     <tr>
                         <td><span th:text="#{exam.languageexemption}"></span></td>
-                        <td><span th:text="${exam.isLanguageExemption()}"></span></td>
+                        <td><span th:if="${exam.isLanguageExemption()}" th:text="#{general.yes}"></span>
+                            <span th:if="${!exam.isLanguageExemption()}" th:text="#{general.no}"></span></td>
                     </tr>
                     <tr th:if="${exam.isLanguageExemption()}">
                         <td><span th:text="#{exam.languageexemptionnotes}"></span></td>
@@ -48,7 +49,8 @@
                     </tr>
                     <tr>
                         <td><span th:text="#{exam.deaf}"></span></td>
-                        <td><span th:text="${exam.isDeaf()}"></span></td>
+                        <td><span th:if="${exam.isDeaf()}" th:text="#{general.yes}"></span>
+                            <span th:if="${!exam.isDeaf()}" th:text="#{general.no}"></span></td>
                     </tr>
                     <tr th:if="${exam.isDeaf()}">
                         <td><span th:text="#{exam.deafnotes}"></span></td>

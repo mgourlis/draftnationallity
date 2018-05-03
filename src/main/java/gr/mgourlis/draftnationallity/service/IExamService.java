@@ -23,6 +23,10 @@ public interface IExamService {
     public Page<Exam> findExamsByUser(String email, Pageable pageable);
     public List<Exam> findExamsByLocalFileNumberAndUser(String localFileNumber, String email);
     public Page<Exam> findExamsByLocalFileNumberAndUser(String localFileNumber, String email, Pageable pageable);
+    public List<Exam> findExamsByStatusAndUser(String status, String email);
+    public Page<Exam> findExamsByStatusAndUser(String status, String email, Pageable pageable);
+    public List<Exam> findExamsByLocalFileNumberAndStatusAndUser(String localFileNumber, String status, String email);
+    public Page<Exam> findExamsByLocalFileNumberAndStatusAndUser(String localFileNumber, String status, String email, Pageable pageable);
     public List<Exam> findAllByStatus(ExamStatus status);
     public Page<Exam> findAllByStatus(ExamStatus status, Pageable pageable);
     public List<Exam> findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatus(String localFileNumber, String FileNumber, String uID, ExamStatus status);
