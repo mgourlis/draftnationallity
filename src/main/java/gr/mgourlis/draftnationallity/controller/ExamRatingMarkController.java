@@ -71,6 +71,9 @@ public class ExamRatingMarkController {
         if(editExamRatingMark == null){
             throw new EntityNotFoundException();
         }
+
+        //TODO - check if used
+
         else if (bindingResult.hasErrors()){
             modelAndView.setViewName("/admin/exam-rating-mark/editExamRatingMark");
         }

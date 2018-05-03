@@ -87,6 +87,9 @@ public class ExamSettingController {
         if(editExamSetting == null){
             throw new EntityNotFoundException();
         }
+
+        //TODO - check if used
+
         ExamSetting checkName = examSettingService.findExamSettingByName(editExamSetting.getName());
         if(checkName != null){
             if(checkName.getId() != editExamSetting.getId()) {

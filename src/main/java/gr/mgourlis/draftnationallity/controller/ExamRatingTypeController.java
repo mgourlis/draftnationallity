@@ -72,6 +72,9 @@ public class ExamRatingTypeController {
         if(editExamRatingType == null){
             throw new EntityNotFoundException();
         }
+
+        //TODO - check if used
+
         else if (bindingResult.hasErrors()){
             modelAndView.setViewName("/admin/exam-rating-type/editExamRatingType");
         }

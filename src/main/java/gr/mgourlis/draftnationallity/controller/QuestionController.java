@@ -99,6 +99,9 @@ public class QuestionController {
         if(editQuestion == null){
             throw new EntityNotFoundException();
         }
+
+        //TODO - check if used
+
         Difficulty editDifficulty = difficultyService.getOne(questionDTO.getQuestionDifficulty());
         if(editDifficulty == null){
             bindingResult

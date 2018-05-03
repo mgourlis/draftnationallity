@@ -78,6 +78,9 @@ public class DifficultyController {
         if(editdifficulty == null){
             throw new EntityNotFoundException();
         }
+
+        //TODO - check if used
+
         else if (bindingResult.hasErrors()){
             modelAndView.setViewName("/admin/difficulty/editDifficulty");
         }
