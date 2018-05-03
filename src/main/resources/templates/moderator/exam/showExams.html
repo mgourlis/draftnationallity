@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <h2>Exams</h2>
+                <h2><span th:text="#{exam.exams}"></span></h2>
             </div>
         </div>
         <div class="row">
@@ -17,10 +17,10 @@
             <div class="col-md-8">
                 <div class="pull-right">
                     <form th:action="@{__${#httpServletRequest.requestURI}__}" method="GET" class="form-inline">
-                        <div class="form-group mb-2"><input type="text" id="luid" name="uid"  th:placeholder="uID" class="form-control" th:value="${param.uid}" /></div>
-                        <div class="form-group mb-2"><input type="text" id="lfile" name="lfile"  th:placeholder="Local-File" class="form-control" th:value="${param.lfile}" /></div>
-                        <div class="form-group mb-2"><input type="text" id="file" name="file"  th:placeholder="File" class="form-control" th:value="${param.file}" /></div>
-                        <button class="btn btn-primary mb-2" type="Submit" th:text="Search"></button>
+                        <div class="form-group mb-2"><input type="text" id="luid" name="uid"  th:placeholder="#{exam.uniqueid}" class="form-control" th:value="${param.uid}" /></div>
+                        <div class="form-group mb-2"><input type="text" id="lfile" name="lfile"  th:placeholder="#{exam.localfilenumber}" class="form-control" th:value="${param.lfile}" /></div>
+                        <div class="form-group mb-2"><input type="text" id="file" name="file"  th:placeholder="#{exam.filenumber}" class="form-control" th:value="${param.file}" /></div>
+                        <button class="btn btn-primary mb-2" type="Submit" th:text="#{general.search}"></button>
                     </form>
                 </div>
             </div>
@@ -29,16 +29,16 @@
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th><a class="sorted" sd:pagination-sort="uID" >UID</a></th>
-                    <th><a class="sorted" sd:pagination-sort="foreas" >Organization</a></th>
-                    <th><a class="sorted" sd:pagination-sort="localFileNumber" >Local File Number</a></th>
-                    <th><a class="sorted" sd:pagination-sort="fileNumber" >File Number</a></th>
-                    <th><a class="sorted" sd:pagination-sort="createdAt" >Created Date</a></th>
-                    <th><a class="sorted" sd:pagination-sort="ratedDate" >Rated Date</a></th>
-                    <th><a class="sorted" sd:pagination-sort="validatedDate" >Validated Date</a></th>
-                    <th><a class="sorted" sd:pagination-sort="validationUser" >Validation User</a></th>
-                    <th>View</th>
-                    <th>Validate</th>
+                    <th><a class="sorted" sd:pagination-sort="uID" ><span th:text="#{exam.uniqueid}"></span></a></th>
+                    <th><a class="sorted" sd:pagination-sort="foreas" ><span th:text="#{exam.foreas}"></span></a></th>
+                    <th><a class="sorted" sd:pagination-sort="localFileNumber" ><span th:text="#{exam.localfilenumber}"></span></a></th>
+                    <th><a class="sorted" sd:pagination-sort="fileNumber" ><span th:text="#{exam.filenumber}"></span></a></th>
+                    <th><a class="sorted" sd:pagination-sort="createdAt" ><span th:text="#{exam.createddate}"></span></a></th>
+                    <th><a class="sorted" sd:pagination-sort="ratedDate" ><span th:text="#{exam.rateddate}"></span></a></th>
+                    <th><a class="sorted" sd:pagination-sort="validatedDate" ><span th:text="#{exam.validateddate}"></span></a></th>
+                    <th><a class="sorted" sd:pagination-sort="validationUser" ><span th:text="#{exam.validationuser}"></span></a></th>
+                    <th><span th:text="#{general.view}"></span></th>
+                    <th><span th:text="#{general.validate}"></span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -51,8 +51,9 @@
                     <td th:text="${exam.getRatedDate()}">Rated Date</td>
                     <td th:text="${exam.getValidatedDate()}">Validated Date</td>
                     <td th:text="${exam.getValidationUser()}">Validation User</td>
-                    <td><a th:href="@{'/moderator/exam/' + ${exam.getId()}}" class="btn btn-success btn-xs">View</a></td>
-                    <td th:if="${exam.getStatus().toString() == 'FINALIZED'}"><a th:href="@{'/moderator/exam/validate/' + ${exam.getId()}}" class="btn btn-warning btn-xs">Validate</a></td>
+                    <td><a th:href="@{'/moderator/exam/' + ${exam.getId()}}" class="btn btn-success btn-xs"><span th:text="#{general.view}"></span></a></td>
+                    <td th:if="${exam.getStatus().toString() == 'FINALIZED'}"><a th:href="@{'/moderator/exam/validate/' + ${exam.getId()}}" class="btn btn-warning btn-xs">
+                        <span th:text="#{general.validate}"></span></a></td>
                 </tr>
                 </tbody>
             </table>

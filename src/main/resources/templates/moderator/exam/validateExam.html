@@ -5,22 +5,24 @@
 <body>
 <div id="main" layout:fragment="content">
     <div class="col-md-6 col-md-offset-3">
-        <a th:href="@{'/moderator/exam/' + ${exam.getId()}}" class="btn btn-success btn-md">go to View</a>
+        <a th:href="@{'/moderator/exam/' + ${exam.getId()}}" class="btn btn-success btn-md"><span th:text="#{general.gotoview}"></span></a>
         <form autocomplete="off" action="#" th:action="@{'/moderator/exam/validate/' + ${exam.getId()}}" th:object="${exam}" method="post" class="form-horizontal" role="form">
-            <h2>Validate Exam</h2>
+            <h2><span th:text="#{exam.validateexam}"></span></h2>
 
             <div class="form-group">
-                <div class="col-sm-9">
+                <div class="col-sm-10">
                     <label>File Number</label>
                     <br/><label	th:if="${#fields.hasErrors('fileNumber')}" th:errors="*{fileNumber}" class="validation-message"></label>
-                    <input type="text" th:field="*{fileNumber}" placeholder="Local File Number" class="form-control" />
+                    <input type="text" th:field="*{fileNumber}" th:placeholder="#{exam.filenumber}" class="form-control" />
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-9">
-                    <span class="col-sm-4"><button type="submit" class="btn btn-primary btn-block" name="action" value="tempsave">Temporary Save</button></span>
-                    <span class="col-sm-4"><button type="submit" class="btn btn-warning btn-block" name="action" value="save">Validate</button></span>
+                <div class="col-sm-10">
+                    <span class="col-sm-6"><button type="submit" class="btn btn-primary btn-block" name="action" value="tempsave">
+                        <span th:text="#{general.tempsave}"></span></button></span>
+                    <span class="col-sm-4"><button type="submit" class="btn btn-warning btn-block" name="action" value="save">
+                        <span th:text="#{general.validate}"></span></button></span>
                 </div>
             </div>
         </form>
