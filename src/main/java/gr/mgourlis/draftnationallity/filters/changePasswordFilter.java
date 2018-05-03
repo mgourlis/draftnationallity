@@ -30,6 +30,7 @@ public class changePasswordFilter implements Filter {
     protected String changePasswordKey = "user.must.change.password";
 
     private String changePasswordUrl = "/resetpass";
+    private String exceptionUrl = "/login";
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
@@ -45,7 +46,6 @@ public class changePasswordFilter implements Filter {
 
             if (obj instanceof UserDetails) {
                 userDetails = (UserDetails) obj;
-            } else {
             }
 
             if (userDetails != null)
@@ -66,7 +66,7 @@ public class changePasswordFilter implements Filter {
                 }
             }
         } catch (Exception e) {
-
+            sendRedirect(((HttpServletRequest) request), ((HttpServletResponse) response), exceptionUrl);
         }
         chain.doFilter(request, response);
     }

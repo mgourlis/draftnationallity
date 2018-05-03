@@ -43,7 +43,7 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/upload-dir/**").addResourceLocations("classpath:/META-INF/resources/static/upload-dir/");
+        registry.addResourceHandler("/static/upload-dir/**").addResourceLocations("classpath:static/upload-dir");
     }
 
     @Override
