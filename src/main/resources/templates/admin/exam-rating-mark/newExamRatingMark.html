@@ -7,12 +7,12 @@
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
 			<form autocomplete="off" action="#" th:action="@{/admin/exam-rating-mark/new}" th:object="${examRatingMark}" method="post" class="form-horizontal" role="form">
-				<h2>Create New Exam Rating Mark</h2>
+				<h2><span th:text="#{examratingmark.create}"></span></h2>
 				<div class="form-group">
 					<div class="col-sm-9">
 						<label th:if="${#fields.hasErrors('ratingMark')}" th:errors="*{ratingMark}"
 							   class="validation-message"></label>
-						<input type="text" th:field="*{ratingMark}" placeholder="Name"
+						<input type="text" th:field="*{ratingMark}" th:placeholder="#{examratingmark.ratingmark}"
 							   class="form-control" />
 					</div>
 				</div>
@@ -20,7 +20,7 @@
 
 				<div class="form-group">
 					<div class="col-sm-3">
-						<button type="submit" class="btn btn-primary btn-block">Submit</button>
+						<button type="submit" class="btn btn-primary btn-block"><span th:text="#{general.submit}"></span></button>
 					</div>
 				</div>
 

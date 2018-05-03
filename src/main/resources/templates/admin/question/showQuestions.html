@@ -7,11 +7,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <h2>Questions</h2>
+                <h2><span th:text="#{question.questions}"></span></h2>
             </div>
             <div class="col-md-6">
                 <div class="pull-right">
-                    <a th:href="${'/admin/question/new'}" class="btn btn-primary mb-2">Create Question Category</a>
+                    <a th:href="${'/admin/question/new'}" class="btn btn-primary mb-2"><span th:text="#{question.create}"></span></a>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
                     <form th:action="@{/admin/question/}" method="GET" class="form-inline">
                         <div class="form-group mb-2">
                             <select class="form-control" id="qdifficulty" name="qdifficulty" >
-                                <option value="">Difficulty</option>
+                                <option value=""><span th:text="#{difficulty.difficulty}"></span></option>
                                 <option th:each="difficulty : ${difficulties}"
                                         th:value="${difficulty.getLevelNumber()}"
                                         th:text="${difficulty.getLevel()}"
@@ -34,14 +34,14 @@
                         </div>
                         <div class="form-group mb-2">
                             <select class="form-control" id="qcategory" name="qcategory" >
-                                <option value="">Category</option>
+                                <option value=""><span th:text="#{questioncategory.questioncategory}"></span></option>
                                 <option th:each="questionCategory : ${questionCategories}"
                                         th:value="${questionCategory.getName()}"
                                         th:text="${questionCategory.getName()}"
                                         th:selected="(${param.qcategory == questionCategory.getName()})">Category</option>
                             </select>
                         </div>
-                        <button class="btn btn-primary mb-2" type="Submit" th:text="Search"></button>
+                        <button class="btn btn-primary mb-2" type="Submit" th:text="#{general.search}"></button>
                     </form>
                 </div>
             </div>
@@ -50,24 +50,23 @@
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th><a class="sorted" sd:pagination-sort="id" >ID</a></th>
-                    <th><a class="sorted" sd:pagination-sort="shortname" >Short Name</a></th>
-                    <th><a class="sorted" sd:pagination-sort="questionCategory" >Category</a></th>
-                    <th><a class="sorted" sd:pagination-sort="questionDifficulty" >Difficulty</a></th>
-                    <th>View</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th><a class="sorted" sd:pagination-sort="shortname" ><span th:text="#{question.shortname}"></span></a></th>
+                    <th><a class="sorted" sd:pagination-sort="questionCategory" ><span th:text="#{questioncategory.questioncategory}"></span></a></th>
+                    <th><a class="sorted" sd:pagination-sort="questionDifficulty" ><span th:text="#{difficulty.difficulty}"></span></a></th>
+                    <th><span th:text="#{general.view}"></span></th>
+                    <th><span th:text="#{general.edit}"></span></th>
+                    <th><span th:text="#{general.delete}"></span></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="question,iterationStatus : ${questions}">
-                    <td th:text="${question.getId()}">ID</td>
                     <td th:text="${question.getShortname()}">Short Name</td>
                     <td th:text="${question.getQuestionCategory().getName()}">Category</td>
                     <td th:text="${question.getQuestionDifficulty().getLevel()}">Difficulty</td>
-                    <td><a th:href="@{'/admin/question/' + ${question.getId()}}" class="btn btn-success btn-xs">View</a></td>
-                    <td><a th:href="@{'/admin/question/edit/' + ${question.getId()}}" class="btn btn-warning btn-xs">Edit</a></td>
-                    <td><a th:href="@{'/admin/question/delete/' + ${question.getId()}}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
+                    <td><a th:href="@{'/admin/question/' + ${question.getId()}}" class="btn btn-success btn-xs"><span th:text="#{general.view}"></span></a></td>
+                    <td><a th:href="@{'/admin/question/edit/' + ${question.getId()}}" class="btn btn-warning btn-xs"><span th:text="#{general.edit}"></span></a></td>
+                    <td><a th:href="@{'/admin/question/delete/' + ${question.getId()}}" class="btn btn-danger btn-xs" th:onclick="'return confirm(\''+#{general.delete.confirm}+'\');'">
+                        <span th:text="#{general.delete}"></span></a></td>
                 </tr>
                 </tbody>
             </table>

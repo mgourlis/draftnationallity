@@ -7,11 +7,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <h2>Exam Settings</h2>
+                <h2><span th:text="#{examsetting.examsettings}"></span></h2>
             </div>
             <div class="col-md-6">
                 <div class="pull-right">
-                    <a th:href="${'/admin/exam-setting/new'}" class="btn btn-primary mb-2">Create Exam Rating</a>
+                    <a th:href="${'/admin/exam-setting/new'}" class="btn btn-primary mb-2"><span th:text="#{examsetting.create}"></span></a>
                 </div>
             </div>
         </div>
@@ -26,20 +26,21 @@
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th><a class="sorted" sd:pagination-sort="id" >ID</a></th>
-                    <th><a class="sorted" sd:pagination-sort="Name" >Short Name</a></th>
-                    <th>View</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th><a class="sorted" sd:pagination-sort="name" ><span th:text="#{examsetting.name}"></span></a></th>
+                    <th><a class="sorted" sd:pagination-sort="enabled" ><span th:text="#{examsetting.enabled}"></span></a></th>
+                    <th><span th:text="#{general.view}"></span></th>
+                    <th><span th:text="#{general.edit}"></span></th>
+                    <th><span th:text="#{general.delete}"></span></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="examSetting,iterationStatus : ${examSettings}">
-                    <td th:text="${examSetting.getId()}">ID</td>
-                    <td th:text="${examSetting.getName()}">Category</td>
-                    <td><a th:href="@{'/admin/exam-setting/' + ${examSetting.getId()}}" class="btn btn-success btn-xs">View</a></td>
-                    <td><a th:href="@{'/admin/exam-setting/edit/' + ${examSetting.getId()}}" class="btn btn-warning btn-xs">Edit</a></td>
-                    <td><a th:href="@{'/admin/exam-setting/delete/' + ${examSetting.getId()}}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
+                    <td th:text="${examSetting.getName()}">Name</td>
+                    <td><span th:if="${examSetting.enabled}" th:text="#{general.yes}"></span><span th:if="${!examSetting.enabled}" th:text="#{general.no}"></span></td>
+                    <td><a th:href="@{'/admin/exam-setting/' + ${examSetting.getId()}}" class="btn btn-success btn-xs"><span th:text="#{general.view}"></span></a></td>
+                    <td><a th:href="@{'/admin/exam-setting/edit/' + ${examSetting.getId()}}" class="btn btn-warning btn-xs"><span th:text="#{general.edit}"></span></a></td>
+                    <td><a th:href="@{'/admin/exam-setting/delete/' + ${examSetting.getId()}}" class="btn btn-danger btn-xs" th:onclick="'return confirm(\''+#{general.delete.confirm}+'\');'">
+                        <span th:text="#{general.delete}"></span></a></td>
                 </tr>
                 </tbody>
             </table>

@@ -11,7 +11,7 @@
             </div>
             <div class="col-md-6">
                 <div class="pull-right">
-                    <a th:href="${'/admin/user/new'}" class="btn btn-primary mb-2"><span th:text="#{user.createuser}"></span></a>
+                    <a th:href="${'/admin/user/new'}" class="btn btn-primary mb-2"><span th:text="#{user.create}"></span></a>
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
                 <thead>
                     <tr>
                         <th><a class="sorted" sd:pagination-sort="name" ><span th:text="#{user.name}"></span></a></th>
-                        <th><a class="sorted" sd:pagination-sort="lastName" ><span th:text="#{user.lastName}"></span></a></th>
+                        <th><a class="sorted" sd:pagination-sort="lastName" ><span th:text="#{user.lastname}"></span></a></th>
                         <th><a class="sorted" sd:pagination-sort="email" ><span th:text="#{general.email}"></span></a></th>
                         <th><a class="sorted" sd:pagination-sort="foreas" ><span th:text="#{user.foreas}"></span></a></th>
                         <th><a class="sorted" sd:pagination-sort="active" ><span th:text="#{user.active}"></span></a></th>

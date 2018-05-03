@@ -4,8 +4,11 @@
     <meta content="ie=edge" http-equiv="x-ua-compatible" />
     <title th:text="${metaTitle} ? ${metaTitle} : #{app.name}"></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" type="text/css" th:href="@{/css/fonts.css}" />-->
+    <!--<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />-->
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery/3.3.1/jquery.min.js}"></script>
 </head>
 
 <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="navbar">
@@ -41,12 +44,8 @@
             </li>
             <li sec:authorize="hasRole('ROLE_MODERATOR')"><a href="/moderator/exam/"><span th:text="#{exam.exams}"></span></a></li>
             <li sec:authorize="hasRole('ROLE_MODERATOR')"><a href="/moderator/exam/validated"><span th:text="#{exam.validatedexams}"></span></a></li>
-            <li sec:authorize="hasRole('ROLE_USER')" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span th:text="#{exam.exams}"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a href="/user/exam/new"><span th:text="#{exam.createexam}"></span></a></li>
-                    <li><a href="/user/exam/"><span th:text="#{exam.pastexams}"></span></a></li>
-                </ul>
-            </li>
+            <li sec:authorize="hasRole('ROLE_USER')"><a href="/user/exam/"><span th:text="#{exam.exams}"></span></a></li>
+            <li sec:authorize="hasRole('ROLE_USER')"><a href="/user/exam/new"><span th:text="#{exam.createexam}"></span></a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li sec:authorize="isFullyAuthenticated()">
