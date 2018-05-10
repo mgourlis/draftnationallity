@@ -46,10 +46,10 @@ public interface ExamRepository extends JpaRepository<Exam,Long> {
 
     public Page<Exam> findExamsByStatusAndDeleted(ExamStatus status, boolean deleted, Pageable pageable);
 
-    @Query(value = "select e from Exam e where (e.localFileNumber like %?1% or e.fileNumber like %?2% or e.uID like %?3%) and e.status = ?4 and e.deleted = ?5")
-    public List<Exam> findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(String localFileNumber, String FileNumber, String uID, ExamStatus status, boolean deleted);
+    @Query(value = "select e from Exam e where (e.localFileNumber like %?1% or e.fileNumber like %?2% or e.uID like %?3%) and (e.status = ?4 or e.status = ?5) and e.deleted = ?6")
+    public List<Exam> findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(String localFileNumber, String FileNumber, String uID, ExamStatus status1, ExamStatus status2, boolean deleted);
 
-    @Query(value = "select e from Exam e where (e.localFileNumber like %?1% or e.fileNumber like %?2% or e.uID like %?3%) and e.status = ?4 and e.deleted = ?5",
-            countQuery = "select count(e) from Exam e where (e.localFileNumber like %?1% or e.fileNumber like %?2% or e.uID like %?3%) and e.status = ?4 and e.deleted = ?5")
-    public Page<Exam> findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(String localFileNumber, String FileNumber, String uID, ExamStatus status, boolean deleted, Pageable pageable);
+    @Query(value = "select e from Exam e where (e.localFileNumber like %?1% or e.fileNumber like %?2% or e.uID like %?3%) and (e.status = ?4 or e.status = ?5) and e.deleted = ?6",
+            countQuery = "select e from Exam e where (e.localFileNumber like %?1% or e.fileNumber like %?2% or e.uID like %?3%) and (e.status = ?4 or e.status = ?5) and e.deleted = ?6")
+    public Page<Exam> findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(String localFileNumber, String FileNumber, String uID, ExamStatus status1, ExamStatus status2, boolean deleted, Pageable pageable);
 }

@@ -66,7 +66,7 @@ public class changePasswordFilter implements Filter {
                 }
             }
         } catch (Exception e) {
-            sendRedirect(((HttpServletRequest) request), ((HttpServletResponse) response), exceptionUrl);
+
         }
         chain.doFilter(request, response);
     }

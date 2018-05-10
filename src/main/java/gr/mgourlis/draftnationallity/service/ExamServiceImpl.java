@@ -139,12 +139,18 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public List<Exam> findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatus(String localFileNumber, String FileNumber, String uID, ExamStatus status) {
-        return examRepository.findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(localFileNumber, FileNumber, uID, status,false);
+        if(status == ExamStatus.FINALIZED)
+            return examRepository.findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(localFileNumber, FileNumber, uID, status, ExamStatus.VALIDATED,false);
+        else
+            return examRepository.findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(localFileNumber, FileNumber, uID, status, null,false);
     }
 
     @Override
     public Page<Exam> findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatus(String localFileNumber, String FileNumber, String uID, ExamStatus status, Pageable pageable) {
-        return examRepository.findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(localFileNumber, FileNumber, uID, status,false, pageable);
+        if(status == ExamStatus.FINALIZED)
+            return examRepository.findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(localFileNumber, FileNumber, uID, status, ExamStatus.VALIDATED,false, pageable);
+        else
+            return examRepository.findExamsByLocalFileNumberContainingOrFileNumberContainingOrUIDContainingAndStatusAndDeleted(localFileNumber, FileNumber, uID, status, null,false, pageable);
     }
 
     @Override
